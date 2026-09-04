@@ -26,7 +26,60 @@ function heroCard(h,i){return `<button type="button" class="hero-card ${state.he
 function pickHero(i){state.hero=heroes[i];save();document.querySelectorAll('.hero-card').forEach(x=>x.classList.remove('selected'));document.querySelectorAll('.hero-card')[i]?.classList.add('selected')}
 function filterHeroes(){const q=(document.getElementById('heroSearch')?.value||'').toLowerCase(); document.querySelectorAll('.hero-card').forEach(c=>c.style.display=c.dataset.name.includes(q)?'':'none')}
 function setup(){A.innerHTML=`<div class="wrap"><div class="top"><h1>Настройка</h1><span class="muted">${state.mode==='host'?'👑 Ведущий':'🎲 Авто'}</span></div><div class="card"><label>Игроков</label><input id="n" type="number" min="3" max="12" value="${state.players}"><label>Шпионов</label><select id="s"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>${state.mode==='host'?`<h3>Выбери героя</h3><input id="heroSearch" class="search" placeholder="🔎 Поиск героя..." oninput="filterHeroes()"><div class="hero-grid">${heroes.map((h,i)=>heroCard(h,i).replace('hero-card ','hero-card '+(state.hero===h?'selected ':'')).replace('<button type="button"','<button data-name="'+h.toLowerCase().replace(/'/g,'&#39;')+'" type="button"')).join('')}</div>`:`<div class="card mini"><b>🎭 Герой</b><p class="muted">Герой будет выбран случайно из всех 125.</p></div>`}<button class="btn" onclick="startLocal()">Создать комнату</button><button class="btn alt" onclick="state=null;save();render()">Назад</button></div></div>`}
-function startLocal(){state.players=Math.max(3,Math.min(12,+document.getElementById('n').value||5));state.spies=+document.getElementById('s').value; if(state.mode!=='host')state.hero=heroes[Math.floor(Math.random()*heroes.length)];state.location=locations[Math.floor(Math.random()*locations.length)];state.spySet=[];while(state.spySet.length<state.spies){let x=Math.floor(Math.random()*state.players);if(!state.spySet.includes(x))state.spySet.push(x)}state.current=0;state.screen='room';save();render()}
+async function startLocal(){
+  state.players=Math.max(
+    3,
+    Math.min(12,+document.getElementById('n').value||5)
+  );
+
+  state.spies=+document.getElementById('s').value;
+
+  if(state.mode!=='host'){
+    state.hero=heroes[Math.floor(Math.random()*heroes.length)];
+  }
+
+  state.location=locations[Math.floor(Math.random()*locations.length)];
+
+  // Создаём код комнаты
+  state.room=Math.random().toString(36).slice(2,8).toUpperCase();
+
+  // Показываем загрузку
+  const btn=document.querySelector('.btn');
+  if(btn) btn.disabled=true;
+
+  // Сохраняем комнату в Supabase
+  const { data, error } = await supabase
+    .from('rooms')
+    .insert({
+      code: state.room,
+      host_telegram_id: tg?.initDataUnsafe?.user?.id || 0,
+      players_count: state.players,
+      spies_count: state.spies,
+      hero: state.hero,
+      location: state.location,
+      status: 'waiting',
+      current_player: 0
+    })
+    .select()
+    .single();
+
+  if(error){
+    console.error(error);
+    alert('Не удалось создать комнату: ' + error.message);
+    if(btn) btn.disabled=false;
+    return;
+  }
+
+  console.log('Комната создана:', data);
+
+  // Пока оставляем локальное состояние,
+  // чтобы существующая игра продолжала работать
+  state.screen='room';
+  state.current=0;
+
+  save();
+  render();
+}
 function room(){A.innerHTML=`<div class="wrap"><h1>Комната</h1><div class="card"><div class="muted">КОД КОМНАТЫ</div><div class="code">${state.room}</div><div class="center"><span class="pill">${state.players} игроков</span><span class="pill">${state.spies} шпион(ов)</span></div><button class="btn" onclick="showRole()">▶️ Начать раздачу ролей</button><button class="btn alt" onclick="state=null;save();render()">Выйти</button></div><div class="card"><h3>Как играть</h3><p>Передавайте телефон игрокам по очереди. Каждый смотрит только свою роль.</p></div></div>`}
 function showRole(){state.screen='play';save();render()}
 function play(){let spy=state.spySet.includes(state.current);A.innerHTML=`<div class="wrap"><div class="card center"><div class="muted">ИГРОК ${state.current+1} / ${state.players}</div><div class="role">${spy?'🕵️':'🎴'}</div><h2>${spy?'Вы — ШПИОН':'Вы — МИРНЫЙ ИГРОК'}</h2><p>${spy?'Постарайтесь понять локацию, не выдав себя.':'Вы знаете локацию. Не называйте её прямо и вычислите шпиона.'}</p><div class="secret">${spy?'Локация неизвестна':`<div class="hero-secret"><img src="${img(state.hero)}" onerror="this.style.visibility='hidden'"><div>📍 ${state.location}</div><b>🎭 ${state.hero}</b></div>`}</div><button class="btn" onclick="nextRole()">Скрыть и передать</button></div></div>`}
