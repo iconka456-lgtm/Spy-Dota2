@@ -19,7 +19,6 @@
       --green: #76e5a2;
       --yellow: #ffd166;
       --red: #ff7b7b;
-      --blue: #74b9ff;
     }
 
     * {
@@ -47,7 +46,7 @@
 
     .wrap {
       width: 100%;
-      max-width: 650px;
+      max-width: 600px;
       margin: 0 auto;
       padding: 18px 14px calc(36px + env(safe-area-inset-bottom));
     }
@@ -60,11 +59,6 @@
     h2 {
       margin: 0 0 10px;
       font-size: 21px;
-    }
-
-    h3 {
-      margin: 0;
-      font-size: 16px;
     }
 
     p {
@@ -147,8 +141,8 @@
     }
 
     .game-type-button {
-      min-height: 155px;
-      padding: 16px 10px;
+      min-height: 140px;
+      padding: 15px 8px;
       color: #fff;
       background: var(--card2);
       border: 2px solid #45454b;
@@ -163,8 +157,8 @@
 
     .game-type-icon {
       display: block;
-      margin-bottom: 9px;
-      font-size: 48px;
+      margin-bottom: 8px;
+      font-size: 46px;
     }
 
     .game-type-subtitle {
@@ -179,79 +173,56 @@
     .mode-card {
       margin-top: 10px;
       padding: 14px;
+      background: var(--card2);
       border: 1px solid #45454a;
       border-radius: 14px;
-      background: var(--card2);
     }
 
-    .picker-title {
-      margin: 18px 0 8px;
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .portrait-grid {
+    .item-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
-      max-height: 410px;
-      padding-right: 2px;
+      max-height: 420px;
       overflow-y: auto;
     }
 
-    .portrait-button {
+    .item-button {
       min-width: 0;
-      padding: 0;
-      overflow: hidden;
+      min-height: 108px;
+      padding: 7px 4px;
       color: #fff;
-      background: #111;
-      border: 2px solid #404045;
-      border-radius: 11px;
-      text-align: left;
-    }
-
-    .portrait-button.selected-peaceful {
-      border-color: var(--green);
-      box-shadow: 0 0 0 1px var(--green);
-    }
-
-    .portrait-button.selected-spy {
-      border-color: var(--yellow);
-      box-shadow: 0 0 0 1px var(--yellow);
-    }
-
-    .portrait-image {
-      display: block;
-      width: 100%;
-      aspect-ratio: 1.45 / 1;
-      object-fit: cover;
-      background: #272727;
-    }
-
-    .item-image {
-      object-fit: contain;
-      padding: 7px;
-      background: #0b0b0b;
-    }
-
-    .portrait-name {
-      display: block;
-      min-height: 36px;
-      padding: 5px 4px 6px;
-      overflow: hidden;
+      background: #101010;
+      border: 2px solid #414146;
+      border-radius: 12px;
       font-size: 11px;
       font-weight: 700;
       line-height: 1.2;
       text-align: center;
-      text-overflow: ellipsis;
     }
 
-    .picked-info {
+    .item-button.selected-peaceful {
+      border-color: var(--green);
+    }
+
+    .item-button.selected-spy {
+      border-color: var(--yellow);
+    }
+
+    .item-icon {
+      display: block;
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 6px;
+      object-fit: contain;
+      image-rendering: auto;
+    }
+
+    .choice-info {
       margin-top: 10px;
       padding: 10px;
-      color: #d6d6d6;
       background: #101010;
-      border-radius: 10px;
+      border-radius: 11px;
+      color: #d5d5d5;
       font-size: 13px;
       line-height: 1.45;
     }
@@ -266,7 +237,7 @@
 
     .secret-button {
       width: 100%;
-      min-height: 165px;
+      min-height: 155px;
       margin-top: 12px;
       padding: 18px;
       color: #fff;
@@ -292,19 +263,12 @@
       border-color: #ffe39b;
     }
 
-    .role-image {
+    .role-item-icon {
       display: block;
-      width: min(240px, 84%);
-      height: 135px;
+      width: 76px;
+      height: 76px;
       margin: 12px auto 0;
-      object-fit: cover;
-      background: #121212;
-      border-radius: 12px;
-    }
-
-    .role-item-image {
       object-fit: contain;
-      padding: 12px;
     }
 
     .timer {
@@ -327,19 +291,12 @@
       border-radius: 14px;
     }
 
-    .result-image {
+    .result-item-icon {
       display: block;
-      width: min(260px, 90%);
-      height: 145px;
+      width: 90px;
+      height: 90px;
       margin: 12px auto;
-      object-fit: cover;
-      background: #0d0d0d;
-      border-radius: 12px;
-    }
-
-    .result-item-image {
       object-fit: contain;
-      padding: 12px;
     }
 
     .role-icon {
@@ -365,106 +322,26 @@
     const app = document.getElementById("app");
 
     const heroes = [
-      { name: "Abaddon", slug: "abaddon" },
-      { name: "Alchemist", slug: "alchemist" },
-      { name: "Ancient Apparition", slug: "ancient_apparition" },
-      { name: "Anti-Mage", slug: "antimage" },
-      { name: "Axe", slug: "axe" },
-      { name: "Bane", slug: "bane" },
-      { name: "Batrider", slug: "batrider" },
-      { name: "Beastmaster", slug: "beastmaster" },
-      { name: "Bloodseeker", slug: "bloodseeker" },
-      { name: "Bounty Hunter", slug: "bounty_hunter" },
-      { name: "Bristleback", slug: "bristleback" },
-      { name: "Broodmother", slug: "broodmother" },
-      { name: "Chaos Knight", slug: "chaos_knight" },
-      { name: "Clinkz", slug: "clinkz" },
-      { name: "Clockwerk", slug: "rattletrap" },
-      { name: "Crystal Maiden", slug: "crystal_maiden" },
-      { name: "Dazzle", slug: "dazzle" },
-      { name: "Doom", slug: "doom_bringer" },
-      { name: "Dragon Knight", slug: "dragon_knight" },
-      { name: "Drow Ranger", slug: "drow_ranger" },
-      { name: "Earthshaker", slug: "earthshaker" },
-      { name: "Ember Spirit", slug: "ember_spirit" },
-      { name: "Enchantress", slug: "enchantress" },
-      { name: "Enigma", slug: "enigma" },
-      { name: "Faceless Void", slug: "faceless_void" },
-      { name: "Gyrocopter", slug: "gyrocopter" },
-      { name: "Huskar", slug: "huskar" },
-      { name: "Invoker", slug: "invoker" },
-      { name: "Jakiro", slug: "jakiro" },
-      { name: "Juggernaut", slug: "juggernaut" },
-      { name: "Kunkka", slug: "kunkka" },
-      { name: "Legion Commander", slug: "legion_commander" },
-      { name: "Lich", slug: "lich" },
-      { name: "Lifestealer", slug: "life_stealer" },
-      { name: "Lina", slug: "lina" },
-      { name: "Lion", slug: "lion" },
-      { name: "Luna", slug: "luna" },
-      { name: "Magnus", slug: "magnataur" },
-      { name: "Mars", slug: "mars" },
-      { name: "Medusa", slug: "medusa" },
-      { name: "Meepo", slug: "meepo" },
-      { name: "Mirana", slug: "mirana" },
-      { name: "Monkey King", slug: "monkey_king" },
-      { name: "Morphling", slug: "morphling" },
-      { name: "Muerta", slug: "muerta" },
-      { name: "Naga Siren", slug: "naga_siren" },
-      { name: "Nature's Prophet", slug: "furion" },
-      { name: "Necrophos", slug: "necrolyte" },
-      { name: "Night Stalker", slug: "night_stalker" },
-      { name: "Nyx Assassin", slug: "nyx_assassin" },
-      { name: "Ogre Magi", slug: "ogre_magi" },
-      { name: "Omniknight", slug: "omniknight" },
-      { name: "Oracle", slug: "oracle" },
-      { name: "Pangolier", slug: "pangolier" },
-      { name: "Phantom Assassin", slug: "phantom_assassin" },
-      { name: "Phantom Lancer", slug: "phantom_lancer" },
-      { name: "Phoenix", slug: "phoenix" },
-      { name: "Puck", slug: "puck" },
-      { name: "Pudge", slug: "pudge" },
-      { name: "Pugna", slug: "pugna" },
-      { name: "Queen of Pain", slug: "queenofpain" },
-      { name: "Razor", slug: "razor" },
-      { name: "Riki", slug: "riki" },
-      { name: "Rubick", slug: "rubick" },
-      { name: "Sand King", slug: "sand_king" },
-      { name: "Shadow Demon", slug: "shadow_demon" },
-      { name: "Shadow Fiend", slug: "nevermore" },
-      { name: "Shadow Shaman", slug: "shadow_shaman" },
-      { name: "Silencer", slug: "silencer" },
-      { name: "Skywrath Mage", slug: "skywrath_mage" },
-      { name: "Slardar", slug: "slardar" },
-      { name: "Slark", slug: "slark" },
-      { name: "Snapfire", slug: "snapfire" },
-      { name: "Sniper", slug: "sniper" },
-      { name: "Spectre", slug: "spectre" },
-      { name: "Spirit Breaker", slug: "spirit_breaker" },
-      { name: "Storm Spirit", slug: "storm_spirit" },
-      { name: "Sven", slug: "sven" },
-      { name: "Techies", slug: "techies" },
-      { name: "Templar Assassin", slug: "templar_assassin" },
-      { name: "Terrorblade", slug: "terrorblade" },
-      { name: "Tidehunter", slug: "tidehunter" },
-      { name: "Tinker", slug: "tinker" },
-      { name: "Tiny", slug: "tiny" },
-      { name: "Treant Protector", slug: "treant" },
-      { name: "Troll Warlord", slug: "troll_warlord" },
-      { name: "Tusk", slug: "tusk" },
-      { name: "Undying", slug: "undying" },
-      { name: "Ursa", slug: "ursa" },
-      { name: "Venomancer", slug: "venomancer" },
-      { name: "Viper", slug: "viper" },
-      { name: "Visage", slug: "visage" },
-      { name: "Void Spirit", slug: "void_spirit" },
-      { name: "Warlock", slug: "warlock" },
-      { name: "Weaver", slug: "weaver" },
-      { name: "Windranger", slug: "windrunner" },
-      { name: "Winter Wyvern", slug: "winter_wyvern" },
-      { name: "Witch Doctor", slug: "witch_doctor" },
-      { name: "Wraith King", slug: "skeleton_king" },
-      { name: "Zeus", slug: "zuus" }
+      "Abaddon", "Alchemist", "Ancient Apparition", "Anti-Mage",
+      "Axe", "Bane", "Batrider", "Beastmaster", "Bloodseeker",
+      "Bounty Hunter", "Bristleback", "Broodmother", "Chaos Knight",
+      "Clinkz", "Clockwerk", "Crystal Maiden", "Dazzle", "Doom",
+      "Dragon Knight", "Drow Ranger", "Earthshaker", "Ember Spirit",
+      "Enchantress", "Enigma", "Faceless Void", "Gyrocopter", "Huskar",
+      "Invoker", "Jakiro", "Juggernaut", "Kunkka", "Legion Commander",
+      "Lich", "Lifestealer", "Lina", "Lion", "Luna", "Magnus", "Mars",
+      "Medusa", "Meepo", "Mirana", "Monkey King", "Morphling", "Muerta",
+      "Naga Siren", "Nature's Prophet", "Necrophos", "Night Stalker",
+      "Nyx Assassin", "Ogre Magi", "Omniknight", "Oracle", "Pangolier",
+      "Phantom Assassin", "Phantom Lancer", "Phoenix", "Puck", "Pudge",
+      "Pugna", "Queen of Pain", "Razor", "Riki", "Rubick", "Sand King",
+      "Shadow Demon", "Shadow Fiend", "Shadow Shaman", "Silencer",
+      "Skywrath Mage", "Slardar", "Slark", "Snapfire", "Sniper",
+      "Spectre", "Spirit Breaker", "Storm Spirit", "Sven", "Techies",
+      "Templar Assassin", "Terrorblade", "Tidehunter", "Tinker", "Tiny",
+      "Treant Protector", "Troll Warlord", "Tusk", "Undying", "Ursa",
+      "Venomancer", "Viper", "Visage", "Void Spirit", "Warlock", "Weaver",
+      "Windranger", "Winter Wyvern", "Witch Doctor", "Wraith King", "Zeus"
     ];
 
     const items = [
@@ -546,6 +423,7 @@
     let selectedMode = "random";
     let hostPeacefulChoice = null;
     let hostSpyChoice = null;
+    let hostPickerTarget = "peaceful";
 
     try {
       if (window.Telegram && window.Telegram.WebApp) {
@@ -553,7 +431,7 @@
         window.Telegram.WebApp.expand();
       }
     } catch (error) {
-      console.log("Telegram API не подключён", error);
+      console.log(error);
     }
 
     function randomItem(list) {
@@ -602,38 +480,14 @@
       }
     }
 
-    function getImageUrl(entry, gameType) {
-      if (gameType === "heroes") {
-        return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/" +
-          entry.slug +
-          ".png";
-      }
-
+    function itemImage(item) {
       return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/" +
-        entry.slug +
+        item.slug +
         ".png";
     }
 
-    function getEntries() {
-      return selectedGameType === "heroes" ? heroes : items;
-    }
-
-    function getTypeLabel(type) {
-      return type === "heroes" ? "героя" : "предмет";
-    }
-
-    function getTypePlural(type) {
-      return type === "heroes" ? "Герои" : "Предметы";
-    }
-
-    function getLocationText() {
-      if (!game) {
-        return "";
-      }
-
-      return game.gameType === "heroes"
-        ? "<br><span style='font-size:15px'>Локация: " + escapeHtml(game.location) + "</span>"
-        : "";
+    function getTypeTitle() {
+      return selectedGameType === "heroes" ? "Герои" : "Предметы";
     }
 
     function renderHome() {
@@ -641,6 +495,7 @@
 
       hostPeacefulChoice = null;
       hostSpyChoice = null;
+      hostPickerTarget = "peaceful";
 
       app.innerHTML = `
         <div class="wrap">
@@ -650,22 +505,22 @@
             <h2>Выбери мини-игру</h2>
 
             <div class="game-type-grid">
-              <button id="heroesTypeButton" class="game-type-button selected">
+              <button id="heroesButton" class="game-type-button">
                 <span class="game-type-icon">🦸</span>
                 Герои
-                <span class="game-type-subtitle">Узнай героя и локацию</span>
+                <span class="game-type-subtitle">Герой и локация</span>
               </button>
 
-              <button id="itemsTypeButton" class="game-type-button">
+              <button id="itemsButton" class="game-type-button">
                 <span class="game-type-icon">🗡️</span>
                 Предметы
-                <span class="game-type-subtitle">Узнай предмет</span>
+                <span class="game-type-subtitle">Предмет без локаций</span>
               </button>
             </div>
           </div>
 
           <div class="card">
-            <h2 id="settingsTitle">Настройки: Герои</h2>
+            <h2 id="settingsTitle"></h2>
 
             <label for="gameMode">Режим игры</label>
             <select id="gameMode">
@@ -673,7 +528,7 @@
               <option value="host">🎙️ С ведущим</option>
             </select>
 
-            <div id="modeDescription" class="mode-card small muted"></div>
+            <div id="modeText" class="mode-card small muted"></div>
 
             <label for="playersCount">Количество игроков</label>
             <input id="playersCount" type="number" min="3" max="20" value="5">
@@ -686,31 +541,183 @@
 
             <div id="hostSettings" class="hidden"></div>
 
-            <button class="btn" id="startGameButton">🎮 Начать раздачу ролей</button>
-          </div>
-
-          <div class="card">
-            <h2>Правила</h2>
-            <p class="muted small">
-              Игроки по очереди удерживают кнопку, смотрят свою роль и передают телефон дальше.
-              Мирные знают правильную информацию, а шпионы получают другую и пытаются не раскрыться.
-            </p>
+            <button id="startGameButton" class="btn">🎮 Начать раздачу ролей</button>
           </div>
         </div>
       `;
 
-      document.getElementById("heroesTypeButton").addEventListener("click", function() {
+      document.getElementById("heroesButton").addEventListener("click", function() {
         selectedGameType = "heroes";
         renderHome();
       });
 
-      document.getElementById("itemsTypeButton").addEventListener("click", function() {
+      document.getElementById("itemsButton").addEventListener("click", function() {
         selectedGameType = "items";
         renderHome();
       });
 
       document.getElementById("gameMode").value = selectedMode;
+
       document.getElementById("gameMode").addEventListener("change", function() {
         selectedMode = document.getElementById("gameMode").value;
         hostPeacefulChoice = null;
-        hostSpyC
+        hostSpyChoice = null;
+        hostPickerTarget = "peaceful";
+        updateHome();
+      });
+
+      document.getElementById("startGameButton").addEventListener("click", createGame);
+
+      updateHome();
+    }
+
+    function updateHome() {
+      const heroesButton = document.getElementById("heroesButton");
+      const itemsButton = document.getElementById("itemsButton");
+      const title = document.getElementById("settingsTitle");
+      const modeText = document.getElementById("modeText");
+      const hostSettings = document.getElementById("hostSettings");
+
+      heroesButton.classList.toggle("selected", selectedGameType === "heroes");
+      itemsButton.classList.toggle("selected", selectedGameType === "items");
+
+      title.textContent = "Настройки: " + getTypeTitle();
+
+      if (selectedMode === "random") {
+        modeText.textContent = selectedGameType === "heroes"
+          ? "Игра сама выберет героя мирных, героя шпионов и локацию."
+          : "Игра сама выберет предмет мирных и другой предмет шпионов.";
+
+        hostSettings.innerHTML = "";
+        hostSettings.classList.add("hidden");
+      } else {
+        modeText.textContent = selectedGameType === "heroes"
+          ? "Ведущий выбирает героев списком. Портреты героев отключены для быстрой работы."
+          : "Ведущий выбирает предметы маленькими иконками.";
+
+        hostSettings.classList.remove("hidden");
+        renderHostSettings();
+      }
+    }
+
+    function renderHostSettings() {
+      const hostSettings = document.getElementById("hostSettings");
+
+      if (selectedGameType === "heroes") {
+        hostSettings.innerHTML = `
+          <div class="mode-card">
+            <h2>Выбор ведущего</h2>
+
+            <label for="peacefulHero">Герой мирных</label>
+            <select id="peacefulHero">
+              ${heroes.map(function(hero) {
+                return `<option value="${escapeHtml(hero)}">${escapeHtml(hero)}</option>`;
+              }).join("")}
+            </select>
+
+            <label for="spyHero">Герой шпионов</label>
+            <select id="spyHero">
+              ${heroes.map(function(hero) {
+                return `<option value="${escapeHtml(hero)}">${escapeHtml(hero)}</option>`;
+              }).join("")}
+            </select>
+
+            <label for="locationSelect">Общая локация</label>
+            <select id="locationSelect">
+              ${locations.map(function(location) {
+                return `<option value="${escapeHtml(location)}">${escapeHtml(location)}</option>`;
+              }).join("")}
+            </select>
+          </div>
+        `;
+
+        return;
+      }
+
+      renderItemPicker();
+    }
+
+    function renderItemPicker() {
+      const hostSettings = document.getElementById("hostSettings");
+      const currentChoice = hostPickerTarget === "peaceful"
+        ? hostPeacefulChoice
+        : hostSpyChoice;
+
+      const title = hostPickerTarget === "peaceful"
+        ? "🛡️ Выбери предмет мирных"
+        : "🕵️ Выбери предмет шпионов";
+
+      const selectedClass = hostPickerTarget === "peaceful"
+        ? "selected-peaceful"
+        : "selected-spy";
+
+      const itemButtons = items.map(function(item, index) {
+        const isSelected = currentChoice && currentChoice.slug === item.slug;
+
+        return `
+          <button
+            class="item-button ${isSelected ? selectedClass : ""}"
+            data-item-index="${index}"
+          >
+            <img
+              class="item-icon"
+              src="${itemImage(item)}"
+              alt=""
+              loading="lazy"
+            >
+            ${escapeHtml(item.name)}
+          </button>
+        `;
+      }).join("");
+
+      hostSettings.innerHTML = `
+        <div class="mode-card">
+          <h2>Выбор ведущего</h2>
+
+          <div class="choice-info">
+            Мирные: <b>${escapeHtml(hostPeacefulChoice ? hostPeacefulChoice.name : "не выбрано")}</b><br>
+            Шпионы: <b>${escapeHtml(hostSpyChoice ? hostSpyChoice.name : "не выбрано")}</b>
+          </div>
+
+          <p class="small">${title}</p>
+
+          <div class="item-grid">
+            ${itemButtons}
+          </div>
+
+          ${hostPickerTarget === "spy" ? `
+            <button id="backToPeacefulButton" class="btn alt">
+              ← Изменить предмет мирных
+            </button>
+          ` : ""}
+        </div>
+      `;
+
+      document.querySelectorAll("[data-item-index]").forEach(function(button) {
+        button.addEventListener("click", function() {
+          const item = items[Number(button.dataset.itemIndex)];
+
+          if (hostPickerTarget === "peaceful") {
+            hostPeacefulChoice = item;
+            hostPickerTarget = "spy";
+          } else {
+            hostSpyChoice = item;
+          }
+
+          haptic("impact");
+          renderItemPicker();
+        });
+      });
+
+      const backButton = document.getElementById("backToPeacefulButton");
+
+      if (backButton) {
+        backButton.addEventListener("click", function() {
+          hostPickerTarget = "peaceful";
+          renderItemPicker();
+        });
+      }
+    }
+
+    function createGame() {
+      const playersInput = Number(document.getElementById("players
