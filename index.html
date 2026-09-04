@@ -35,8 +35,7 @@
     }
 
     button,
-    input,
-    select {
+    input {
       font: inherit;
     }
 
@@ -81,10 +80,6 @@
       font-size: 13px;
     }
 
-    .hidden {
-      display: none !important;
-    }
-
     .btn {
       width: 100%;
       margin-top: 10px;
@@ -92,17 +87,17 @@
       border: 0;
       border-radius: 14px;
       color: #111;
-      background: #fff;
+      background: #ffffff;
       font-weight: 700;
     }
 
     .btn.alt {
-      color: #fff;
+      color: #ffffff;
       background: #303035;
     }
 
     .btn.danger {
-      color: #fff;
+      color: #ffffff;
       background: #a83131;
     }
 
@@ -123,12 +118,11 @@
       font-size: 14px;
     }
 
-    input,
-    select {
+    input {
       width: 100%;
       padding: 13px;
-      color: #fff;
-      background: #111;
+      color: #ffffff;
+      background: #111111;
       border: 1px solid #4a4a4a;
       border-radius: 12px;
       outline: none;
@@ -147,7 +141,7 @@
       min-height: 135px;
       margin-top: 12px;
       padding: 18px;
-      color: #fff;
+      color: #ffffff;
       background: #35353a;
       border: 2px solid #53535a;
       border-radius: 18px;
@@ -189,6 +183,16 @@
       font-size: 64px;
       text-align: center;
     }
+
+    .error-box {
+      margin: 20px;
+      padding: 16px;
+      color: #ffffff;
+      background: #3b1717;
+      border: 1px solid #f07a7a;
+      border-radius: 15px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
   </style>
 </head>
 
@@ -196,29 +200,122 @@
   <div id="app"></div>
 
   <script>
+    window.addEventListener("error", function(event) {
+      const root = document.getElementById("app");
+
+      if (root) {
+        root.innerHTML =
+          "<div class='error-box'>" +
+          "<h2>Ошибка запуска</h2>" +
+          "<p>" + String(event.message || "Неизвестная ошибка") + "</p>" +
+          "<p>Строка: " + String(event.lineno || "?") + "</p>" +
+          "</div>";
+      }
+    });
+
     const app = document.getElementById("app");
 
     const heroes = [
-      "Abaddon", "Alchemist", "Ancient Apparition", "Anti-Mage",
-      "Axe", "Bane", "Batrider", "Beastmaster", "Bloodseeker",
-      "Bounty Hunter", "Bristleback", "Broodmother", "Chaos Knight",
-      "Clinkz", "Clockwerk", "Crystal Maiden", "Dazzle", "Doom",
-      "Dragon Knight", "Drow Ranger", "Earthshaker", "Ember Spirit",
-      "Enchantress", "Enigma", "Faceless Void", "Gyrocopter", "Huskar",
-      "Invoker", "Jakiro", "Juggernaut", "Kunkka", "Legion Commander",
-      "Lich", "Lifestealer", "Lina", "Lion", "Luna", "Magnus", "Mars",
-      "Medusa", "Meepo", "Mirana", "Monkey King", "Morphling", "Muerta",
-      "Naga Siren", "Nature's Prophet", "Necrophos", "Night Stalker",
-      "Nyx Assassin", "Ogre Magi", "Omniknight", "Oracle", "Pangolier",
-      "Phantom Assassin", "Phantom Lancer", "Phoenix", "Puck", "Pudge",
-      "Pugna", "Queen of Pain", "Razor", "Riki", "Rubick", "Sand King",
-      "Shadow Demon", "Shadow Fiend", "Shadow Shaman", "Silencer",
-      "Skywrath Mage", "Slardar", "Slark", "Snapfire", "Sniper",
-      "Spectre", "Spirit Breaker", "Storm Spirit", "Sven", "Techies",
-      "Templar Assassin", "Terrorblade", "Tidehunter", "Tinker", "Tiny",
-      "Treant Protector", "Troll Warlord", "Tusk", "Undying", "Ursa",
-      "Venomancer", "Viper", "Visage", "Void Spirit", "Warlock", "Weaver",
-      "Windranger", "Winter Wyvern", "Witch Doctor", "Wraith King", "Zeus"
+      "Abaddon",
+      "Alchemist",
+      "Ancient Apparition",
+      "Anti-Mage",
+      "Axe",
+      "Bane",
+      "Batrider",
+      "Beastmaster",
+      "Bloodseeker",
+      "Bounty Hunter",
+      "Bristleback",
+      "Broodmother",
+      "Chaos Knight",
+      "Clinkz",
+      "Clockwerk",
+      "Crystal Maiden",
+      "Dazzle",
+      "Doom",
+      "Dragon Knight",
+      "Drow Ranger",
+      "Earthshaker",
+      "Ember Spirit",
+      "Enchantress",
+      "Enigma",
+      "Faceless Void",
+      "Gyrocopter",
+      "Huskar",
+      "Invoker",
+      "Jakiro",
+      "Juggernaut",
+      "Kunkka",
+      "Legion Commander",
+      "Lich",
+      "Lifestealer",
+      "Lina",
+      "Lion",
+      "Luna",
+      "Magnus",
+      "Mars",
+      "Medusa",
+      "Meepo",
+      "Mirana",
+      "Monkey King",
+      "Morphling",
+      "Muerta",
+      "Naga Siren",
+      "Nature's Prophet",
+      "Necrophos",
+      "Night Stalker",
+      "Nyx Assassin",
+      "Ogre Magi",
+      "Omniknight",
+      "Oracle",
+      "Pangolier",
+      "Phantom Assassin",
+      "Phantom Lancer",
+      "Phoenix",
+      "Puck",
+      "Pudge",
+      "Pugna",
+      "Queen of Pain",
+      "Razor",
+      "Riki",
+      "Rubick",
+      "Sand King",
+      "Shadow Demon",
+      "Shadow Fiend",
+      "Shadow Shaman",
+      "Silencer",
+      "Skywrath Mage",
+      "Slardar",
+      "Slark",
+      "Snapfire",
+      "Sniper",
+      "Spectre",
+      "Spirit Breaker",
+      "Storm Spirit",
+      "Sven",
+      "Techies",
+      "Templar Assassin",
+      "Terrorblade",
+      "Tidehunter",
+      "Tinker",
+      "Tiny",
+      "Treant Protector",
+      "Troll Warlord",
+      "Tusk",
+      "Undying",
+      "Ursa",
+      "Venomancer",
+      "Viper",
+      "Visage",
+      "Void Spirit",
+      "Warlock",
+      "Weaver",
+      "Windranger",
+      "Winter Wyvern",
+      "Witch Doctor",
+      "Wraith King",
+      "Zeus"
     ];
 
     const locations = [
@@ -242,7 +339,7 @@
         window.Telegram.WebApp.expand();
       }
     } catch (error) {
-      console.log("Telegram API не подключён", error);
+      console.log("Telegram WebApp не подключён", error);
     }
 
     function randomItem(items) {
@@ -264,16 +361,16 @@
 
     function escapeHtml(value) {
       return String(value)
-        .replace(/&/g, "&")
-        .replace(/</g, "<")
-        .replace(/>/g, ">")
-        .replace(/"/g, """)
-        .replace(/'/g, "'");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
     function haptic() {
       try {
-        const tg = window.Telegram.WebApp;
+        const tg = window.Telegram && window.Telegram.WebApp;
 
         if (tg && tg.HapticFeedback) {
           tg.HapticFeedback.impactOccurred("medium");
@@ -292,6 +389,7 @@
 
           <div class="card">
             <h2>Игра на одном устройстве</h2>
+
             <p class="muted">
               Настрой количество игроков, раздай роли по очереди и передавай телефон.
             </p>
@@ -310,9 +408,11 @@
 
           <div class="card">
             <h2>Как играть</h2>
+
             <p class="muted small">
-              Игрок удерживает кнопку, запоминает роль, отпускает кнопку и передаёт телефон следующему.
-              Обычные игроки знают героя и локацию. Шпион знает только то, что он шпион.
+              Игрок удерживает кнопку, запоминает роль, отпускает кнопку
+              и передаёт телефон следующему. Мирные знают героя и локацию.
+              Шпионы знают только, что они шпионы.
             </p>
           </div>
         </div>
@@ -336,15 +436,13 @@
         indexes.push(i);
       }
 
-      const spyIndexes = shuffle(indexes).slice(0, spiesCount);
-
       game = {
         playersCount: playersCount,
         spiesCount: spiesCount,
         minutes: minutes,
         hero: randomItem(heroes),
         location: randomItem(locations),
-        spyIndexes: spyIndexes,
+        spyIndexes: shuffle(indexes).slice(0, spiesCount),
         currentPlayer: 0
       };
 
@@ -388,8 +486,14 @@
       const roleButton = document.getElementById("roleButton");
       const nextButton = document.getElementById("nextButton");
       let roleWasShown = false;
+      let roleVisible = false;
 
       function showRole() {
+        if (roleVisible) {
+          return;
+        }
+
+        roleVisible = true;
         roleButton.classList.add("open");
 
         if (isSpy) {
@@ -407,9 +511,15 @@
       }
 
       function hideRole() {
+        if (!roleVisible) {
+          return;
+        }
+
+        roleVisible = false;
+        roleWasShown = true;
+
         roleButton.classList.remove("open");
         roleButton.innerHTML = "Нажми и удерживай,<br>чтобы увидеть роль";
-        roleWasShown = true;
         nextButton.disabled = false;
       }
 
@@ -454,6 +564,7 @@
 
           <div class="card">
             <h2>Обсуждение</h2>
+
             <p class="muted">
               Задавайте вопросы друг другу. Не называйте героя и локацию прямо.
             </p>
@@ -482,6 +593,10 @@
           return;
         }
 
+        if (seconds <= 0) {
+          return;
+        }
+
         running = true;
         timerButton.textContent = "⏸️ Пауза";
 
@@ -491,6 +606,7 @@
 
           if (seconds <= 0) {
             clearInterval(timerId);
+            running = false;
             timer.classList.add("finished");
             timerButton.disabled = true;
             haptic();
@@ -527,6 +643,7 @@
 
           <div class="card">
             <h2>Герой и локация</h2>
+
             <div class="result">
               <div class="role-icon">🛡️</div>
               <h2>${escapeHtml(game.hero)}</h2>
@@ -536,6 +653,7 @@
 
           <div class="card">
             <h2>Шпионы</h2>
+
             <div class="result">
               <div class="role-icon">🕵️</div>
               <p><b>${spies}</b></p>
@@ -548,6 +666,7 @@
       `;
 
       document.getElementById("newGameButton").addEventListener("click", function() {
+        game = null;
         renderHome();
       });
 
