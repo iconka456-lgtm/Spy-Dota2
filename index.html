@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#111111">
   <title>Spy: Dota 2</title>
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -48,7 +48,8 @@ const tg = window.Telegram?.WebApp;
 tg?.ready();
 tg?.expand();
 
-const supabase = window.supabase.createClient(
+const { createClient } = supabase;
+const supabaseClient = createClient(
   'https://hyvcpcwoxxcuhjgrhars.supabase.co',
   'sb_publishable_EPkobMICKNonO148D6QmHA_8I6gJdPy'
 );
@@ -167,7 +168,7 @@ function home(){
   state = null;
   roomData = null;
   me = null;
-  if(channel) supabase.removeChannel(channel);
+  if(channel) supabaseClient.removeChannel(channel);
   channel = null;
   localStorage.removeItem('spyDotaOnline');
 
@@ -195,7 +196,7 @@ async function createRoom(){
   const location = locations[Math.floor(Math.random()*locations.length)];
 
   try{
-    const {data: room, error} = await supabase.from('rooms').insert({
+    const {data: room, error} = await supabaseClient.from('rooms').insert({
       code: roomCode,
       host_telegram_id: user.id,
       players_count: 5,
@@ -208,7 +209,7 @@ async function createRoom(){
 
     if(error) throw error;
 
-    const {data: player, error: pError} = await supabase.from('room_players').insert({
+    const {data: player, error: pError} = await supabaseClient.from('room_players').insert({
       room_id: room.id,
       telegram_id: user.id,
       player_number:0,
@@ -223,7 +224,8 @@ async function createRoom(){
     await loadRoom();
   }catch(e){
     console.error(e);
-    showError('Не удалось создать комнату:\\n' + e.message);
+    showError('Не удалось создать комнату:\
+' + e.message);
   }
 }
 
@@ -239,7 +241,7 @@ async function joinRoom(){
   const user = tgUser();
 
   try{
-    const {data: room, error} = await supabase
+    const {data: room, error} = await supabaseClient
       .from('rooms')
       .select('*')
       .eq('code', roomCode)
@@ -249,7 +251,7 @@ async function joinRoom(){
     if(!room) throw new Error('Комната не найдена');
     if(room.status !== 'waiting') throw new Error('Игра в этой комнате уже началась');
 
-    const {data: oldPlayer} = await supabase
+    const {data: oldPlayer} = await supabaseClient
       .from('room_players')
       .select('*')
       .eq('room_id', room.id)
@@ -259,7 +261,7 @@ async function joinRoom(){
     let player = oldPlayer;
 
     if(!player){
-      const {count, error: countError} = await supabase
+      const {count, error: countError} = await supabaseClient
         .from('room_players')
         .select('*', {count:'exact', head:true})
         .eq('room_id', room.id);
@@ -267,7 +269,7 @@ async function joinRoom(){
       if(countError) throw countError;
       if((count || 0) >= room.players_count) throw new Error('Комната заполнена');
 
-      const {data:p, error:pError} = await supabase.from('room_players').insert({
+      const {data:p, error:pError} = await supabaseClient.from('room_players').insert({
         room_id: room.id,
         telegram_id: user.id,
         player_number: count || 0,
@@ -291,7 +293,7 @@ async function joinRoom(){
 async function loadRoom(){
   if(!state?.roomId) return home();
 
-  const {data:room, error} = await supabase
+  const {data:room, error} = await supabaseClient
     .from('rooms')
     .select('*')
     .eq('id', state.roomId)
@@ -300,7 +302,7 @@ async function loadRoom(){
   if(error) return showError(error.message);
   roomData = room;
 
-  const {data:players, error:pError} = await supabase
+  const {data:players, error:pError} = await supabaseClient
     .from('room_players')
     .select('*')
     .eq('room_id', room.id)
@@ -316,9 +318,9 @@ async function loadRoom(){
 }
 
 function subscribe(roomId){
-  if(channel) supabase.removeChannel(channel);
+  if(channel) supabaseClient.removeChannel(channel);
 
-  channel = supabase
+  channel = supabaseClient
     .channel('spy-room-' + roomId)
     .on('postgres_changes',
       {event:'*',schema:'public',table:'rooms',filter:'id=eq.' + roomId},
@@ -334,7 +336,7 @@ function subscribe(roomId){
 async function startGame(){
   if(!state?.isHost) return;
 
-  const {data:players, error} = await supabase
+  const {data:players, error} = await supabaseClient
     .from('room_players')
     .select('*')
     .eq('room_id', state.roomId)
@@ -358,14 +360,14 @@ async function startGame(){
   const spies = new Set(indexes.slice(0, spyCount));
 
   for(let i=0;i<players.length;i++){
-    const {error:e} = await supabase
+    const {error:e} = await supabaseClient
       .from('room_players')
       .update({is_spy:spies.has(i)})
       .eq('id',players[i].id);
     if(e) return alert(e.message);
   }
 
-  const {error:e} = await supabase
+  const {error:e} = await supabaseClient
     .from('rooms')
     .update({status:'playing', current_player:0})
     .eq('id',state.roomId);
@@ -386,7 +388,7 @@ function render(){
 }
 
 async function renderWaiting(){
-  const {data:players} = await supabase
+  const {data:players} = await supabaseClient
     .from('room_players')
     .select('*')
     .eq('room_id', roomData.id)
@@ -421,7 +423,7 @@ async function renderWaiting(){
 }
 
 async function renderPlaying(){
-  const {data:players} = await supabase
+  const {data:players} = await supabaseClient
     .from('room_players')
     .select('*')
     .eq('room_id', roomData.id)
@@ -464,7 +466,7 @@ async function renderPlaying(){
 async function finishGame(){
   if(!state?.isHost) return alert('Закончить раунд может ведущий.');
 
-  const {error} = await supabase
+  const {error} = await supabaseClient
     .from('rooms')
     .update({status:'finished'})
     .eq('id',state.roomId);
