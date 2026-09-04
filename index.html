@@ -3,720 +3,204 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#101010">
   <title>Dota2SpyForSolin</title>
+
+  <script>
+    window.addEventListener("error", function(event) {
+      document.addEventListener("DOMContentLoaded", function() {
+        var app = document.getElementById("app");
+
+        if (app) {
+          app.innerHTML =
+            "<div style='font-family:Arial;padding:20px;color:white;background:#101010;min-height:100vh'>" +
+            "<h2>Ошибка JavaScript</h2>" +
+            "<pre style='white-space:pre-wrap;color:#ff7777'>" +
+            String(event.message) +
+            "
+Строка: " + event.lineno +
+            "
+Файл: " + event.filename +
+            "</pre>" +
+            "</div>";
+        }
+      });
+    });
+
+    window.addEventListener("unhandledrejection", function(event) {
+      var app = document.getElementById("app");
+
+      if (app) {
+        app.innerHTML =
+          "<div style='font-family:Arial;padding:20px;color:white;background:#101010;min-height:100vh'>" +
+          "<h2>Ошибка загрузки</h2>" +
+          "<pre style='white-space:pre-wrap;color:#ff7777'>" +
+          String(event.reason?.message || event.reason || "Неизвестная ошибка") +
+          "</pre>" +
+          "</div>";
+      }
+    });
+  </script>
 
   <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    :root {
-      --bg: #101010;
-      --card: #1d1d1f;
-      --card2: #121212;
-      --line: #353535;
-      --text: #ffffff;
-      --muted: #9a9a9a;
-      --green: #76e5a2;
-      --yellow: #ffd166;
-      --red: #ff7b7b;
+    * {
+      box-sizing: border-box;
     }
-
-    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
+      color: white;
+      background: #101010;
+      font-family: Arial, sans-serif;
     }
-
-    button, input, select { font: inherit; }
-    button { cursor: pointer; }
 
     .wrap {
-      width: 100%;
-      max-width: 620px;
+      max-width: 600px;
       margin: 0 auto;
-      padding: 18px 14px 42px;
+      padding: 20px 15px;
     }
-
-    h1 {
-      font-size: 28px;
-      margin: 8px 0 18px;
-    }
-
-    h2 {
-      font-size: 21px;
-      margin: 0 0 10px;
-    }
-
-    p { line-height: 1.45; }
 
     .card {
-      margin: 12px 0;
-      padding: 17px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 18px;
+      padding: 18px;
+      margin-top: 14px;
+      border: 1px solid #393939;
+      border-radius: 16px;
+      background: #1d1d1f;
     }
-
-    .center { text-align: center; }
-    .muted { color: var(--muted); }
-    .small { font-size: 13px; }
-    .ok { color: var(--green); }
-    .warn { color: var(--yellow); }
-    .error { color: var(--red); white-space: pre-wrap; line-height: 1.45; }
-    .hidden { display: none !important; }
 
     .btn {
       width: 100%;
-      margin-top: 10px;
+      margin-top: 12px;
       padding: 15px;
       border: 0;
-      border-radius: 14px;
-      background: #ffffff;
-      color: #111111;
-      font-weight: 700;
+      border-radius: 12px;
+      color: #111;
+      background: white;
+      font-weight: bold;
     }
 
     .btn.alt {
-      background: #2b2b2f;
-      color: #ffffff;
+      color: white;
+      background: #333;
     }
 
-    .btn.danger {
-      background: #a83131;
-      color: #ffffff;
-    }
-
-    .btn:disabled {
-      opacity: 0.45;
-      cursor: default;
-    }
-
-    label {
-      display: block;
-      margin: 11px 0 5px;
-      color: #c6c6c6;
-      font-size: 14px;
-    }
-
-    input, select {
+    input {
       width: 100%;
+      margin-top: 8px;
       padding: 13px;
-      border: 1px solid #444;
-      border-radius: 12px;
-      outline: none;
-      background: #101010;
-      color: #ffffff;
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .code {
-      margin: 12px 0 18px;
-      font-size: 38px;
-      font-weight: 800;
-      letter-spacing: 7px;
-    }
-
-    .pill {
-      display: inline-block;
-      margin: 3px;
-      padding: 8px 11px;
-      border-radius: 999px;
-      background: #2a2a2d;
-      font-size: 14px;
-    }
-
-    .status {
-      margin-top: 12px;
-      padding: 11px 12px;
-      border-radius: 12px;
-      background: var(--card2);
-      color: #b8b8b8;
-      line-height: 1.4;
-    }
-
-    .players {
-      display: grid;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .player {
-      padding: 12px;
-      border-radius: 12px;
-      background: var(--card2);
-    }
-
-    .spy-choice {
-      display: block;
-      margin-top: 10px;
-      padding: 10px;
-      border: 1px solid #3d3d3d;
+      border: 1px solid #555;
       border-radius: 10px;
-      color: var(--yellow);
+      color: white;
+      background: #111;
     }
 
-    .spy-choice input {
-      width: auto;
-      margin-right: 8px;
-      vertical-align: middle;
+    .muted {
+      color: #aaa;
     }
 
-    .role {
-      margin: 14px 0;
-      font-size: 64px;
-    }
-
-    .secret {
-      margin: 15px 0;
-      padding: 16px;
-      border-radius: 14px;
-      background: var(--card2);
-    }
-
-    .hero-image {
-      display: block;
-      width: 140px;
-      height: 79px;
-      margin: 0 auto 12px;
-      border-radius: 10px;
-      object-fit: cover;
-      background: #000;
-    }
-
-    .hero-image.big {
-      width: 190px;
-      height: 107px;
+    .error {
+      color: #ff7777;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 
 <body>
-  <div id="app"></div>
+  <div id="app">
+    <div class="wrap">
+      <h1>🕵️ Dota2SpyForSolin</h1>
+      <div class="card">
+        Загрузка...
+      </div>
+    </div>
+  </div>
 
   <script>
-    const APP_NAME = "Dota2SpyForSolin";
+    var app = document.getElementById("app");
 
-    const SUPABASE_URL = "https://hyvcpcwoxxcuhjgrhars.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_EPkobMICKNonO148D6QmHA_8I6gJdPy";
-
-    const app = document.getElementById("app");
-
-    const heroes = [
-      "Abaddon", "Alchemist", "Ancient Apparition", "Anti-Mage", "Arc Warden",
-      "Axe", "Bane", "Batrider", "Beastmaster", "Bloodseeker", "Bounty Hunter",
-      "Brewmaster", "Bristleback", "Broodmother", "Centaur Warrunner",
-      "Chaos Knight", "Chen", "Clinkz", "Clockwerk", "Crystal Maiden",
-      "Dark Seer", "Dark Willow", "Dawnbreaker", "Dazzle", "Death Prophet",
-      "Disruptor", "Doom", "Dragon Knight", "Drow Ranger", "Earthshaker",
-      "Earth Spirit", "Elder Titan", "Ember Spirit", "Enchantress", "Enigma",
-      "Faceless Void", "Grimstroke", "Gyrocopter", "Hoodwink", "Huskar",
-      "Invoker", "Jakiro", "Juggernaut", "Keeper of the Light", "Kez", "Kunkka",
-      "Legion Commander", "Leshrac", "Lich", "Lifestealer", "Lina", "Lion",
-      "Lone Druid", "Luna", "Lycan", "Marci", "Magnus", "Mars", "Medusa",
-      "Meepo", "Mirana", "Monkey King", "Morphling", "Muerta", "Naga Siren",
-      "Nature's Prophet", "Necrophos", "Night Stalker", "Nyx Assassin",
-      "Ogre Magi", "Omniknight", "Oracle", "Outworld Destroyer", "Pangolier",
-      "Phantom Assassin", "Phantom Lancer", "Phoenix", "Primal Beast", "Puck",
-      "Pudge", "Pugna", "Queen of Pain", "Razor", "Riki", "Ringmaster",
-      "Rubick", "Sand King", "Shadow Demon", "Shadow Fiend", "Shadow Shaman",
-      "Silencer", "Skywrath Mage", "Slardar", "Slark", "Snapfire", "Sniper",
-      "Spectre", "Spirit Breaker", "Storm Spirit", "Sven", "Techies",
-      "Templar Assassin", "Terrorblade", "Tidehunter", "Timbersaw", "Tinker",
-      "Tiny", "Treant Protector", "Troll Warlord", "Tusk", "Underlord",
-      "Undying", "Ursa", "Vengeful Spirit", "Venomancer", "Viper", "Visage",
-      "Void Spirit", "Warlock", "Weaver", "Windranger", "Winter Wyvern",
-      "Witch Doctor", "Wraith King", "Zeus"
-    ];
-
-    const locations = [
-      "Таверна",
-      "Рошанова яма",
-      "Мид-лейн",
-      "Лес Radiant",
-      "Лес Dire",
-      "Фонтан Radiant",
-      "Фонтан Dire",
-      "Секретный магазин",
-      "Лагерь Древних"
-    ];
-
-    const heroSlugs = {
-      "Abaddon":"abaddon",
-      "Alchemist":"alchemist",
-      "Ancient Apparition":"ancient_apparition",
-      "Anti-Mage":"antimage",
-      "Arc Warden":"arc_warden",
-      "Axe":"axe",
-      "Bane":"bane",
-      "Batrider":"batrider",
-      "Beastmaster":"beastmaster",
-      "Bloodseeker":"bloodseeker",
-      "Bounty Hunter":"bounty_hunter",
-      "Brewmaster":"brewmaster",
-      "Bristleback":"bristleback",
-      "Broodmother":"broodmother",
-      "Centaur Warrunner":"centaur",
-      "Chaos Knight":"chaos_knight",
-      "Chen":"chen",
-      "Clinkz":"clinkz",
-      "Clockwerk":"rattletrap",
-      "Crystal Maiden":"crystal_maiden",
-      "Dark Seer":"dark_seer",
-      "Dark Willow":"dark_willow",
-      "Dawnbreaker":"dawnbreaker",
-      "Dazzle":"dazzle",
-      "Death Prophet":"death_prophet",
-      "Disruptor":"disruptor",
-      "Doom":"doom_bringer",
-      "Dragon Knight":"dragon_knight",
-      "Drow Ranger":"drow_ranger",
-      "Earthshaker":"earthshaker",
-      "Earth Spirit":"earth_spirit",
-      "Elder Titan":"elder_titan",
-      "Ember Spirit":"ember_spirit",
-      "Enchantress":"enchantress",
-      "Enigma":"enigma",
-      "Faceless Void":"faceless_void",
-      "Grimstroke":"grimstroke",
-      "Gyrocopter":"gyrocopter",
-      "Hoodwink":"hoodwink",
-      "Huskar":"huskar",
-      "Invoker":"invoker",
-      "Jakiro":"jakiro",
-      "Juggernaut":"juggernaut",
-      "Keeper of the Light":"keeper_of_the_light",
-      "Kez":"kez",
-      "Kunkka":"kunkka",
-      "Legion Commander":"legion_commander",
-      "Leshrac":"leshrac",
-      "Lich":"lich",
-      "Lifestealer":"life_stealer",
-      "Lina":"lina",
-      "Lion":"lion",
-      "Lone Druid":"lone_druid",
-      "Luna":"luna",
-      "Lycan":"lycan",
-      "Marci":"marci",
-      "Magnus":"magnataur",
-      "Mars":"mars",
-      "Medusa":"medusa",
-      "Meepo":"meepo",
-      "Mirana":"mirana",
-      "Monkey King":"monkey_king",
-      "Morphling":"morphling",
-      "Muerta":"muerta",
-      "Naga Siren":"naga_siren",
-      "Nature's Prophet":"furion",
-      "Necrophos":"necrolyte",
-      "Night Stalker":"night_stalker",
-      "Nyx Assassin":"nyx_assassin",
-      "Ogre Magi":"ogre_magi",
-      "Omniknight":"omniknight",
-      "Oracle":"oracle",
-      "Outworld Destroyer":"obsidian_destroyer",
-      "Pangolier":"pangolier",
-      "Phantom Assassin":"phantom_assassin",
-      "Phantom Lancer":"phantom_lancer",
-      "Phoenix":"phoenix",
-      "Primal Beast":"primal_beast",
-      "Puck":"puck",
-      "Pudge":"pudge",
-      "Pugna":"pugna",
-      "Queen of Pain":"queenofpain",
-      "Razor":"razor",
-      "Riki":"riki",
-      "Ringmaster":"ringmaster",
-      "Rubick":"rubick",
-      "Sand King":"sand_king",
-      "Shadow Demon":"shadow_demon",
-      "Shadow Fiend":"nevermore",
-      "Shadow Shaman":"shadow_shaman",
-      "Silencer":"silencer",
-      "Skywrath Mage":"skywrath_mage",
-      "Slardar":"slardar",
-      "Slark":"slark",
-      "Snapfire":"snapfire",
-      "Sniper":"sniper",
-      "Spectre":"spectre",
-      "Spirit Breaker":"spirit_breaker",
-      "Storm Spirit":"storm_spirit",
-      "Sven":"sven",
-      "Techies":"techies",
-      "Templar Assassin":"templar_assassin",
-      "Terrorblade":"terrorblade",
-      "Tidehunter":"tidehunter",
-      "Timbersaw":"timbersaw",
-      "Tinker":"tinker",
-      "Tiny":"tiny",
-      "Treant Protector":"treant",
-      "Troll Warlord":"troll_warlord",
-      "Tusk":"tusk",
-      "Underlord":"abyssal_underlord",
-      "Undying":"undying",
-      "Ursa":"ursa",
-      "Vengeful Spirit":"vengefulspirit",
-      "Venomancer":"venomancer",
-      "Viper":"viper",
-      "Visage":"visage",
-      "Void Spirit":"void_spirit",
-      "Warlock":"warlock",
-      "Weaver":"weaver",
-      "Windranger":"windrunner",
-      "Winter Wyvern":"winter_wyvern",
-      "Witch Doctor":"witch_doctor",
-      "Wraith King":"skeleton_king",
-      "Zeus":"zuus"
-    };
-
-    let tg = null;
-    try {
-      tg = window.Telegram?.WebApp || null;
-      tg?.ready();
-      tg?.expand();
-    } catch (error) {}
-
-    if (!window.supabase?.createClient) {
-      app.innerHTML = `
-        <div class="wrap">
-          <h1>🕵️ ${APP_NAME}</h1>
-          <div class="card">
-            <h2>Не удалось загрузить игру</h2>
-            <div class="error">Supabase не загрузился. Полностью закрой Telegram, открой снова и повтори попытку.</div>
-          </div>
-        </div>
-      `;
-    } else {
-      startGameApp();
+    function screenError(text) {
+      app.innerHTML =
+        "<div class='wrap'>" +
+        "<h1>🕵️ Dota2SpyForSolin</h1>" +
+        "<div class='card'>" +
+        "<h2>Ошибка</h2>" +
+        "<div class='error'>" + String(text).replace(/</g, "&lt;") + "</div>" +
+        "</div>" +
+        "</div>";
     }
 
-    function startGameApp() {
-      const { createClient } = window.supabase;
-
-      const db = createClient(SUPABASE_URL, SUPABASE_KEY, {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false
-        }
-      });
-
-      let state = getSavedState();
-      let room = null;
-      let players = [];
-      let me = null;
-      let channel = null;
-      let busy = false;
-      let refreshTimer = null;
-
-      function getSavedState() {
-        try {
-          return JSON.parse(localStorage.getItem("dota2spy_state") || "null");
-        } catch {
-          return null;
-        }
+    try {
+      if (!window.supabase || !window.supabase.createClient) {
+        throw new Error(
+          "Supabase не загрузился. Проверь интернет, затем полностью закрой Telegram и открой приложение снова."
+        );
       }
 
-      function saveState() {
-        localStorage.setItem("dota2spy_state", JSON.stringify(state));
-      }
+      var SUPABASE_URL = "https://hyvcpcwoxxcuhjgrhars.supabase.co";
+      var SUPABASE_KEY = "sb_publishable_EPkobMICKNonO148D6QmHA_8I6gJdPy";
 
-      function clearState() {
-        localStorage.removeItem("dota2spy_state");
-      }
-
-      function esc(value) {
-        return String(value ?? "").replace(/[&<>"']/g, char => ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#039;"
-        }[char]));
-      }
-
-      function randomItem(array) {
-        return array[Math.floor(Math.random() * array.length)];
-      }
-
-      function roomCode() {
-        return Math.random().toString(36).slice(2, 8).toUpperCase();
-      }
-
-      function heroImage(hero) {
-        const slug = heroSlugs[hero];
-        return slug
-          ? "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/" + slug + ".png"
-          : "";
-      }
-
-      function identity() {
-        const telegramUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
-
-        if (telegramUser?.id) {
-          return {
-            id: Number(telegramUser.id),
-            name: telegramUser.first_name || telegramUser.username || "Игрок"
-          };
-        }
-
-        let guestId = localStorage.getItem("dota2spy_guest_id");
-
-        if (!guestId) {
-          guestId = "8" + Date.now().toString() + Math.floor(Math.random() * 100000).toString();
-          localStorage.setItem("dota2spy_guest_id", guestId);
-        }
-
-        return {
-          id: Number(guestId),
-          name: "Гость"
-        };
-      }
-
-      function showError(message) {
-        app.innerHTML = `
-          <div class="wrap">
-            <h1>🕵️ ${APP_NAME}</h1>
-            <div class="card">
-              <h2>Ошибка</h2>
-              <div class="error">${esc(message)}</div>
-              <button class="btn" onclick="goHome()">На главную</button>
-            </div>
-          </div>
-        `;
-      }
-
-      function goHome() {
-        clearTimeout(refreshTimer);
-
-        if (channel) {
-          db.removeChannel(channel);
-          channel = null;
-        }
-
-        state = null;
-        room = null;
-        players = [];
-        me = null;
-        clearState();
-        renderHome();
-      }
-
-      function renderHome() {
-        app.innerHTML = `
-          <div class="wrap">
-            <h1>🕵️ ${APP_NAME}</h1>
-
-            <div class="card">
-              <h2>Создать комнату</h2>
-              <p class="muted">Создай комнату и отправь друзьям код.</p>
-
-              <label>Режим игры</label>
-              <select id="roomMode" onchange="toggleHostMode()">
-                <option value="random">🎲 Случайный режим</option>
-                <option value="host">🎙️ Режим с ведущим</option>
-              </select>
-
-              <div class="row">
-                <div>
-                  <label>Игроков</label>
-                  <input id="playersCount" type="number" min="3" max="10" value="5">
-                </div>
-
-                <div>
-                  <label>Шпионов</label>
-                  <input id="spiesCount" type="number" min="1" max="4" value="1">
-                </div>
-              </div>
-
-              <div id="hostOptions" class="hidden">
-                <label>Герой</label>
-                <select id="selectedHero">
-                  ${heroes.map(hero => `<option value="${esc(hero)}">${esc(hero)}</option>`).join("")}
-                </select>
-
-                <label>Локация</label>
-                <select id="selectedLocation">
-                  ${locations.map(location => `<option value="${esc(location)}">${esc(location)}</option>`).join("")}
-                </select>
-
-                <div class="status small">
-                  Ведущий выбирает героя и локацию сейчас, а игрока-шпиона — перед стартом.
-                </div>
-              </div>
-
-              <button class="btn" onclick="createRoom()">🎮 Создать комнату</button>
-            </div>
-
-            <div class="card">
-              <h2>Войти в комнату</h2>
-              <input id="joinCode" maxlength="6" placeholder="Код комнаты" autocomplete="off">
-              <button class="btn alt" onclick="joinRoom()">🚪 Войти</button>
-            </div>
-          </div>
-        `;
-      }
-
-      function toggleHostMode() {
-        const mode = document.getElementById("roomMode")?.value || "random";
-        document.getElementById("hostOptions")?.classList.toggle("hidden", mode !== "host");
-      }
-
-      async function createRoom() {
-        if (busy) return;
-
-        busy = true;
-
-        try {
-          const current = identity();
-          const mode = document.getElementById("roomMode")?.value || "random";
-
-          const wantedPlayers = Number(document.getElementById("playersCount")?.value || 5);
-          const wantedSpies = Number(document.getElementById("spiesCount")?.value || 1);
-
-          const playersCount = Math.max(3, Math.min(10, wantedPlayers));
-          const spiesCount = Math.max(1, Math.min(playersCount - 1, wantedSpies));
-
-          const hero = mode === "host"
-            ? (document.getElementById("selectedHero")?.value || heroes[0])
-            : randomItem(heroes);
-
-          const location = mode === "host"
-            ? (document.getElementById("selectedLocation")?.value || locations[0])
-            : randomItem(locations);
-
-          let newRoom = null;
-          let lastError = null;
-
-          for (let attempt = 0; attempt < 5; attempt++) {
-            const result = await db
-              .from("rooms")
-              .insert({
-                code: roomCode(),
-                host_telegram_id: current.id,
-                players_count: playersCount,
-                spies_count: spiesCount,
-                hero: hero,
-                location: location,
-                mode: mode,
-                status: "waiting",
-                current_player: 0
-              })
-              .select()
-              .single();
-
-            if (!result.error) {
-              newRoom = result.data;
-              break;
-            }
-
-            lastError = result.error;
+      var db = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY,
+        {
+          auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+            detectSessionInUrl: false
           }
-
-          if (!newRoom) {
-            throw lastError || new Error("Не удалось создать комнату");
-          }
-
-          const playerResult = await db
-            .from("room_players")
-            .insert({
-              room_id: newRoom.id,
-              telegram_id: current.id,
-              player_number: 0,
-              is_spy: false
-            })
-            .select()
-            .single();
-
-          if (playerResult.error) throw playerResult.error;
-
-          state = {
-            roomId: newRoom.id,
-            roomCode: newRoom.code,
-            userId: current.id,
-            isHost: true
-          };
-
-          room = newRoom;
-          players = [playerResult.data];
-          me = playerResult.data;
-
-          saveState();
-          subscribe(newRoom.id);
-          renderRoom();
-        } catch (error) {
-          console.error(error);
-          showError("Не удалось создать комнату:
-" + (error.message || "Неизвестная ошибка"));
-        } finally {
-          busy = false;
         }
-      }
+      );
 
-      async function joinRoom() {
-        if (busy) return;
-
-        const code = (document.getElementById("joinCode")?.value || "").trim().toUpperCase();
-
-        if (code.length < 4) {
-          alert("Введи код комнаты");
-          return;
+      try {
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.ready();
+          window.Telegram.WebApp.expand();
         }
+      } catch (telegramError) {}
 
-        busy = true;
+      app.innerHTML =
+        "<div class='wrap'>" +
+        "<h1>🕵️ Dota2SpyForSolin</h1>" +
+        "<div class='card'>" +
+        "<h2 class='muted'>Приложение загрузилось</h2>" +
+        "<p>Если ты видишь этот экран — чёрный экран исправлен.</p>" +
+        "<input id='testCode' placeholder='Тестовый код комнаты'>" +
+        "<button class='btn' onclick='testSupabase()'>Проверить подключение к Supabase</button>" +
+        "<div id='result' class='muted' style='margin-top:12px'></div>" +
+        "</div>" +
+        "</div>";
+
+      window.testSupabase = async function() {
+        var result = document.getElementById("result");
+        result.textContent = "Проверяю подключение...";
 
         try {
-          const current = identity();
-
-          const roomResult = await db
+          var response = await db
             .from("rooms")
-            .select("*")
-            .eq("code", code)
-            .maybeSingle();
+            .select("id")
+            .limit(1);
 
-          if (roomResult.error) throw roomResult.error;
-          if (!roomResult.data) throw new Error("Комната не найдена");
-
-          const foundRoom = roomResult.data;
-
-          if (foundRoom.status !== "waiting") {
-            throw new Error("Игра в этой комнате уже началась");
+          if (response.error) {
+            throw response.error;
           }
 
-          const listResult = await db
-            .from("room_players")
-            .select("*")
-            .eq("room_id", foundRoom.id)
-            .order("player_number");
+          result.innerHTML =
+            "<span style='color:#76e5a2'>✅ Supabase подключён. Таблица rooms доступна.</span>";
+        } catch (error) {
+          result.innerHTML =
+            "<span style='color:#ff7777'>❌ Ошибка Supabase: " +
+            String(error.message || error) +
+            "</span>";
+        }
+      };
 
-          if (listResult.error) throw listResult.error;
-
-          let currentPlayers = listResult.data || [];
-
-          const existingPlayer = currentPlayers.find(
-            player => Number(player.telegram_id) === Number(current.id)
-          );
-
-          let joinedPlayer = existingPlayer;
-
-          if (!joinedPlayer) {
-            if (currentPlayers.length >= Number(foundRoom.players_count)) {
-              throw new Error("Комната уже заполнена");
-            }
-
-            const playerResult = await db
-              .from("room_players")
-              .insert({
-                room_id: foundRoom.id,
-                telegram_id: current.id,
-                player_number: currentPlayers.length,
-           
+    } catch (error) {
+      console.error(error);
+      screenError(error.message || error);
+    }
+  </script>
+</body>
+</html>
