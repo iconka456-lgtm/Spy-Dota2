@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#111111">
-  <title>Dota2SpyForSolin</title>
+  <title>Spy: Dota 2</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -37,24 +37,18 @@
     .error{color:#ff7676;white-space:pre-wrap}
     .ok{color:#7ee787}
     .divider{height:1px;background:#333;margin:18px 0}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .small{font-size:13px}
-    .hidden{display:none}
   </style>
 </head>
+
 <body>
 <div id="app"></div>
 
 <script>
-let tg = window.Telegram?.WebApp || null;
-try { tg?.ready(); tg?.expand(); } catch(e) {}
+const tg = window.Telegram?.WebApp;
+tg?.ready();
+tg?.expand();
 
-const supabaseApi = window.supabase;
-if (!supabaseApi?.createClient) {
-  document.getElementById('app').innerHTML = `<div class="wrap"><h1>Dota2SpyForSolin</h1><div class="card"><div class="error">Supabase не загрузился. Проверь интернет и CDN.</div></div></div>`;
-  throw new Error('Supabase CDN not loaded');
-}
-const { createClient } = supabaseApi;
+const { createClient } = supabase;
 const supabaseClient = createClient(
   'https://hyvcpcwoxxcuhjgrhars.supabase.co',
   'sb_publishable_EPkobMICKNonO148D6QmHA_8I6gJdPy'
@@ -120,7 +114,10 @@ const heroSlugs = {
   "Witch Doctor":"witch_doctor","Wraith King":"skeleton_king","Zeus":"zuus"
 };
 
-const locations = ["Таверна","Рошанова яма","Мид-лейн","Лес Radiant","Лес Dire","Фонтан Radiant","Фонтан Dire","Секретный магазин","Лагерь Древних"];
+const locations = [
+  "Таверна","Рошанова яма","Мид-лейн","Лес Radiant","Лес Dire",
+  "Фонтан Radiant","Фонтан Dire","Секретный магазин","Лагерь Древних"
+];
 
 const app = document.getElementById('app');
 
@@ -128,30 +125,37 @@ let state = JSON.parse(localStorage.spyDotaOnline || 'null');
 let roomData = null;
 let me = null;
 let channel = null;
-let roomPlayersCache = [];
-let lastRenderKey = '';
 
 function tgUser(){
-  const u = window.Telegram?.WebApp?.initDataUnsafe?.user;
-  if(!u?.id) return null;
-  return { id:Number(u.id), username:u.username || '', first_name:u.first_name || 'Игрок' };
+  const u = tg?.initDataUnsafe?.user;
+  return {
+    id: Number(u?.id || ('9' + Date.now())),
+    username: u?.username || '',
+    first_name: u?.first_name || 'Игрок'
+  };
 }
 
-function save(){ localStorage.spyDotaOnline = JSON.stringify(state); }
+function save(){
+  localStorage.spyDotaOnline = JSON.stringify(state);
+}
 
 function img(hero){
   return 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/' + heroSlugs[hero] + '.png';
 }
 
 function esc(s){
-  return String(s ?? '').replace(/[&<>"']/g, x => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[x]));
+  return String(s ?? '').replace(/[&<>"']/g, x => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+  }[x]));
 }
 
-function code(){ return Math.random().toString(36).slice(2,8).toUpperCase(); }
+function code(){
+  return Math.random().toString(36).slice(2,8).toUpperCase();
+}
 
 function showError(message){
   app.innerHTML = `<div class="wrap">
-    <h1>Dota2SpyForSolin</h1>
+    <h1>Spy: Dota 2</h1>
     <div class="card">
       <h2>Ошибка</h2>
       <div class="error">${esc(message)}</div>
@@ -164,50 +168,16 @@ function home(){
   state = null;
   roomData = null;
   me = null;
-  roomPlayersCache = [];
-  lastRenderKey = '';
   if(channel) supabaseClient.removeChannel(channel);
   channel = null;
   localStorage.removeItem('spyDotaOnline');
-  buildHome();
-  setupCreateForm();
-}
 
-function buildHome(){
   app.innerHTML = `<div class="wrap">
-    <h1>🕵️ Dota2SpyForSolin</h1>
+    <h1>🕵️ Spy: Dota 2</h1>
 
     <div class="card">
       <h2>Создать комнату</h2>
       <p class="muted">Ты создаёшь комнату и отправляешь код друзьям.</p>
-
-      <label>Режим игры</label>
-      <select id="roomMode" onchange="setupCreateForm()">
-        <option value="random">Случайный</option>
-        <option value="host">С ведущим</option>
-      </select>
-
-      <div id="hostOptions" class="hidden">
-        <label>Герой</label>
-        <select id="heroPick">${heroes.map(h=>`<option value="${esc(h)}">${esc(h)}</option>`).join('')}</select>
-
-        <label>Локация</label>
-        <select id="locationPick">${locations.map(l=>`<option value="${esc(l)}">${esc(l)}</option>`).join('')}</select>
-
-        <div class="row">
-          <div>
-            <label>Шпионов</label>
-            <input id="spiesCount" type="number" min="1" max="4" value="1">
-          </div>
-          <div>
-            <label>Игроков</label>
-            <input id="playersCount" type="number" min="3" max="10" value="5">
-          </div>
-        </div>
-
-        <p class="small muted">В режиме ведущего он сам задаёт героя, локацию и число шпионов.</p>
-      </div>
-
       <button class="btn" onclick="createRoom()">🎮 Создать комнату</button>
     </div>
 
@@ -217,38 +187,26 @@ function buildHome(){
       <button class="btn alt" onclick="joinRoom()">🚪 Войти</button>
     </div>
   </div>`;
-  window.setupCreateForm = setupCreateForm;
-}
-
-function setupCreateForm(){
-  const mode = document.getElementById('roomMode')?.value || 'random';
-  const hostOptions = document.getElementById('hostOptions');
-  if(hostOptions) hostOptions.style.display = mode === 'host' ? 'block' : 'none';
 }
 
 async function createRoom(){
   const user = tgUser();
-  if(!user) return showError('Открой мини-приложение внутри Telegram, чтобы получить данные пользователя.');
-
   const roomCode = code();
-  const mode = document.getElementById('roomMode')?.value || 'random';
-  const hero = mode === 'host' ? (document.getElementById('heroPick')?.value || heroes[0]) : heroes[Math.floor(Math.random()*heroes.length)];
-  const location = mode === 'host' ? (document.getElementById('locationPick')?.value || locations[0]) : locations[Math.floor(Math.random()*locations.length)];
-  const spiesCount = Number(document.getElementById('spiesCount')?.value || 1);
-  const playersCount = Number(document.getElementById('playersCount')?.value || 5);
+  const hero = heroes[Math.floor(Math.random()*heroes.length)];
+  const location = locations[Math.floor(Math.random()*locations.length)];
 
   try{
     const {data: room, error} = await supabaseClient.from('rooms').insert({
       code: roomCode,
       host_telegram_id: user.id,
-      players_count: playersCount,
-      spies_count: spiesCount,
+      players_count: 5,
+      spies_count: 1,
       hero,
       location,
-      mode,
       status:'waiting',
       current_player:0
     }).select().single();
+
     if(error) throw error;
 
     const {data: player, error: pError} = await supabaseClient.from('room_players').insert({
@@ -257,6 +215,7 @@ async function createRoom(){
       player_number:0,
       is_spy:false
     }).select().single();
+
     if(pError) throw pError;
 
     state = {roomId:room.id, roomCode:room.code, userId:user.id, isHost:true};
@@ -265,29 +224,48 @@ async function createRoom(){
     await loadRoom();
   }catch(e){
     console.error(e);
-    showError('Не удалось создать комнату:
+    showError('Не удалось создать комнату:\
 ' + e.message);
   }
 }
 
 async function joinRoom(){
-  const roomCode = (document.getElementById('joinCode')?.value || '').trim().toUpperCase();
-  if(roomCode.length < 4) return alert('Введи код комнаты');
+  const input = document.getElementById('joinCode');
+  const roomCode = (input?.value || '').trim().toUpperCase();
+
+  if(roomCode.length < 4){
+    alert('Введи код комнаты');
+    return;
+  }
 
   const user = tgUser();
-  if(!user) return showError('Открой мини-приложение внутри Telegram, чтобы получить данные пользователя.');
 
   try{
-    const {data: room, error} = await supabaseClient.from('rooms').select('*').eq('code', roomCode).maybeSingle();
+    const {data: room, error} = await supabaseClient
+      .from('rooms')
+      .select('*')
+      .eq('code', roomCode)
+      .maybeSingle();
+
     if(error) throw error;
     if(!room) throw new Error('Комната не найдена');
     if(room.status !== 'waiting') throw new Error('Игра в этой комнате уже началась');
 
-    const {data: oldPlayer} = await supabaseClient.from('room_players').select('*').eq('room_id', room.id).eq('telegram_id', user.id).maybeSingle();
+    const {data: oldPlayer} = await supabaseClient
+      .from('room_players')
+      .select('*')
+      .eq('room_id', room.id)
+      .eq('telegram_id', user.id)
+      .maybeSingle();
+
     let player = oldPlayer;
 
     if(!player){
-      const {count, error: countError} = await supabaseClient.from('room_players').select('*', {count:'exact', head:true}).eq('room_id', room.id);
+      const {count, error: countError} = await supabaseClient
+        .from('room_players')
+        .select('*', {count:'exact', head:true})
+        .eq('room_id', room.id);
+
       if(countError) throw countError;
       if((count || 0) >= room.players_count) throw new Error('Комната заполнена');
 
@@ -297,6 +275,7 @@ async function joinRoom(){
         player_number: count || 0,
         is_spy:false
       }).select().single();
+
       if(pError) throw pError;
       player = p;
     }
@@ -314,15 +293,24 @@ async function joinRoom(){
 async function loadRoom(){
   if(!state?.roomId) return home();
 
-  const {data:room, error} = await supabaseClient.from('rooms').select('*').eq('id', state.roomId).single();
+  const {data:room, error} = await supabaseClient
+    .from('rooms')
+    .select('*')
+    .eq('id', state.roomId)
+    .single();
+
   if(error) return showError(error.message);
   roomData = room;
 
-  const {data:players, error:pError} = await supabaseClient.from('room_players').select('*').eq('room_id', room.id).order('player_number');
+  const {data:players, error:pError} = await supabaseClient
+    .from('room_players')
+    .select('*')
+    .eq('room_id', room.id)
+    .order('player_number');
+
   if(pError) return showError(pError.message);
 
-  roomPlayersCache = players || [];
-  me = roomPlayersCache.find(p => Number(p.telegram_id) === Number(state.userId)) || null;
+  me = players.find(p => Number(p.telegram_id) === Number(state.userId)) || null;
   if(!me) return showError('Твой игрок не найден');
 
   subscribe(room.id);
@@ -330,55 +318,30 @@ async function loadRoom(){
 }
 
 function subscribe(roomId){
-  if(channel) return;
+  if(channel) supabaseClient.removeChannel(channel);
 
   channel = supabaseClient
     .channel('spy-room-' + roomId)
-    .on('postgres_changes', {event:'UPDATE', schema:'public', table:'rooms', filter:'id=eq.' + roomId}, async () => { await loadRoom(); })
-    .on('postgres_changes', {event:'INSERT', schema:'public', table:'room_players', filter:'room_id=eq.' + roomId}, async () => { await loadRoom(); })
-    .on('postgres_changes', {event:'UPDATE', schema:'public', table:'room_players', filter:'room_id=eq.' + roomId}, async () => { await loadRoom(); })
-    .on('postgres_changes', {event:'DELETE', schema:'public', table:'room_players', filter:'room_id=eq.' + roomId}, async () => { await loadRoom(); })
+    .on('postgres_changes',
+      {event:'*',schema:'public',table:'rooms',filter:'id=eq.' + roomId},
+      async () => { await loadRoom(); }
+    )
+    .on('postgres_changes',
+      {event:'*',schema:'public',table:'room_players',filter:'room_id=eq.' + roomId},
+      async () => { await loadRoom(); }
+    )
     .subscribe();
-}
-
-function renderKey(){
-  return JSON.stringify({
-    status: roomData?.status || '',
-    code: roomData?.code || '',
-    mode: roomData?.mode || '',
-    hero: roomData?.hero || '',
-    location: roomData?.location || '',
-    spies_count: roomData?.spies_count || '',
-    players: roomPlayersCache.map(p => [p.id,p.telegram_id,p.player_number,p.is_spy]),
-    me: me ? [me.id, me.telegram_id, me.player_number, me.is_spy] : null
-  });
-}
-
-function render(){
-  if(!roomData) return home();
-  const key = renderKey();
-  if(key === lastRenderKey) return;
-  lastRenderKey = key;
-
-  if(roomData.status === 'waiting') return renderWaiting();
-  if(roomData.status === 'playing') return renderPlaying();
-  if(roomData.status === 'finished') return renderFinished();
-  renderWaiting();
-}
-
-function getSpyIndexes(count, spyCount){
-  const indexes = [...Array(count).keys()];
-  for(let i=indexes.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [indexes[i],indexes[j]]=[indexes[j],indexes[i]];
-  }
-  return new Set(indexes.slice(0, spyCount));
 }
 
 async function startGame(){
   if(!state?.isHost) return;
 
-  const {data:players, error} = await supabaseClient.from('room_players').select('*').eq('room_id', state.roomId).order('player_number');
+  const {data:players, error} = await supabaseClient
+    .from('room_players')
+    .select('*')
+    .eq('room_id', state.roomId)
+    .order('player_number');
+
   if(error) return alert(error.message);
 
   if(players.length < 3){
@@ -387,57 +350,89 @@ async function startGame(){
   }
 
   const spyCount = Math.min(Number(roomData.spies_count) || 1, players.length - 1);
-  const spies = getSpyIndexes(players.length, spyCount);
+  const indexes = [...Array(players.length).keys()];
+
+  for(let i=indexes.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [indexes[i],indexes[j]]=[indexes[j],indexes[i]];
+  }
+
+  const spies = new Set(indexes.slice(0, spyCount));
 
   for(let i=0;i<players.length;i++){
-    const {error:e} = await supabaseClient.from('room_players').update({is_spy:spies.has(i)}).eq('id',players[i].id);
+    const {error:e} = await supabaseClient
+      .from('room_players')
+      .update({is_spy:spies.has(i)})
+      .eq('id',players[i].id);
     if(e) return alert(e.message);
   }
 
-  const {error:e} = await supabaseClient.from('rooms').update({status:'playing', current_player:0}).eq('id',state.roomId);
+  const {error:e} = await supabaseClient
+    .from('rooms')
+    .update({status:'playing', current_player:0})
+    .eq('id',state.roomId);
+
   if(e) alert(e.message);
 }
 
-function leaveRoom(){ home(); }
+function leaveRoom(){
+  home();
+}
+
+function render(){
+  if(!roomData) return home();
+  if(roomData.status === 'waiting') return renderWaiting();
+  if(roomData.status === 'playing') return renderPlaying();
+  if(roomData.status === 'finished') return renderFinished();
+  renderWaiting();
+}
 
 async function renderWaiting(){
-  const players = roomPlayersCache || [];
-  const mode = roomData.mode || 'random';
-  const isHost = !!state.isHost;
+  const {data:players} = await supabaseClient
+    .from('room_players')
+    .select('*')
+    .eq('room_id', roomData.id)
+    .order('player_number');
+
+  const list = players || [];
 
   app.innerHTML = `<div class="wrap">
-    <h1>🕵️ Dota2SpyForSolin</h1>
+    <h1>🕵️ Комната</h1>
 
     <div class="card center">
       <div class="muted">КОД КОМНАТЫ</div>
       <div class="code">${esc(roomData.code)}</div>
       <div>
-        <span class="pill">👥 ${players.length} игроков</span>
+        <span class="pill">👥 ${list.length} игроков</span>
         <span class="pill">🕵️ ${roomData.spies_count} шпион</span>
-        <span class="pill">🎮 ${mode === 'host' ? 'ведущий' : 'случайный'}</span>
       </div>
     </div>
 
     <div class="card">
       <h2>Игроки</h2>
       <div class="players">
-        ${players.map((p,i)=>`<div class="player">👤 Игрок ${i+1} ${Number(p.telegram_id)===Number(state.userId)?'<span class="ok">(ты)</span>':''}</div>`).join('')}
+        ${list.map((p,i)=>`<div class="player">👤 Игрок ${i+1} ${Number(p.telegram_id)===Number(state.userId)?'<span class="ok">(ты)</span>':''}</div>`).join('')}
       </div>
-
-      ${isHost && mode === 'host'
-        ? `<div class="status">Это режим ведущего. Герой, локация и шпион уже заданы при создании комнаты.</div>`
-        : `<div class="status">Друзья могут заходить по этому коду. Экран обновится автоматически.</div>`}
-
-      ${isHost ? `<button class="btn" onclick="startGame()">▶️ Начать игру</button>` : `<div class="status center">⏳ Ждём ведущего...</div>`}
+      <div class="status">Друзья могут заходить по этому коду. Экран обновится автоматически.</div>
+      ${state.isHost
+        ? `<button class="btn" onclick="startGame()">▶️ Начать игру</button>`
+        : `<div class="status center">⏳ Ждём ведущего...</div>`}
       <button class="btn alt" onclick="leaveRoom()">Выйти</button>
     </div>
   </div>`;
 }
 
 async function renderPlaying(){
-  const players = roomPlayersCache || [];
-  const myPlayer = players.find(p => Number(p.telegram_id) === Number(state.userId));
+  const {data:players} = await supabaseClient
+    .from('room_players')
+    .select('*')
+    .eq('room_id', roomData.id)
+    .order('player_number');
+
+  const list = players || [];
+  const myPlayer = list.find(p => Number(p.telegram_id) === Number(state.userId));
   me = myPlayer || me;
+
   const spy = !!me?.is_spy;
 
   app.innerHTML = `<div class="wrap">
@@ -463,11 +458,42 @@ async function renderPlaying(){
 
     <div class="card">
       <h3>В комнате</h3>
-      ${players.map((p,i)=>`<div class="player">👤 Игрок ${i+1} ${Number(p.telegram_id)===Number(state.userId)?'— ты':''}</div>`).join('')}
+      ${list.map((p,i)=>`<div class="player">👤 Игрок ${i+1} ${Number(p.telegram_id)===Number(state.userId)?'— ты':''}</div>`).join('')}
     </div>
   </div>`;
 }
 
 async function finishGame(){
   if(!state?.isHost) return alert('Закончить раунд может ведущий.');
-  const {error} =
+
+  const {error} = await supabaseClient
+    .from('rooms')
+    .update({status:'finished'})
+    .eq('id',state.roomId);
+
+  if(error) alert(error.message);
+}
+
+async function renderFinished(){
+  app.innerHTML = `<div class="wrap">
+    <h1>🏆 Раунд окончен</h1>
+    <div class="card center">
+      <div class="hero-secret big">
+        <img src="${img(roomData.hero)}" onerror="this.style.display='none'">
+        <p>📍 <b>${esc(roomData.location)}</b></p>
+        <b>🎭 ${esc(roomData.hero)}</b>
+      </div>
+      <p>🕵️ Шпионов: <b>${roomData.spies_count}</b></p>
+    </div>
+    <button class="btn" onclick="home()">Новая игра</button>
+  </div>`;
+}
+
+if(state?.roomId){
+  loadRoom().catch(e => showError(e.message));
+}else{
+  home();
+}
+</script>
+</body>
+</html>
