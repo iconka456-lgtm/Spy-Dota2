@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#111111">
-  <title>Spy: Dota 2</title>
+  <title>Dota2SpyForSolin</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -39,6 +39,7 @@
     .divider{height:1px;background:#333;margin:18px 0}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .small{font-size:13px}
+    .hidden{display:none}
   </style>
 </head>
 <body>
@@ -131,10 +132,11 @@ let lastRenderKey = '';
 
 function tgUser(){
   const u = tg?.initDataUnsafe?.user;
+  if(!u?.id) return null;
   return {
-    id: Number(u?.id || ('9' + Date.now())),
-    username: u?.username || '',
-    first_name: u?.first_name || 'Игрок'
+    id: Number(u.id),
+    username: u.username || '',
+    first_name: u.first_name || 'Игрок'
   };
 }
 
@@ -158,7 +160,7 @@ function code(){
 
 function showError(message){
   app.innerHTML = `<div class="wrap">
-    <h1>Spy: Dota 2</h1>
+    <h1>Dota2SpyForSolin</h1>
     <div class="card">
       <h2>Ошибка</h2>
       <div class="error">${esc(message)}</div>
@@ -176,35 +178,83 @@ function home(){
   if(channel) supabaseClient.removeChannel(channel);
   channel = null;
   localStorage.removeItem('spyDotaOnline');
+  buildHome();
+  setupCreateForm();
+}
 
+function buildHome(){
   app.innerHTML = `<div class="wrap">
-    <h1>🕵️ Spy: Dota 2</h1>
+    <h1>🕵️ Dota2SpyForSolin</h1>
+
     <div class="card">
       <h2>Создать комнату</h2>
       <p class="muted">Ты создаёшь комнату и отправляешь код друзьям.</p>
+
+      <label>Режим игры</label>
+      <select id="roomMode" onchange="setupCreateForm()">
+        <option value="random">Случайный</option>
+        <option value="host">С ведущим</option>
+      </select>
+
+      <div id="hostOptions" class="hidden">
+        <label>Герой</label>
+        <select id="heroPick">${heroes.map(h=>`<option value="${esc(h)}">${esc(h)}</option>`).join('')}</select>
+
+        <label>Локация</label>
+        <select id="locationPick">${locations.map(l=>`<option value="${esc(l)}">${esc(l)}</option>`).join('')}</select>
+
+        <div class="row">
+          <div>
+            <label>Шпионов</label>
+            <input id="spiesCount" type="number" min="1" max="4" value="1">
+          </div>
+          <div>
+            <label>Игроков</label>
+            <input id="playersCount" type="number" min="3" max="10" value="5">
+          </div>
+        </div>
+
+        <p class="small muted">В этом режиме ведущий сам выбирает героя, локацию и число шпионов.</p>
+      </div>
+
       <button class="btn" onclick="createRoom()">🎮 Создать комнату</button>
     </div>
+
     <div class="card">
       <h2>Войти в комнату</h2>
       <input id="joinCode" maxlength="6" placeholder="Код комнаты" autocomplete="off">
       <button class="btn alt" onclick="joinRoom()">🚪 Войти</button>
     </div>
   </div>`;
+  window.setupCreateForm = setupCreateForm;
 }
 
-function normalizeRoomSettings(r){
-  return {
-    mode: r?.mode || 'random',
-    hero: r?.hero || '',
-    location: r?.location || '',
-    spies_count: Number(r?.spies_count || 1),
-    players_count: Number(r?.players_count || 5),
-    current_player: Number(r?.current_player || 0)
-  };
+function setupCreateForm(){
+  const mode = document.getElementById('roomMode')?.value || 'random';
+  const hostOptions = document.getElementById('hostOptions');
+  if(hostOptions) hostOptions.style.display = mode === 'host' ? 'block' : 'none';
+}
+
+function getToken(){
+  let token = localStorage.spyDotaToken;
+  if(!token){
+    token = 't_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.spyDotaToken = token;
+  }
+  return token;
+}
+
+function getLocalPlayerName(){
+  return tgUser()?.first_name || 'Игрок';
 }
 
 async function createRoom(){
   const user = tgUser();
+  if(!user){
+    showError('Telegram не передал данные пользователя. Открой мини-приложение внутри Telegram.');
+    return;
+  }
+
   const roomCode = code();
   const mode = document.getElementById('roomMode')?.value || 'random';
   const hero = mode === 'host' ? (document.getElementById('heroPick')?.value || heroes[0]) : heroes[Math.floor(Math.random()*heroes.length)];
@@ -224,7 +274,6 @@ async function createRoom(){
       status:'waiting',
       current_player:0
     }).select().single();
-
     if(error) throw error;
 
     const {data: player, error: pError} = await supabaseClient.from('room_players').insert({
@@ -233,7 +282,6 @@ async function createRoom(){
       player_number:0,
       is_spy:false
     }).select().single();
-
     if(pError) throw pError;
 
     state = {roomId:room.id, roomCode:room.code, userId:user.id, isHost:true};
@@ -250,13 +298,16 @@ async function createRoom(){
 async function joinRoom(){
   const input = document.getElementById('joinCode');
   const roomCode = (input?.value || '').trim().toUpperCase();
-
   if(roomCode.length < 4){
     alert('Введи код комнаты');
     return;
   }
 
   const user = tgUser();
+  if(!user){
+    showError('Telegram не передал данные пользователя. Открой мини-приложение внутри Telegram.');
+    return;
+  }
 
   try{
     const {data: room, error} = await supabaseClient
@@ -360,10 +411,6 @@ function subscribe(roomId){
     .subscribe();
 }
 
-function setRoomFields(fields){
-  roomData = Object.assign({}, roomData || {}, fields);
-}
-
 function renderKey(){
   return JSON.stringify({
     status: roomData?.status || '',
@@ -400,6 +447,7 @@ function getSpyIndexes(count, spyCount){
 
 async function startGame(){
   if(!state?.isHost) return;
+
   const {data:players, error} = await supabaseClient
     .from('room_players')
     .select('*')
@@ -407,6 +455,7 @@ async function startGame(){
     .order('player_number');
 
   if(error) return alert(error.message);
+
   if(players.length < 3){
     alert('Нужно минимум 3 игрока');
     return;
@@ -441,7 +490,7 @@ async function renderWaiting(){
   const isHost = !!state.isHost;
 
   app.innerHTML = `<div class="wrap">
-    <h1>🕵️ Комната</h1>
+    <h1>🕵️ Dota2SpyForSolin</h1>
 
     <div class="card center">
       <div class="muted">КОД КОМНАТЫ</div>
@@ -459,7 +508,9 @@ async function renderWaiting(){
         ${players.map((p,i)=>`<div class="player">👤 Игрок ${i+1} ${Number(p.telegram_id)===Number(state.userId)?'<span class="ok">(ты)</span>':''}</div>`).join('')}
       </div>
 
-      ${isHost && mode === 'host' ? `<div class="status">Это режим ведущего. Герой, локация и шпион уже заданы при создании комнаты.</div>` : `<div class="status">Друзья могут заходить по этому коду. Экран обновится автоматически.</div>`}
+      ${isHost && mode === 'host'
+        ? `<div class="status">Это режим ведущего. Герой, локация и шпион уже заданы при создании комнаты.</div>`
+        : `<div class="status">Друзья могут заходить по этому коду. Экран обновится автоматически.</div>`}
 
       ${isHost ? `<button class="btn" onclick="startGame()">▶️ Начать игру</button>` : `<div class="status center">⏳ Ждём ведущего...</div>`}
       <button class="btn alt" onclick="leaveRoom()">Выйти</button>
@@ -495,53 +546,4 @@ async function renderPlaying(){
     </div>
 
     <div class="card">
-      <h3>В комнате</h3>
-      ${players.map((p,i)=>`<div class="player">👤 Игрок ${i+1} ${Number(p.telegram_id)===Number(state.userId)?'— ты':''}</div>`).join('')}
-    </div>
-  </div>`;
-}
-
-async function finishGame(){
-  if(!state?.isHost) return alert('Закончить раунд может ведущий.');
-  const {error} = await supabaseClient
-    .from('rooms')
-    .update({status:'finished'})
-    .eq('id',state.roomId);
-  if(error) alert(error.message);
-}
-
-async function renderFinished(){
-  app.innerHTML = `<div class="wrap">
-    <h1>🏆 Раунд окончен</h1>
-    <div class="card center">
-      <div class="hero-secret big">
-        <img src="${img(roomData.hero)}" onerror="this.style.display='none'">
-        <p>📍 <b>${esc(roomData.location)}</b></p>
-        <b>🎭 ${esc(roomData.hero)}</b>
-      </div>
-      <p>🕵️ Шпионов: <b>${roomData.spies_count}</b></p>
-    </div>
-    <button class="btn" onclick="home()">Новая игра</button>
-  </div>`;
-}
-
-function setupCreateForm(){
-  const mode = document.getElementById('roomMode')?.value || 'random';
-  document.getElementById('hostOptions').style.display = mode === 'host' ? 'block' : 'none';
-}
-
-function buildHome(){
-  app.innerHTML = `<div class="wrap">
-    <h1>🕵️ Spy: Dota 2</h1>
-
-    <div class="card">
-      <h2>Создать комнату</h2>
-      <p class="muted">Ты создаёшь комнату и отправляешь код друзьям.</p>
-
-      <label>Режим игры</label>
-      <select id="roomMode" onchange="setupCreateForm()">
-        <option value="random">Случайный</option>
-        <option value="host">С ведущим</option>
-      </select>
-
-      <div id="hostOptions" class=
+     
