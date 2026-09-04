@@ -9,7 +9,10 @@ const locations=["Таверна", "Рошанова яма", "Мид-лейн",
 const A=document.getElementById('app');
 let state=JSON.parse(localStorage.spyDota||'null');
 function save(){localStorage.spyDota=JSON.stringify(state)}
-function img(h){return 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/'+heroSlugs[h]+'.png'}
+function img(h){
+  const slug=heroSlugs[h];
+  return 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/'+slug+'.png';
+}
 function render(){if(!state)return home(); if(state.screen==='setup')setup(); else if(state.screen==='room')room(); else if(state.screen==='play')play(); else if(state.screen==='result')result()}
 function home(){A.innerHTML=`<div class="wrap"><h1>🕵️ Spy: Dota 2</h1><div class="card"><h2>Новая игра</h2><button class="btn" onclick="newGame('auto')">🎲 Классическая — роли автоматически</button><button class="btn alt" onclick="newGame('host')">👑 Ведущий — сам выбирает героя</button><p class="muted">125 героев Dota 2. Игра рассчитана на передачу одного телефона игрокам по очереди.</p></div></div>`}
 function newGame(mode){state={screen:'setup',mode,players:5,spies:1,room:Math.random().toString(36).slice(2,8).toUpperCase(),hero:heroes[0],location:locations[0],current:0};save();render()}
