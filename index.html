@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#101010">
-  <title>Dota 2 Spy</title>
+  <title>Dota2SpyForSolin</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
 
@@ -35,7 +35,8 @@
     }
 
     button,
-    input {
+    input,
+    select {
       font: inherit;
     }
 
@@ -45,7 +46,7 @@
 
     .wrap {
       width: 100%;
-      max-width: 600px;
+      max-width: 620px;
       margin: 0 auto;
       padding: 18px 14px calc(36px + env(safe-area-inset-bottom));
     }
@@ -80,6 +81,10 @@
       font-size: 13px;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
     .btn {
       width: 100%;
       margin-top: 10px;
@@ -87,17 +92,17 @@
       border: 0;
       border-radius: 14px;
       color: #111;
-      background: #ffffff;
+      background: #fff;
       font-weight: 700;
     }
 
     .btn.alt {
-      color: #ffffff;
+      color: #fff;
       background: #303035;
     }
 
     .btn.danger {
-      color: #ffffff;
+      color: #fff;
       background: #a83131;
     }
 
@@ -118,14 +123,59 @@
       font-size: 14px;
     }
 
-    input {
+    input,
+    select {
       width: 100%;
       padding: 13px;
-      color: #ffffff;
-      background: #111111;
+      color: #fff;
+      background: #111;
       border: 1px solid #4a4a4a;
       border-radius: 12px;
       outline: none;
+    }
+
+    .game-type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .game-type-button {
+      min-height: 130px;
+      padding: 16px 10px;
+      color: #fff;
+      background: var(--card2);
+      border: 2px solid #45454b;
+      border-radius: 18px;
+      font-weight: 700;
+    }
+
+    .game-type-button.selected {
+      border-color: var(--yellow);
+      background: #332d19;
+    }
+
+    .game-type-icon {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 44px;
+    }
+
+    .game-type-subtitle {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+
+    .mode-card {
+      margin-top: 10px;
+      padding: 14px;
+      border: 1px solid #45454a;
+      border-radius: 14px;
+      background: var(--card2);
     }
 
     .player-number {
@@ -138,10 +188,10 @@
 
     .secret-button {
       width: 100%;
-      min-height: 135px;
+      min-height: 145px;
       margin-top: 12px;
       padding: 18px;
-      color: #ffffff;
+      color: #fff;
       background: #35353a;
       border: 2px solid #53535a;
       border-radius: 18px;
@@ -152,16 +202,22 @@
       touch-action: none;
     }
 
-    .secret-button.open {
-      color: #1f1700;
+    .secret-button.open-peaceful {
+      color: #06180d;
+      background: var(--green);
+      border-color: #b2ffd0;
+    }
+
+    .secret-button.open-spy {
+      color: #211700;
       background: var(--yellow);
       border-color: #ffe39b;
     }
 
     .timer {
-      margin: 20px 0;
+      margin: 18px 0;
       color: var(--green);
-      font-size: 58px;
+      font-size: 56px;
       font-weight: 800;
       text-align: center;
       font-variant-numeric: tabular-nums;
@@ -180,18 +236,49 @@
 
     .role-icon {
       margin: 8px 0;
-      font-size: 64px;
+      font-size: 58px;
       text-align: center;
+    }
+
+    .picker-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+
+    .picker-button {
+      padding: 10px 6px;
+      background: #111;
+      color: #fff;
+      border: 2px solid #404045;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .picker-button.selected {
+      border-color: var(--yellow);
+    }
+
+    .picker-image {
+      display: block;
+      width: 100%;
+      height: 52px;
+      object-fit: contain;
+      margin-bottom: 6px;
     }
 
     .error-box {
       margin: 20px;
       padding: 16px;
-      color: #ffffff;
+      color: #fff;
       background: #3b1717;
       border: 1px solid #f07a7a;
       border-radius: 15px;
-      font-family: Arial, Helvetica, sans-serif;
     }
   </style>
 </head>
@@ -202,7 +289,6 @@
   <script>
     window.addEventListener("error", function(event) {
       const root = document.getElementById("app");
-
       if (root) {
         root.innerHTML =
           "<div class='error-box'>" +
@@ -216,106 +302,85 @@
     const app = document.getElementById("app");
 
     const heroes = [
-      "Abaddon",
-      "Alchemist",
-      "Ancient Apparition",
-      "Anti-Mage",
-      "Axe",
-      "Bane",
-      "Batrider",
-      "Beastmaster",
-      "Bloodseeker",
-      "Bounty Hunter",
-      "Bristleback",
-      "Broodmother",
-      "Chaos Knight",
-      "Clinkz",
-      "Clockwerk",
-      "Crystal Maiden",
-      "Dazzle",
-      "Doom",
-      "Dragon Knight",
-      "Drow Ranger",
-      "Earthshaker",
-      "Ember Spirit",
-      "Enchantress",
-      "Enigma",
-      "Faceless Void",
-      "Gyrocopter",
-      "Huskar",
-      "Invoker",
-      "Jakiro",
-      "Juggernaut",
-      "Kunkka",
-      "Legion Commander",
-      "Lich",
-      "Lifestealer",
-      "Lina",
-      "Lion",
-      "Luna",
-      "Magnus",
-      "Mars",
-      "Medusa",
-      "Meepo",
-      "Mirana",
-      "Monkey King",
-      "Morphling",
-      "Muerta",
-      "Naga Siren",
-      "Nature's Prophet",
-      "Necrophos",
-      "Night Stalker",
-      "Nyx Assassin",
-      "Ogre Magi",
-      "Omniknight",
-      "Oracle",
-      "Pangolier",
-      "Phantom Assassin",
-      "Phantom Lancer",
-      "Phoenix",
-      "Puck",
-      "Pudge",
-      "Pugna",
-      "Queen of Pain",
-      "Razor",
-      "Riki",
-      "Rubick",
-      "Sand King",
-      "Shadow Demon",
-      "Shadow Fiend",
-      "Shadow Shaman",
-      "Silencer",
-      "Skywrath Mage",
-      "Slardar",
-      "Slark",
-      "Snapfire",
-      "Sniper",
-      "Spectre",
-      "Spirit Breaker",
-      "Storm Spirit",
-      "Sven",
-      "Techies",
-      "Templar Assassin",
-      "Terrorblade",
-      "Tidehunter",
-      "Tinker",
-      "Tiny",
-      "Treant Protector",
-      "Troll Warlord",
-      "Tusk",
-      "Undying",
-      "Ursa",
-      "Venomancer",
-      "Viper",
-      "Visage",
-      "Void Spirit",
-      "Warlock",
-      "Weaver",
-      "Windranger",
-      "Winter Wyvern",
-      "Witch Doctor",
-      "Wraith King",
-      "Zeus"
+      "Abaddon", "Alchemist", "Ancient Apparition", "Anti-Mage", "Axe", "Bane",
+      "Batrider", "Beastmaster", "Bloodseeker", "Bounty Hunter", "Bristleback",
+      "Broodmother", "Chaos Knight", "Clinkz", "Clockwerk", "Crystal Maiden",
+      "Dazzle", "Doom", "Dragon Knight", "Drow Ranger", "Earthshaker",
+      "Ember Spirit", "Enchantress", "Enigma", "Faceless Void", "Gyrocopter",
+      "Huskar", "Invoker", "Jakiro", "Juggernaut", "Kunkka", "Legion Commander",
+      "Lich", "Lifestealer", "Lina", "Lion", "Luna", "Magnus", "Mars", "Medusa",
+      "Meepo", "Mirana", "Monkey King", "Morphling", "Muerta", "Naga Siren",
+      "Nature's Prophet", "Necrophos", "Night Stalker", "Nyx Assassin",
+      "Ogre Magi", "Omniknight", "Oracle", "Pangolier", "Phantom Assassin",
+      "Phantom Lancer", "Phoenix", "Puck", "Pudge", "Pugna", "Queen of Pain",
+      "Razor", "Riki", "Rubick", "Sand King", "Shadow Demon", "Shadow Fiend",
+      "Shadow Shaman", "Silencer", "Skywrath Mage", "Slardar", "Slark",
+      "Snapfire", "Sniper", "Spectre", "Spirit Breaker", "Storm Spirit", "Sven",
+      "Techies", "Templar Assassin", "Terrorblade", "Tidehunter", "Tinker",
+      "Tiny", "Treant Protector", "Troll Warlord", "Tusk", "Undying", "Ursa",
+      "Venomancer", "Viper", "Visage", "Void Spirit", "Warlock", "Weaver",
+      "Windranger", "Winter Wyvern", "Witch Doctor", "Wraith King", "Zeus"
+    ];
+
+    const items = [
+      { name: "Aghanim's Scepter", slug: "ultimate_scepter" },
+      { name: "Aghanim's Shard", slug: "aghanims_shard" },
+      { name: "Arcane Boots", slug: "arcane_boots" },
+      { name: "Armlet", slug: "armlet" },
+      { name: "Assault Cuirass", slug: "assault" },
+      { name: "Battle Fury", slug: "bfury" },
+      { name: "Black King Bar", slug: "black_king_bar" },
+      { name: "Blink Dagger", slug: "blink" },
+      { name: "Bloodthorn", slug: "bloodthorn" },
+      { name: "Boots of Travel", slug: "travel_boots" },
+      { name: "Bottle", slug: "bottle" },
+      { name: "Butterfly", slug: "butterfly" },
+      { name: "Crimson Guard", slug: "crimson_guard" },
+      { name: "Daedalus", slug: "greater_crit" },
+      { name: "Dagon", slug: "dagon" },
+      { name: "Desolator", slug: "desolator" },
+      { name: "Diffusal Blade", slug: "diffusal_blade" },
+      { name: "Divine Rapier", slug: "rapier" },
+      { name: "Dragon Lance", slug: "dragon_lance" },
+      { name: "Ethereal Blade", slug: "ethereal_blade" },
+      { name: "Eye of Skadi", slug: "skadi" },
+      { name: "Force Staff", slug: "force_staff" },
+      { name: "Gleipnir", slug: "gungir" },
+      { name: "Guardian Greaves", slug: "guardian_greaves" },
+      { name: "Hand of Midas", slug: "hand_of_midas" },
+      { name: "Heart of Tarrasque", slug: "heart" },
+      { name: "Heaven's Halberd", slug: "heavens_halberd" },
+      { name: "Hurricane Pike", slug: "hurricane_pike" },
+      { name: "Kaya", slug: "kaya" },
+      { name: "Linken's Sphere", slug: "sphere" },
+      { name: "Lotus Orb", slug: "lotus_orb" },
+      { name: "Manta Style", slug: "manta" },
+      { name: "Mask of Madness", slug: "mask_of_madness" },
+      { name: "Meteor Hammer", slug: "meteor_hammer" },
+      { name: "Mjollnir", slug: "mjollnir" },
+      { name: "Monkey King Bar", slug: "monkey_king_bar" },
+      { name: "Moon Shard", slug: "moon_shard" },
+      { name: "Nullifier", slug: "nullifier" },
+      { name: "Octarine Core", slug: "octarine_core" },
+      { name: "Orchid Malevolence", slug: "orchid" },
+      { name: "Overwhelming Blink", slug: "overwhelming_blink" },
+      { name: "Pipe of Insight", slug: "pipe" },
+      { name: "Power Treads", slug: "power_treads" },
+      { name: "Radiance", slug: "radiance" },
+      { name: "Refresher Orb", slug: "refresher" },
+      { name: "Rod of Atos", slug: "rod_of_atos" },
+      { name: "Sange and Yasha", slug: "sange_and_yasha" },
+      { name: "Satanic", slug: "satanic" },
+      { name: "Scythe of Vyse", slug: "sheepstick" },
+      { name: "Shadow Blade", slug: "invis_sword" },
+      { name: "Shiva's Guard", slug: "shivas_guard" },
+      { name: "Silver Edge", slug: "silver_edge" },
+      { name: "Solar Crest", slug: "solar_crest" },
+      { name: "Spirit Vessel", slug: "spirit_vessel" },
+      { name: "Vanguard", slug: "vanguard" },
+      { name: "Veil of Discord", slug: "veil_of_discord" },
+      { name: "Wind Waker", slug: "wind_waker" },
+      { name: "Witch Blade", slug: "witch_blade" }
     ];
 
     const locations = [
@@ -332,6 +397,12 @@
 
     let game = null;
     let timerId = null;
+    let selectedType = "heroes";
+    let selectedMode = "random";
+    let selectedTimerMode = "withTime";
+    let hostPeacefulChoice = null;
+    let hostSpyChoice = null;
+    let hostPickerTarget = "peaceful";
 
     try {
       if (window.Telegram && window.Telegram.WebApp) {
@@ -339,23 +410,19 @@
         window.Telegram.WebApp.expand();
       }
     } catch (error) {
-      console.log("Telegram WebApp не подключён", error);
+      console.log(error);
     }
 
-    function randomItem(items) {
-      return items[Math.floor(Math.random() * items.length)];
+    function randomItem(list) {
+      return list[Math.floor(Math.random() * list.length)];
     }
 
-    function shuffle(items) {
-      const result = items.slice();
-
+    function shuffle(list) {
+      const result = list.slice();
       for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        const temp = result[i];
-        result[i] = result[j];
-        result[j] = temp;
+        [result[i], result[j]] = [result[j], result[i]];
       }
-
       return result;
     }
 
@@ -368,85 +435,285 @@
         .replace(/'/g, "&#039;");
     }
 
-    function haptic() {
+    function haptic(type) {
       try {
         const tg = window.Telegram && window.Telegram.WebApp;
-
-        if (tg && tg.HapticFeedback) {
-          tg.HapticFeedback.impactOccurred("medium");
-        }
+        if (!tg || !tg.HapticFeedback) return;
+        if (type === "success") tg.HapticFeedback.notificationOccurred("success");
+        else if (type === "error") tg.HapticFeedback.notificationOccurred("error");
+        else tg.HapticFeedback.impactOccurred("medium");
       } catch (error) {
         console.log(error);
       }
     }
 
+    function itemImage(item) {
+      return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/" + item.slug + ".png";
+    }
+
+    function getTitle() {
+      return selectedType === "heroes" ? "Герои" : "Предметы";
+    }
+
     function renderHome() {
       clearInterval(timerId);
+      hostPeacefulChoice = null;
+      hostSpyChoice = null;
+      hostPickerTarget = "peaceful";
 
       app.innerHTML = `
         <div class="wrap">
-          <h1>🕵️ Dota 2 Spy</h1>
+          <h1>🕵️ Dota2SpyForSolin</h1>
 
           <div class="card">
-            <h2>Игра на одном устройстве</h2>
+            <h2>Выбери мини-игру</h2>
 
-            <p class="muted">
-              Настрой количество игроков, раздай роли по очереди и передавай телефон.
-            </p>
+            <div class="game-type-grid">
+              <button id="heroesButton" class="game-type-button">
+                <span class="game-type-icon">🦸</span>
+                Герои
+                <span class="game-type-subtitle">Герой и локация</span>
+              </button>
 
-            <label for="players">Количество игроков</label>
-            <input id="players" type="number" min="3" max="20" value="5">
-
-            <label for="spies">Количество шпионов</label>
-            <input id="spies" type="number" min="1" max="5" value="1">
-
-            <label for="minutes">Время игры в минутах</label>
-            <input id="minutes" type="number" min="1" max="60" value="8">
-
-            <button class="btn" id="startSetup">🎮 Начать раздачу ролей</button>
+              <button id="itemsButton" class="game-type-button">
+                <span class="game-type-icon">🗡️</span>
+                Предметы
+                <span class="game-type-subtitle">Предмет без локаций</span>
+              </button>
+            </div>
           </div>
 
           <div class="card">
-            <h2>Как играть</h2>
+            <h2 id="settingsTitle"></h2>
 
-            <p class="muted small">
-              Игрок удерживает кнопку, запоминает роль, отпускает кнопку
-              и передаёт телефон следующему. Мирные знают героя и локацию.
-              Шпионы знают только, что они шпионы.
-            </p>
+            <label for="gameMode">Режим игры</label>
+            <select id="gameMode">
+              <option value="random">🎲 Рандом</option>
+              <option value="host">🎙️ С ведущим</option>
+            </select>
+
+            <label for="timerMode">Таймер</label>
+            <select id="timerMode">
+              <option value="withTime">⏱️ С временем</option>
+              <option value="withoutTime">♾️ Без времени</option>
+            </select>
+
+            <div id="modeText" class="mode-card small muted"></div>
+
+            <label for="playersCount">Количество игроков</label>
+            <input id="playersCount" type="number" min="3" max="20" value="5">
+
+            <label for="spiesCount">Количество шпионов</label>
+            <input id="spiesCount" type="number" min="1" max="5" value="1">
+
+            <label for="minutesCount">Время игры в минутах</label>
+            <input id="minutesCount" type="number" min="1" max="60" value="8">
+
+            <div id="hostSettings" class="hidden"></div>
+
+            <button id="startGameButton" class="btn">🎮 Начать раздачу ролей</button>
           </div>
         </div>
       `;
 
-      document.getElementById("startSetup").addEventListener("click", createGame);
+      document.getElementById("heroesButton").addEventListener("click", function() {
+        selectedType = "heroes";
+        renderHome();
+      });
+
+      document.getElementById("itemsButton").addEventListener("click", function() {
+        selectedType = "items";
+        renderHome();
+      });
+
+      document.getElementById("gameMode").value = selectedMode;
+      document.getElementById("timerMode").value = selectedTimerMode;
+
+      document.getElementById("gameMode").addEventListener("change", function() {
+        selectedMode = document.getElementById("gameMode").value;
+        hostPeacefulChoice = null;
+        hostSpyChoice = null;
+        hostPickerTarget = "peaceful";
+        updateHome();
+      });
+
+      document.getElementById("timerMode").addEventListener("change", function() {
+        selectedTimerMode = document.getElementById("timerMode").value;
+        updateHome();
+      });
+
+      document.getElementById("startGameButton").addEventListener("click", createGame);
+      updateHome();
+    }
+
+    function updateHome() {
+      document.getElementById("settingsTitle").textContent = "Настройки: " + getTitle();
+
+      document.getElementById("heroesButton").classList.toggle("selected", selectedType === "heroes");
+      document.getElementById("itemsButton").classList.toggle("selected", selectedType === "items");
+
+      const modeText = document.getElementById("modeText");
+      const hostSettings = document.getElementById("hostSettings");
+      const minutesInput = document.getElementById("minutesCount");
+
+      minutesInput.style.display = selectedTimerMode === "withoutTime" ? "none" : "block";
+
+      if (selectedMode === "random") {
+        modeText.textContent = selectedType === "heroes"
+          ? "Игра сама выберет героя мирных, героя шпионов и локацию."
+          : "Игра сама выберет предмет мирных и другой предмет шпионов.";
+        hostSettings.innerHTML = "";
+        hostSettings.classList.add("hidden");
+      } else {
+        modeText.textContent = selectedType === "heroes"
+          ? "Ведущий сам выбирает героя мирных, героя шпионов и локацию."
+          : "Ведущий сам выбирает предмет мирных и предмет шпионов.";
+        hostSettings.classList.remove("hidden");
+        renderHostSettings();
+      }
+    }
+
+    function renderHostSettings() {
+      const hostSettings = document.getElementById("hostSettings");
+
+      if (selectedType === "heroes") {
+        hostSettings.innerHTML = `
+          <div class="mode-card">
+            <h2>Выбор ведущего</h2>
+
+            <label for="peacefulHero">Герой мирных</label>
+            <select id="peacefulHero">
+              ${heroes.map(hero => `<option value="${escapeHtml(hero)}">${escapeHtml(hero)}</option>`).join("")}
+            </select>
+
+            <label for="spyHero">Герой шпионов</label>
+            <select id="spyHero">
+              ${heroes.map(hero => `<option value="${escapeHtml(hero)}">${escapeHtml(hero)}</option>`).join("")}
+            </select>
+
+            <label for="locationSelect">Локация</label>
+            <select id="locationSelect">
+              ${locations.map(location => `<option value="${escapeHtml(location)}">${escapeHtml(location)}</option>`).join("")}
+            </select>
+          </div>
+        `;
+        return;
+      }
+
+      const currentChoice = hostPickerTarget === "peaceful" ? hostPeacefulChoice : hostSpyChoice;
+      const selectedClass = hostPickerTarget === "peaceful" ? "selected" : "selected";
+
+      hostSettings.innerHTML = `
+        <div class="mode-card">
+          <h2>Выбор ведущего</h2>
+
+          <p class="small muted">
+            ${hostPickerTarget === "peaceful" ? "Сначала выбери предмет мирных." : "Теперь выбери предмет шпионов."}
+          </p>
+
+          <div class="picker-grid">
+            ${items.map((item, index) => `
+              <button class="picker-button ${currentChoice && currentChoice.slug === item.slug ? selectedClass : ""}" data-item-index="${index}">
+                <img class="picker-image" src="${itemImage(item)}" alt="" loading="lazy">
+                ${escapeHtml(item.name)}
+              </button>
+            `).join("")}
+          </div>
+
+          ${hostPickerTarget === "spy" ? `<button id="backButton" class="btn alt">← Назад к предмету мирных</button>` : ""}
+        </div>
+      `;
+
+      document.querySelectorAll("[data-item-index]").forEach(button => {
+        button.addEventListener("click", function() {
+          const item = items[Number(button.dataset.itemIndex)];
+          if (hostPickerTarget === "peaceful") {
+            hostPeacefulChoice = item;
+            hostPickerTarget = "spy";
+          } else {
+            hostSpyChoice = item;
+          }
+          haptic("impact");
+          renderHostSettings();
+        });
+      });
+
+      const backButton = document.getElementById("backButton");
+      if (backButton) {
+        backButton.addEventListener("click", function() {
+          hostPickerTarget = "peaceful";
+          renderHostSettings();
+        });
+      }
     }
 
     function createGame() {
-      const playersInput = Number(document.getElementById("players").value);
-      const spiesInput = Number(document.getElementById("spies").value);
-      const minutesInput = Number(document.getElementById("minutes").value);
+      const playersInput = Number(document.getElementById("playersCount").value);
+      const spiesInput = Number(document.getElementById("spiesCount").value);
+      const minutesInput = Number(document.getElementById("minutesCount").value);
 
       const playersCount = Math.max(3, Math.min(20, playersInput || 5));
       const spiesCount = Math.max(1, Math.min(playersCount - 1, spiesInput || 1));
       const minutes = Math.max(1, Math.min(60, minutesInput || 8));
 
-      const indexes = [];
+      let peacefulAnswer;
+      let spyAnswer;
+      let location = "";
 
-      for (let i = 0; i < playersCount; i++) {
-        indexes.push(i);
+      if (selectedType === "heroes") {
+        if (selectedMode === "host") {
+          peacefulAnswer = document.getElementById("peacefulHero").value;
+          spyAnswer = document.getElementById("spyHero").value;
+          location = document.getElementById("locationSelect").value;
+          if (peacefulAnswer === spyAnswer) {
+            alert("Для мирных и шпионов выбери разных героев.");
+            return;
+          }
+        } else {
+          peacefulAnswer = randomItem(heroes);
+          do {
+            spyAnswer = randomItem(heroes);
+          } while (spyAnswer === peacefulAnswer);
+          location = randomItem(locations);
+        }
+      } else {
+        if (selectedMode === "host") {
+          if (!hostPeacefulChoice || !hostSpyChoice) {
+            alert("Выбери предмет мирных и предмет шпионов.");
+            return;
+          }
+          if (hostPeacefulChoice.slug === hostSpyChoice.slug) {
+            alert("Для мирных и шпионов выбери разные предметы.");
+            return;
+          }
+          peacefulAnswer = hostPeacefulChoice;
+          spyAnswer = hostSpyChoice;
+        } else {
+          peacefulAnswer = randomItem(items);
+          do {
+            spyAnswer = randomItem(items);
+          } while (spyAnswer.slug === peacefulAnswer.slug);
+        }
       }
 
+      const playerIndexes = [];
+      for (let i = 0; i < playersCount; i++) playerIndexes.push(i);
+
       game = {
+        type: selectedType,
+        mode: selectedMode,
+        timerMode: selectedTimerMode,
         playersCount: playersCount,
         spiesCount: spiesCount,
         minutes: minutes,
-        hero: randomItem(heroes),
-        location: randomItem(locations),
-        spyIndexes: shuffle(indexes).slice(0, spiesCount),
+        peacefulAnswer: peacefulAnswer,
+        spyAnswer: spyAnswer,
+        location: location,
+        spyIndexes: shuffle(playerIndexes).slice(0, spiesCount),
         currentPlayer: 0
       };
 
-      haptic();
+      haptic("success");
       renderRoleScreen();
     }
 
@@ -457,7 +724,7 @@
 
       app.innerHTML = `
         <div class="wrap">
-          <h1>🕵️ Раздача ролей</h1>
+          <h1>🕵️ Dota2SpyForSolin</h1>
 
           <div class="card">
             <div class="player-number">Игрок ${playerNumber}</div>
@@ -489,36 +756,31 @@
       let roleVisible = false;
 
       function showRole() {
-        if (roleVisible) {
-          return;
-        }
-
+        if (roleVisible) return;
         roleVisible = true;
-        roleButton.classList.add("open");
+        roleButton.classList.add(isSpy ? "open-spy" : "open-peaceful");
+        const answer = isSpy ? game.spyAnswer : game.peacefulAnswer;
 
-        if (isSpy) {
-          roleButton.innerHTML = "🕵️<br>ТЫ ШПИОН";
+        if (game.type === "heroes") {
+          roleButton.innerHTML =
+            (isSpy ? "🕵️<br>ТЫ ШПИОН" : "🛡️<br>" + escapeHtml(answer)) +
+            "<br><span style='font-size:15px'>Локация: " + escapeHtml(game.location) + "</span>";
         } else {
           roleButton.innerHTML =
-            "🛡️<br>" +
-            escapeHtml(game.hero) +
-            "<br><span style='font-size:15px'>Локация: " +
-            escapeHtml(game.location) +
-            "</span>";
+            isSpy ? "🕵️<br>ТЫ ШПИОН" : "🛡️<br>ТЫ МИРНЫЙ" +
+            "<br><span style='font-size:16px'>Предмет: " + escapeHtml(answer.name) + "</span>" +
+            "<img class='picker-image' style='height:72px;margin:10px auto 0' src='" + itemImage(answer) + "' alt=''>";
         }
 
-        haptic();
+        haptic("impact");
       }
 
       function hideRole() {
-        if (!roleVisible) {
-          return;
-        }
-
+        if (!roleVisible) return;
         roleVisible = false;
         roleWasShown = true;
-
-        roleButton.classList.remove("open");
+        roleButton.classList.remove("open-peaceful");
+        roleButton.classList.remove("open-spy");
         roleButton.innerHTML = "Нажми и удерживай,<br>чтобы увидеть роль";
         nextButton.disabled = false;
       }
@@ -537,10 +799,7 @@
       roleButton.addEventListener("pointercancel", hideRole);
 
       nextButton.addEventListener("click", function() {
-        if (!roleWasShown) {
-          return;
-        }
-
+        if (!roleWasShown) return;
         if (game.currentPlayer < game.playersCount - 1) {
           game.currentPlayer += 1;
           renderRoleScreen();
@@ -556,22 +815,29 @@
     }
 
     function renderGameScreen() {
-      const totalSeconds = game.minutes * 60;
+      const totalSeconds = game.timerMode === "withoutTime" ? 0 : game.minutes * 60;
 
       app.innerHTML = `
         <div class="wrap">
-          <h1>🕵️ Игра началась</h1>
+          <h1>🕵️ Dota2SpyForSolin</h1>
 
           <div class="card">
-            <h2>Обсуждение</h2>
+            <h2>Игра началась</h2>
 
             <p class="muted">
-              Задавайте вопросы друг другу. Не называйте героя и локацию прямо.
+              Задавайте вопросы друг другу. Не называйте правильный ответ слишком прямо.
             </p>
 
-            <div id="timer" class="timer">${formatTime(totalSeconds)}</div>
+            <div id="timer" class="timer">
+              ${game.timerMode === "withoutTime" ? "∞" : formatTime(totalSeconds)}
+            </div>
 
-            <button id="timerButton" class="btn">▶️ Запустить таймер</button>
+            ${game.timerMode === "withTime" ? `
+              <button id="timerButton" class="btn">▶️ Запустить таймер</button>
+            ` : `
+              <button id="pauseButton" class="btn alt" disabled>♾️ Игра без времени</button>
+            `}
+
             <button id="finishButton" class="btn yellow">🏁 Закончить раунд</button>
           </div>
 
@@ -579,44 +845,42 @@
         </div>
       `;
 
-      let seconds = totalSeconds;
-      let running = false;
+      if (game.timerMode === "withTime") {
+        let seconds = totalSeconds;
+        let running = false;
+        const timer = document.getElementById("timer");
+        const timerButton = document.getElementById("timerButton");
 
-      const timer = document.getElementById("timer");
-      const timerButton = document.getElementById("timerButton");
-
-      timerButton.addEventListener("click", function() {
-        if (running) {
-          clearInterval(timerId);
-          running = false;
-          timerButton.textContent = "▶️ Продолжить таймер";
-          return;
-        }
-
-        if (seconds <= 0) {
-          return;
-        }
-
-        running = true;
-        timerButton.textContent = "⏸️ Пауза";
-
-        timerId = setInterval(function() {
-          seconds -= 1;
-          timer.textContent = formatTime(seconds);
-
-          if (seconds <= 0) {
+        timerButton.addEventListener("click", function() {
+          if (running) {
             clearInterval(timerId);
             running = false;
-            timer.classList.add("finished");
-            timerButton.disabled = true;
-            haptic();
-
-            setTimeout(function() {
-              alert("Время вышло! Выберите предполагаемого шпиона.");
-            }, 100);
+            timerButton.textContent = "▶️ Продолжить таймер";
+            return;
           }
-        }, 1000);
-      });
+
+          if (seconds <= 0) return;
+
+          running = true;
+          timerButton.textContent = "⏸️ Пауза";
+
+          timerId = setInterval(function() {
+            seconds -= 1;
+            timer.textContent = formatTime(seconds);
+
+            if (seconds <= 0) {
+              clearInterval(timerId);
+              running = false;
+              timer.classList.add("finished");
+              timerButton.disabled = true;
+              haptic("error");
+              setTimeout(function() {
+                alert("Время вышло! Выберите предполагаемого шпиона.");
+              }, 100);
+            }
+          }, 1000);
+        });
+      }
 
       document.getElementById("finishButton").addEventListener("click", function() {
         clearInterval(timerId);
@@ -631,32 +895,37 @@
     }
 
     function renderResultScreen() {
-      const spies = game.spyIndexes
-        .map(function(index) {
-          return "Игрок " + (index + 1);
-        })
-        .join(", ");
+      const spies = game.spyIndexes.map(function(index) {
+        return "Игрок " + (index + 1);
+      }).join(", ");
+
+      const peacefulName = game.type === "heroes" ? game.peacefulAnswer : game.peacefulAnswer.name;
+      const spyName = game.type === "heroes" ? game.spyAnswer : game.spyAnswer.name;
+
+      const locationText = game.type === "heroes"
+        ? "<p>Локация: <b>" + escapeHtml(game.location) + "</b></p>"
+        : "";
 
       app.innerHTML = `
         <div class="wrap">
           <h1>🕵️ Итоги раунда</h1>
 
           <div class="card">
-            <h2>Герой и локация</h2>
-
+            <h2>Мирные</h2>
             <div class="result">
               <div class="role-icon">🛡️</div>
-              <h2>${escapeHtml(game.hero)}</h2>
-              <p>Локация: <b>${escapeHtml(game.location)}</b></p>
+              <p><b>${escapeHtml(peacefulName)}</b></p>
+              ${locationText}
             </div>
           </div>
 
           <div class="card">
             <h2>Шпионы</h2>
-
             <div class="result">
               <div class="role-icon">🕵️</div>
-              <p><b>${spies}</b></p>
+              <p><b>${escapeHtml(spyName)}</b></p>
+              ${locationText}
+              <p>Шпионы: <b>${spies}</b></p>
             </div>
           </div>
 
@@ -679,10 +948,7 @@
     function formatTime(seconds) {
       const minutes = Math.floor(seconds / 60);
       const restSeconds = seconds % 60;
-
-      return String(minutes).padStart(2, "0") +
-        ":" +
-        String(restSeconds).padStart(2, "0");
+      return String(minutes).padStart(2, "0") + ":" + String(restSeconds).padStart(2, "0");
     }
 
     renderHome();
