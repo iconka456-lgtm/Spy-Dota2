@@ -747,3 +747,998 @@
 
       app.innerHTML = `
         <div class="wrap">
+          <h1>🕵️ Dota2SpyForSolin</h1>
+
+          <div class="card">
+            <h2>Настройки Dota Spy</h2>
+
+            <div class="choice-grid">
+              <button id="spyHeroesButton" class="choice-button">
+                🦸<br><br>Герои
+              </button>
+
+              <button id="spyItemsButton" class="choice-button">
+                🗡️<br><br>Предметы
+              </button>
+            </div>
+
+            <label for="gameMode">Режим игры</label>
+            <select id="gameMode">
+              <option value="random">🎲 Рандом</option>
+              <option value="host">🎙️ С ведущим</option>
+            </select>
+
+            <label for="timerMode">Таймер</label>
+            <select id="timerMode">
+              <option value="withTime">⏱️ С временем</option>
+              <option value="withoutTime">♾️ Без времени</option>
+            </select>
+
+            <div id="modeText" class="mode-card small muted"></div>
+
+            <label for="playersCount">Количество игроков</label>
+            <input id="playersCount" type="number" min="3" max="20" value="5">
+
+            <label for="spiesCount">Количество шпионов</label>
+            <input id="spiesCount" type="number" min="1" max="5" value="1">
+
+            <div id="minutesBlock">
+              <label for="minutesCount">Время игры в минутах</label>
+              <input id="minutesCount" type="number" min="1" max="60" value="8">
+            </div>
+
+            <div id="hostSettings" class="hidden"></div>
+
+            <button id="startSpyButton" class="btn">🎮 Начать раздачу ролей</button>
+            <button id="backHomeButton" class="btn alt">← В главное меню</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("spyHeroesButton").addEventListener("click", function() {
+        selectedSpyType = "heroes";
+        renderSpySettings();
+      });
+
+      document.getElementById("spyItemsButton").addEventListener("click", function() {
+        selectedSpyType = "items";
+        renderSpySettings();
+      });
+
+      document.getElementById("gameMode").value = selectedSpyMode;
+      document.getElementById("timerMode").value = selectedTimerMode;
+
+      document.getElementById("gameMode").addEventListener("change", function() {
+        selectedSpyMode = document.getElementById("gameMode").value;
+        hostPeacefulChoice = null;
+        hostSpyChoice = null;
+        hostPickerTarget = "peaceful";
+        updateSpySettings();
+      });
+
+      document.getElementById("timerMode").addEventListener("change", function() {
+        selectedTimerMode = document.getElementById("timerMode").value;
+        updateSpySettings();
+      });
+
+      document.getElementById("startSpyButton").addEventListener("click", createSpyGame);
+      document.getElementById("backHomeButton").addEventListener("click", renderHome);
+
+      updateSpySettings();
+    }
+
+    function updateSpySettings() {
+      document.getElementById("spyHeroesButton").classList.toggle(
+        "selected",
+        selectedSpyType === "heroes"
+      );
+
+      document.getElementById("spyItemsButton").classList.toggle(
+        "selected",
+        selectedSpyType === "items"
+      );
+
+      document.getElementById("minutesBlock").classList.toggle(
+        "hidden",
+        selectedTimerMode === "withoutTime"
+      );
+
+      var modeText = document.getElementById("modeText");
+      var hostSettings = document.getElementById("hostSettings");
+
+      if (selectedSpyMode === "random") {
+        modeText.textContent = selectedSpyType === "heroes"
+          ? "Игра сама выберет героя мирных, героя шпионов и локацию."
+          : "Игра сама выберет предмет мирных и другой предмет шпионов.";
+
+        hostSettings.innerHTML = "";
+        hostSettings.classList.add("hidden");
+      } else {
+        modeText.textContent = selectedSpyType === "heroes"
+          ? "Ведущий выбирает героя мирных, героя шпионов и общую локацию."
+          : "Ведущий выбирает предмет мирных и предмет шпионов.";
+
+        hostSettings.classList.remove("hidden");
+        renderHostSettings();
+      }
+    }
+
+    function renderHostSettings() {
+      var hostSettings = document.getElementById("hostSettings");
+
+      if (selectedSpyType === "heroes") {
+        hostSettings.innerHTML = `
+          <div class="mode-card">
+            <h3>Выбор ведущего</h3>
+
+            <label for="peacefulHero">Герой мирных</label>
+            <select id="peacefulHero">
+              ${heroes.map(function(hero) {
+                return "<option value='" + escapeHtml(hero.name) + "'>" +
+                  escapeHtml(hero.name) +
+                  "</option>";
+              }).join("")}
+            </select>
+
+            <label for="spyHero">Герой шпионов</label>
+            <select id="spyHero">
+              ${heroes.map(function(hero) {
+                return "<option value='" + escapeHtml(hero.name) + "'>" +
+                  escapeHtml(hero.name) +
+                  "</option>";
+              }).join("")}
+            </select>
+
+            <label for="locationSelect">Локация</label>
+            <select id="locationSelect">
+              ${locations.map(function(location) {
+                return "<option value='" + escapeHtml(location) + "'>" +
+                  escapeHtml(location) +
+                  "</option>";
+              }).join("")}
+            </select>
+          </div>
+        `;
+
+        return;
+      }
+
+      renderHostItemsPicker();
+    }
+
+    function renderHostItemsPicker() {
+      var hostSettings = document.getElementById("hostSettings");
+      var currentChoice = hostPickerTarget === "peaceful"
+        ? hostPeacefulChoice
+        : hostSpyChoice;
+
+      hostSettings.innerHTML = `
+        <div class="mode-card">
+          <h3>Выбор ведущего</h3>
+
+          <p class="small muted">
+            ${hostPickerTarget === "peaceful"
+              ? "Выбери предмет мирных."
+              : "Теперь выбери предмет шпионов."}
+          </p>
+
+          <div class="guess-grid">
+            ${items.map(function(item, index) {
+              var selected = currentChoice && currentChoice.slug === item.slug
+                ? " selected-secret"
+                : "";
+
+              return `
+                <button class="guess-card item${selected}" data-host-item="${index}">
+                  <img class="guess-image" src="${itemImage(item)}" alt="" loading="lazy">
+                  <span class="guess-name">${escapeHtml(item.name)}</span>
+                </button>
+              `;
+            }).join("")}
+          </div>
+
+          ${hostPickerTarget === "spy"
+            ? "<button id='hostBackButton' class='btn alt'>← Изменить предмет мирных</button>"
+            : ""}
+        </div>
+      `;
+
+      var buttons = document.querySelectorAll("[data-host-item]");
+
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function() {
+          var item = items[Number(this.dataset.hostItem)];
+
+          if (hostPickerTarget === "peaceful") {
+            hostPeacefulChoice = item;
+            hostPickerTarget = "spy";
+          } else {
+            hostSpyChoice = item;
+          }
+
+          haptic("impact");
+          renderHostItemsPicker();
+        });
+      }
+
+      var backButton = document.getElementById("hostBackButton");
+
+      if (backButton) {
+        backButton.addEventListener("click", function() {
+          hostPickerTarget = "peaceful";
+          renderHostItemsPicker();
+        });
+      }
+    }
+
+    function createSpyGame() {
+      var playersInput = Number(document.getElementById("playersCount").value);
+      var spiesInput = Number(document.getElementById("spiesCount").value);
+      var minutesInput = Number(document.getElementById("minutesCount").value);
+
+      var playersCount = Math.max(3, Math.min(20, playersInput || 5));
+      var spiesCount = Math.max(1, Math.min(playersCount - 1, spiesInput || 1));
+      var minutes = Math.max(1, Math.min(60, minutesInput || 8));
+
+      var peacefulAnswer;
+      var spyAnswer;
+      var location = "";
+
+      if (selectedSpyType === "heroes") {
+        if (selectedSpyMode === "host") {
+          peacefulAnswer = document.getElementById("peacefulHero").value;
+          spyAnswer = document.getElementById("spyHero").value;
+          location = document.getElementById("locationSelect").value;
+
+          if (peacefulAnswer === spyAnswer) {
+            alert("Выбери разных героев для мирных и шпионов.");
+            return;
+          }
+        } else {
+          peacefulAnswer = randomItem(heroes).name;
+
+          do {
+            spyAnswer = randomItem(heroes).name;
+          } while (spyAnswer === peacefulAnswer);
+
+          location = randomItem(locations);
+        }
+      } else {
+        if (selectedSpyMode === "host") {
+          if (!hostPeacefulChoice || !hostSpyChoice) {
+            alert("Выбери предмет мирных и предмет шпионов.");
+            return;
+          }
+
+          if (hostPeacefulChoice.slug === hostSpyChoice.slug) {
+            alert("Для мирных и шпионов выбери разные предметы.");
+            return;
+          }
+
+          peacefulAnswer = hostPeacefulChoice;
+          spyAnswer = hostSpyChoice;
+        } else {
+          peacefulAnswer = randomItem(items);
+
+          do {
+            spyAnswer = randomItem(items);
+          } while (spyAnswer.slug === peacefulAnswer.slug);
+        }
+      }
+
+      var playerIndexes = [];
+
+      for (var i = 0; i < playersCount; i++) {
+        playerIndexes.push(i);
+      }
+
+      spyGame = {
+        type: selectedSpyType,
+        timerMode: selectedTimerMode,
+        playersCount: playersCount,
+        minutes: minutes,
+        peacefulAnswer: peacefulAnswer,
+        spyAnswer: spyAnswer,
+        location: location,
+        spyIndexes: shuffle(playerIndexes).slice(0, spiesCount),
+        currentPlayer: 0
+      };
+
+      haptic("success");
+      renderSpyRoleScreen();
+    }
+
+    function renderSpyRoleScreen() {
+      var playerNumber = spyGame.currentPlayer + 1;
+      var isSpy = spyGame.spyIndexes.indexOf(spyGame.currentPlayer) !== -1;
+      var isLast = playerNumber === spyGame.playersCount;
+
+      app.innerHTML = `
+        <div class="wrap">
+          <h1>🕵️ Dota2SpyForSolin</h1>
+
+          <div class="card">
+            <div class="player-number">Игрок ${playerNumber}</div>
+
+            <p class="muted" style="text-align:center">
+              Остальные игроки не должны смотреть на экран.
+            </p>
+
+            <button id="roleButton" class="secret-button">
+              Нажми и удерживай,<br>чтобы увидеть роль
+            </button>
+
+            <p class="muted small" style="text-align:center">
+              Отпусти кнопку, когда запомнишь роль.
+            </p>
+
+            <button id="nextButton" class="btn alt" disabled>
+              ${isLast ? "🚀 Начать игру" : "Передать игроку " + (playerNumber + 1)}
+            </button>
+          </div>
+
+          <button id="cancelSpyButton" class="btn danger">Отменить игру</button>
+        </div>
+      `;
+
+      var roleButton = document.getElementById("roleButton");
+      var nextButton = document.getElementById("nextButton");
+      var roleVisible = false;
+      var roleWasShown = false;
+
+      function showRole() {
+        if (roleVisible) {
+          return;
+        }
+
+        roleVisible = true;
+        roleWasShown = true;
+
+        roleButton.classList.add(isSpy ? "open-spy" : "open-peaceful");
+
+        if (spyGame.type === "heroes") {
+          if (isSpy) {
+            roleButton.innerHTML =
+              "🕵️<br>ТЫ ШПИОН<br>" +
+              "<span style='font-size:15px'>Твой герой: " +
+              escapeHtml(spyGame.spyAnswer) +
+              "</span><br>" +
+              "<span style='font-size:15px'>Локация: " +
+              escapeHtml(spyGame.location) +
+              "</span>";
+          } else {
+            roleButton.innerHTML =
+              "🛡️<br>ТЫ МИРНЫЙ<br>" +
+              "<span style='font-size:15px'>Твой герой: " +
+              escapeHtml(spyGame.peacefulAnswer) +
+              "</span><br>" +
+              "<span style='font-size:15px'>Локация: " +
+              escapeHtml(spyGame.location) +
+              "</span>";
+          }
+        } else {
+          var answer = isSpy ? spyGame.spyAnswer : spyGame.peacefulAnswer;
+
+          roleButton.innerHTML =
+            (isSpy ? "🕵️<br>ТЫ ШПИОН" : "🛡️<br>ТЫ МИРНЫЙ") +
+            "<br><span style='font-size:15px'>Предмет: " +
+            escapeHtml(answer.name) +
+            "</span>";
+        }
+
+        haptic("impact");
+      }
+
+      function hideRole() {
+        if (!roleVisible) {
+          return;
+        }
+
+        roleVisible = false;
+        roleButton.classList.remove("open-peaceful");
+        roleButton.classList.remove("open-spy");
+        roleButton.innerHTML = "Нажми и удерживай,<br>чтобы увидеть роль";
+        nextButton.disabled = false;
+      }
+
+      roleButton.addEventListener("pointerdown", function(event) {
+        event.preventDefault();
+        showRole();
+      });
+
+      roleButton.addEventListener("pointerup", function(event) {
+        event.preventDefault();
+        hideRole();
+      });
+
+      roleButton.addEventListener("pointerleave", hideRole);
+      roleButton.addEventListener("pointercancel", hideRole);
+
+      nextButton.addEventListener("click", function() {
+        if (!roleWasShown) {
+          return;
+        }
+
+        if (spyGame.currentPlayer < spyGame.playersCount - 1) {
+          spyGame.currentPlayer += 1;
+          renderSpyRoleScreen();
+        } else {
+          renderSpyGameScreen();
+        }
+      });
+
+      document.getElementById("cancelSpyButton").addEventListener("click", renderHome);
+    }
+
+    function renderSpyGameScreen() {
+      var hasTimer = spyGame.timerMode === "withTime";
+      var totalSeconds = spyGame.minutes * 60;
+
+      app.innerHTML = `
+        <div class="wrap">
+          <h1>🕵️ Dota2SpyForSolin</h1>
+
+          <div class="card">
+            <h2>Игра началась</h2>
+
+            <p class="muted">
+              Задавайте вопросы друг другу. Не называйте правильный ответ слишком прямо.
+            </p>
+
+            <div id="timer" class="timer">
+              ${hasTimer ? formatTime(totalSeconds) : "∞"}
+            </div>
+
+            ${hasTimer
+              ? "<button id='timerButton' class='btn'>▶️ Запустить таймер</button>"
+              : "<div class='guess-status'>♾️ Игра идёт без ограничения по времени</div>"}
+
+            <button id="finishSpyButton" class="btn yellow">🏁 Закончить раунд</button>
+          </div>
+
+          <button id="cancelSpyButton" class="btn danger">Отменить игру</button>
+        </div>
+      `;
+
+      if (hasTimer) {
+        var seconds = totalSeconds;
+        var running = false;
+        var timer = document.getElementById("timer");
+        var timerButton = document.getElementById("timerButton");
+
+        timerButton.addEventListener("click", function() {
+          if (running) {
+            clearInterval(timerId);
+            running = false;
+            timerButton.textContent = "▶️ Продолжить таймер";
+            return;
+          }
+
+          if (seconds <= 0) {
+            return;
+          }
+
+          running = true;
+          timerButton.textContent = "⏸️ Пауза";
+
+          timerId = setInterval(function() {
+            seconds -= 1;
+            timer.textContent = formatTime(seconds);
+
+            if (seconds <= 0) {
+              clearInterval(timerId);
+              running = false;
+              timer.classList.add("finished");
+              timerButton.disabled = true;
+              haptic("error");
+
+              setTimeout(function() {
+                alert("Время вышло!");
+              }, 100);
+            }
+          }, 1000);
+        });
+      }
+
+      document.getElementById("finishSpyButton").addEventListener("click", function() {
+        clearInterval(timerId);
+        renderSpyResultScreen();
+      });
+
+      document.getElementById("cancelSpyButton").addEventListener("click", renderHome);
+    }
+
+    function renderSpyResultScreen() {
+      var spies = spyGame.spyIndexes.map(function(index) {
+        return "Игрок " + (index + 1);
+      }).join(", ");
+
+      var peacefulName = spyGame.type === "heroes"
+        ? spyGame.peacefulAnswer
+        : spyGame.peacefulAnswer.name;
+
+      var spyName = spyGame.type === "heroes"
+        ? spyGame.spyAnswer
+        : spyGame.spyAnswer.name;
+
+      app.innerHTML = `
+        <div class="wrap">
+          <h1>🕵️ Итоги раунда</h1>
+
+          <div class="card">
+            <div class="result">
+              <div class="role-icon">🛡️</div>
+              <h2>Мирные</h2>
+              <p><b>${escapeHtml(peacefulName)}</b></p>
+              ${spyGame.type === "heroes"
+                ? "<p>Локация: <b>" + escapeHtml(spyGame.location) + "</b></p>"
+                : ""}
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="result">
+              <div class="role-icon">🕵️</div>
+              <h2>Шпионы</h2>
+              <p><b>${escapeHtml(spyName)}</b></p>
+              ${spyGame.type === "heroes"
+                ? "<p>Локация: <b>" + escapeHtml(spyGame.location) + "</b></p>"
+                : ""}
+              <p>Шпионы: <b>${escapeHtml(spies)}</b></p>
+            </div>
+          </div>
+
+          <button id="homeFromSpyResult" class="btn">🏠 В главное меню</button>
+        </div>
+      `;
+
+      document.getElementById("homeFromSpyResult").addEventListener("click", renderHome);
+    }
+
+    function renderGuessTypeScreen() {
+      clearInterval(timerId);
+
+      app.innerHTML = `
+        <div class="wrap">
+          <h1>🔍 Угадай героя / предмет</h1>
+
+          <div class="card">
+            <h2>Игра на двоих</h2>
+
+            <p class="muted">
+              Каждый игрок загадывает одну карточку. Задавайте вопросы друг другу
+              и зачёркивайте неподходящие варианты.
+            </p>
+
+            <div class="choice-grid">
+              <button id="guessHeroesButton" class="choice-button">
+                <span class="main-mode-icon">🦸</span>
+                Герои
+                <span class="main-mode-subtitle">20 героев с портретами</span>
+              </button>
+
+              <button id="guessItemsButton" class="choice-button">
+                <span class="main-mode-icon">🗡️</span>
+                Предметы
+                <span class="main-mode-subtitle">20 предметов с иконками</span>
+              </button>
+            </div>
+
+            <button id="backFromGuessButton" class="btn alt">← В главное меню</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("guessHeroesButton").addEventListener("click", function() {
+        createGuessGame("heroes");
+      });
+
+      document.getElementById("guessItemsButton").addEventListener("click", function() {
+        createGuessGame("items");
+      });
+
+      document.getElementById("backFromGuessButton").addEventListener("click", renderHome);
+    }
+
+    function createGuessGame(type) {
+      var source = type === "heroes" ? heroes : items;
+
+      guessGame = {
+        type: type,
+        cards: shuffle(source).slice(0, 20),
+        playerOneSecret: null,
+        playerTwoSecret: null,
+        activePlayer: 1,
+        crossedByPlayerOne: [],
+        crossedByPlayerTwo: []
+      };
+
+      haptic("success");
+      renderGuessSecretScreen(1);
+    }
+
+    function renderGuessSecretScreen(player) {
+      var title = player === 1 ? "Игрок 1" : "Игрок 2";
+
+      app.innerHTML = `
+        <div class="wrap">
+          <h1>🔍 Угадай</h1>
+
+          <div class="card">
+            <div class="player-number">${title}</div>
+
+            <p class="muted" style="text-align:center">
+              Выбери одну секретную карточку. Не показывай экран сопернику.
+            </p>
+
+            <div class="guess-grid">
+              ${renderGuessCards("secret")}
+            </div>
+
+            <button id="cancelGuessSetup" class="btn danger">Отменить игру</button>
+          </div>
+        </div>
+      `;
+
+      var buttons = document.querySelectorAll("[data-guess-card]");
+
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function() {
+          var cardIndex = Number(this.dataset.guessCard);
+          var selectedCard = guessGame.cards[cardIndex];
+
+          if (player === 1) {
+            guessGame.playerOneSecret = selectedCard;
+          } else {
+            guessGame.playerTwoSecret = selectedCard;
+          }
+
+          haptic("impact");
+          renderSecretConfirmScreen(player);
+        });
+      }
+
+      document.getElementById("cancelGuessSetup").addEventListener("click", renderHome);
+    }
+
+    function renderSecretConfirmScreen(player) {
+      var secret = player === 1
+        ? guessGame.playerOneSecret
+        : guessGame.playerTwoSecret;
+
+      app.innerHTML = `
+        <div class="wrap">
+          <h1>🔍 Угадай</h1>
+
+          <div class="card">
+            <div class="player-number">Игрок ${player}</div>
+
+            <p class="muted" style="text-align:center">
+              Ты загадал:
+            </p>
+
+            <div class="result">
+              <img
+                class="secret-preview-image ${guessGame.type === "items" ? "item-image" : ""}"
+                src="${getImage(secret, guessGame.type)}"
+                alt=""
+              >
+              <h2>${escapeHtml(secret.name)}</h2>
+            </div>
+
+            <button id="confirmSecretButton" class="btn">
+              ${player === 1 ? "Передать телефон игроку 2" : "🚀 Начать игру"}
+            </button>
+
+            <button id="changeSecretButton" class="btn alt">← Выбрать другую карточку</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("confirmSecretButton").addEventListener("click", function() {
+        if (player === 1) {
+          renderPassPhoneScreen();
+        } else {
+          guessGame.activePlayer = 1;
+          renderGuessBoard();
+        }
+      });
+
+      document.getElementById("changeSecretButton").addEventListener("click", function() {
+        renderGuessSecretScreen(player);
+      });
+    }
+
+    function renderPassPhoneScreen() {
+      app.innerHTML = `
+        <div class="wrap">
+          <h1>🔍 Угадай</h1>
+
+          <div class="card">
+            <div class="player-number">Передай телефон</div>
+
+            <p class="muted" style="text-align:center">
+              Игрок 1 выбрал секретную карточку.<br>
+              Теперь телефон берёт игрок 2.
+            </p>
+
+            <button id="continueToPlayerTwo" class="btn">
+              Игрок 2: выбрать свою карточку
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("continueToPlayerTwo").addEventListener("click", function() {
+        renderGuessSecretScreen(2);
+      });
+    }
+
+    function renderGuessCards(mode) {
+      var html = "";
+
+      for (var i = 0; i < guessGame.cards.length; i++) {
+        var card = guessGame.cards[i];
+        var crossed = false;
+
+        if (mode === "play") {
+          var crossedList = guessGame.activePlayer === 1
+            ? guessGame.crossedByPlayerOne
+            : guessGame.crossedByPlayerTwo;
+
+          crossed = crossedList.indexOf(i) !== -1;
+        }
+
+        html += `
+          <button
+            class="guess-card ${guessGame.type === "items" ? "item" : ""} ${crossed ? "crossed" : ""}"
+            data-guess-card="${i}"
+          >
+            <img
+              class="guess-image"
+              src="${getImage(card, guessGame.type)}"
+              alt=""
+              loading="lazy"
+            >
+            <span class="guess-name">${escapeHtml(card.name)}</span>
+          </button>
+        `;
+      }
+
+      return html;
+    }
+
+    function renderGuessBoard() {
+      var player = guessGame.activePlayer;
+
+      app.innerHTML = `
+        <div class="wrap">
+          <h1>🔍 Угадай</h1>
+
+          <div class="guess-status">
+            Сейчас ходит <b>Игрок ${player}</b>.<br>
+            Задавайте вопросы. Нажми на карточку, чтобы зачеркнуть её.
+          </div>
+
+          <div class="card">
+            <div class="guess-grid">
+              ${renderGuessCards("play")}
+            </div>
+
+            <button id="switchTurnButton" class="btn blue">
+              🔄 Передать ход игроку ${player === 1 ? "2" : "1"}
+            </button>
+
+            <button id="finishGuessButton" class="btn yellow">
+              🏁 Закончить без победителя
+            </button>
+
+            <button id="cancelGuessButton" class="btn danger">
+              Отменить игру
+            </button>
+          </div>
+        </div>
+      `;
+
+      var buttons = document.querySelectorAll("[data-guess-card]");
+
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function() {
+          toggleGuessCard(Number(this.dataset.guessCard));
+        });
+      }
+
+      document.getElementById("switchTurnButton").addEventListener("click", function() {
+        guessGame.activePlayer = guessGame.activePlayer === 1 ? 2 : 1;
+        haptic("impact");
+        renderGuessBoard();
+      });
+
+      document.getElementById("finishGuessButton").addEventListener("click", function() {
+        renderGuessResult(0);
+      });
+
+      document.getElementById("cancelGuessButton").addEventListener("click", renderHome);
+    }
+
+    function toggleGuessCard(cardIndex) {
+      var crossedList = guessGame.activePlayer === 1
+        ? guessGame.crossedByPlayerOne
+        : guessGame.crossedByPlayerTwo;
+
+      var position = crossedList.indexOf(cardIndex);
+
+      if (position !== -1) {
+        crossedList.splice(position, 1);
+        haptic("impact");
+        renderGuessBoard();
+        return;
+      }
+
+      crossedList.push(cardIndex);
+
+      var chosenCard = guessGame.cards[cardIndex];
+      var opponentSecret = guessGame.activePlayer === 1
+        ? guessGame.playerTwoSecret
+        : guessGame.playerOneSecret;
+
+      haptic("impact");
+
+      if (chosenCard.slug === opponentSecret.slug) {
+        haptic("success");
+        renderGuessResult(guessGame.activePlayer);
+      } else {
+        renderGuessBoard();
+      }
+    }
+
+    function renderGuessResult(winner) {
+      var winnerText = winner === 1
+        ? "🏆 Победил игрок 1!"
+        : winner === 2
+          ? "🏆 Победил игрок 2!"
+          : "🏁 Игра закончена";
+
+      app.innerHTML = `
+        <div class="wrap">
+          <h1>🔍 Итоги игры</h1>
+
+          <div class="card">
+            <div class="result">
+              <div class="role-icon">${winner === 0 ? "🤝" : "🏆"}</div>
+              <h2>${winnerText}</h2>
+              <p class="muted">
+                ${winner === 0
+                  ? "Никто не зачеркнул секретную карточку соперника."
+                  : "Игрок зачеркнул секретную карточку противника."}
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Загадка игрока 1</h2>
+
+            <div class="result">
+              <img
+                class="secret-preview-image ${guessGame.type === "items" ? "item-image" : ""}"
+                src="${getImage(guessGame.playerOneSecret, guessGame.type)}"
+                alt=""
+              >
+              <h2>${escapeHtml(guessGame.playerOneSecret.name)}</h2>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Загадка игрока 2</h2>
+
+            <div class="result">
+              <img
+                class="secret-preview-image ${guessGame.type === "items" ? "item-image" : ""}"
+                src="${getImage(guessGame.playerTwoSecret, guessGame.type)}"
+                alt=""
+              >
+              <h2>${escapeHtml(guessGame.playerTwoSecret.name)}</h2>
+            </div>
+          </div>
+
+          <button id="newGuessGameButton" class="btn">🔄 Новая партия</button>
+          <button id="homeFromGuessButton" class="btn alt">🏠 В главное меню</button>
+        </div>
+      `;
+
+      document.getElementById("newGuessGameButton").addEventListener("click", function() {
+        createGuessGame(guessGame.type);
+      });
+
+      document.getElementById("homeFromGuessButton").addEventListener("click", renderHome);
+    }
+
+    function formatTime(seconds) {
+      var minutes = Math.floor(seconds / 60);
+      var restSeconds = seconds % 60;
+
+      return String(minutes).padStart(2, "0") +
+        ":" +
+        String(restSeconds).padStart(2, "0");
+    }
+
+    renderHome();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
