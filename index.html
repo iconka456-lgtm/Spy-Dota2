@@ -47,7 +47,7 @@
 
     .wrap {
       width: 100%;
-      max-width: 600px;
+      max-width: 650px;
       margin: 0 auto;
       padding: 18px 14px calc(36px + env(safe-area-inset-bottom));
     }
@@ -60,6 +60,11 @@
     h2 {
       margin: 0 0 10px;
       font-size: 21px;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 16px;
     }
 
     p {
@@ -135,12 +140,120 @@
       outline: none;
     }
 
+    .game-type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .game-type-button {
+      min-height: 155px;
+      padding: 16px 10px;
+      color: #fff;
+      background: var(--card2);
+      border: 2px solid #45454b;
+      border-radius: 18px;
+      font-weight: 700;
+    }
+
+    .game-type-button.selected {
+      border-color: var(--yellow);
+      background: #332d19;
+    }
+
+    .game-type-icon {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 48px;
+    }
+
+    .game-type-subtitle {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+
     .mode-card {
-      padding: 14px;
       margin-top: 10px;
+      padding: 14px;
       border: 1px solid #45454a;
       border-radius: 14px;
       background: var(--card2);
+    }
+
+    .picker-title {
+      margin: 18px 0 8px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .portrait-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      max-height: 410px;
+      padding-right: 2px;
+      overflow-y: auto;
+    }
+
+    .portrait-button {
+      min-width: 0;
+      padding: 0;
+      overflow: hidden;
+      color: #fff;
+      background: #111;
+      border: 2px solid #404045;
+      border-radius: 11px;
+      text-align: left;
+    }
+
+    .portrait-button.selected-peaceful {
+      border-color: var(--green);
+      box-shadow: 0 0 0 1px var(--green);
+    }
+
+    .portrait-button.selected-spy {
+      border-color: var(--yellow);
+      box-shadow: 0 0 0 1px var(--yellow);
+    }
+
+    .portrait-image {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1.45 / 1;
+      object-fit: cover;
+      background: #272727;
+    }
+
+    .item-image {
+      object-fit: contain;
+      padding: 7px;
+      background: #0b0b0b;
+    }
+
+    .portrait-name {
+      display: block;
+      min-height: 36px;
+      padding: 5px 4px 6px;
+      overflow: hidden;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-align: center;
+      text-overflow: ellipsis;
+    }
+
+    .picked-info {
+      margin-top: 10px;
+      padding: 10px;
+      color: #d6d6d6;
+      background: #101010;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.45;
     }
 
     .player-number {
@@ -153,7 +266,7 @@
 
     .secret-button {
       width: 100%;
-      min-height: 145px;
+      min-height: 165px;
       margin-top: 12px;
       padding: 18px;
       color: #fff;
@@ -179,6 +292,21 @@
       border-color: #ffe39b;
     }
 
+    .role-image {
+      display: block;
+      width: min(240px, 84%);
+      height: 135px;
+      margin: 12px auto 0;
+      object-fit: cover;
+      background: #121212;
+      border-radius: 12px;
+    }
+
+    .role-item-image {
+      object-fit: contain;
+      padding: 12px;
+    }
+
     .timer {
       margin: 20px 0;
       color: var(--green);
@@ -199,9 +327,24 @@
       border-radius: 14px;
     }
 
+    .result-image {
+      display: block;
+      width: min(260px, 90%);
+      height: 145px;
+      margin: 12px auto;
+      object-fit: cover;
+      background: #0d0d0d;
+      border-radius: 12px;
+    }
+
+    .result-item-image {
+      object-fit: contain;
+      padding: 12px;
+    }
+
     .role-icon {
       margin: 8px 0;
-      font-size: 64px;
+      font-size: 58px;
       text-align: center;
     }
 
@@ -222,26 +365,167 @@
     const app = document.getElementById("app");
 
     const heroes = [
-      "Abaddon", "Alchemist", "Ancient Apparition", "Anti-Mage",
-      "Axe", "Bane", "Batrider", "Beastmaster", "Bloodseeker",
-      "Bounty Hunter", "Bristleback", "Broodmother", "Chaos Knight",
-      "Clinkz", "Clockwerk", "Crystal Maiden", "Dazzle", "Doom",
-      "Dragon Knight", "Drow Ranger", "Earthshaker", "Ember Spirit",
-      "Enchantress", "Enigma", "Faceless Void", "Gyrocopter", "Huskar",
-      "Invoker", "Jakiro", "Juggernaut", "Kunkka", "Legion Commander",
-      "Lich", "Lifestealer", "Lina", "Lion", "Luna", "Magnus", "Mars",
-      "Medusa", "Meepo", "Mirana", "Monkey King", "Morphling", "Muerta",
-      "Naga Siren", "Nature's Prophet", "Necrophos", "Night Stalker",
-      "Nyx Assassin", "Ogre Magi", "Omniknight", "Oracle", "Pangolier",
-      "Phantom Assassin", "Phantom Lancer", "Phoenix", "Puck", "Pudge",
-      "Pugna", "Queen of Pain", "Razor", "Riki", "Rubick", "Sand King",
-      "Shadow Demon", "Shadow Fiend", "Shadow Shaman", "Silencer",
-      "Skywrath Mage", "Slardar", "Slark", "Snapfire", "Sniper",
-      "Spectre", "Spirit Breaker", "Storm Spirit", "Sven", "Techies",
-      "Templar Assassin", "Terrorblade", "Tidehunter", "Tinker", "Tiny",
-      "Treant Protector", "Troll Warlord", "Tusk", "Undying", "Ursa",
-      "Venomancer", "Viper", "Visage", "Void Spirit", "Warlock", "Weaver",
-      "Windranger", "Winter Wyvern", "Witch Doctor", "Wraith King", "Zeus"
+      { name: "Abaddon", slug: "abaddon" },
+      { name: "Alchemist", slug: "alchemist" },
+      { name: "Ancient Apparition", slug: "ancient_apparition" },
+      { name: "Anti-Mage", slug: "antimage" },
+      { name: "Axe", slug: "axe" },
+      { name: "Bane", slug: "bane" },
+      { name: "Batrider", slug: "batrider" },
+      { name: "Beastmaster", slug: "beastmaster" },
+      { name: "Bloodseeker", slug: "bloodseeker" },
+      { name: "Bounty Hunter", slug: "bounty_hunter" },
+      { name: "Bristleback", slug: "bristleback" },
+      { name: "Broodmother", slug: "broodmother" },
+      { name: "Chaos Knight", slug: "chaos_knight" },
+      { name: "Clinkz", slug: "clinkz" },
+      { name: "Clockwerk", slug: "rattletrap" },
+      { name: "Crystal Maiden", slug: "crystal_maiden" },
+      { name: "Dazzle", slug: "dazzle" },
+      { name: "Doom", slug: "doom_bringer" },
+      { name: "Dragon Knight", slug: "dragon_knight" },
+      { name: "Drow Ranger", slug: "drow_ranger" },
+      { name: "Earthshaker", slug: "earthshaker" },
+      { name: "Ember Spirit", slug: "ember_spirit" },
+      { name: "Enchantress", slug: "enchantress" },
+      { name: "Enigma", slug: "enigma" },
+      { name: "Faceless Void", slug: "faceless_void" },
+      { name: "Gyrocopter", slug: "gyrocopter" },
+      { name: "Huskar", slug: "huskar" },
+      { name: "Invoker", slug: "invoker" },
+      { name: "Jakiro", slug: "jakiro" },
+      { name: "Juggernaut", slug: "juggernaut" },
+      { name: "Kunkka", slug: "kunkka" },
+      { name: "Legion Commander", slug: "legion_commander" },
+      { name: "Lich", slug: "lich" },
+      { name: "Lifestealer", slug: "life_stealer" },
+      { name: "Lina", slug: "lina" },
+      { name: "Lion", slug: "lion" },
+      { name: "Luna", slug: "luna" },
+      { name: "Magnus", slug: "magnataur" },
+      { name: "Mars", slug: "mars" },
+      { name: "Medusa", slug: "medusa" },
+      { name: "Meepo", slug: "meepo" },
+      { name: "Mirana", slug: "mirana" },
+      { name: "Monkey King", slug: "monkey_king" },
+      { name: "Morphling", slug: "morphling" },
+      { name: "Muerta", slug: "muerta" },
+      { name: "Naga Siren", slug: "naga_siren" },
+      { name: "Nature's Prophet", slug: "furion" },
+      { name: "Necrophos", slug: "necrolyte" },
+      { name: "Night Stalker", slug: "night_stalker" },
+      { name: "Nyx Assassin", slug: "nyx_assassin" },
+      { name: "Ogre Magi", slug: "ogre_magi" },
+      { name: "Omniknight", slug: "omniknight" },
+      { name: "Oracle", slug: "oracle" },
+      { name: "Pangolier", slug: "pangolier" },
+      { name: "Phantom Assassin", slug: "phantom_assassin" },
+      { name: "Phantom Lancer", slug: "phantom_lancer" },
+      { name: "Phoenix", slug: "phoenix" },
+      { name: "Puck", slug: "puck" },
+      { name: "Pudge", slug: "pudge" },
+      { name: "Pugna", slug: "pugna" },
+      { name: "Queen of Pain", slug: "queenofpain" },
+      { name: "Razor", slug: "razor" },
+      { name: "Riki", slug: "riki" },
+      { name: "Rubick", slug: "rubick" },
+      { name: "Sand King", slug: "sand_king" },
+      { name: "Shadow Demon", slug: "shadow_demon" },
+      { name: "Shadow Fiend", slug: "nevermore" },
+      { name: "Shadow Shaman", slug: "shadow_shaman" },
+      { name: "Silencer", slug: "silencer" },
+      { name: "Skywrath Mage", slug: "skywrath_mage" },
+      { name: "Slardar", slug: "slardar" },
+      { name: "Slark", slug: "slark" },
+      { name: "Snapfire", slug: "snapfire" },
+      { name: "Sniper", slug: "sniper" },
+      { name: "Spectre", slug: "spectre" },
+      { name: "Spirit Breaker", slug: "spirit_breaker" },
+      { name: "Storm Spirit", slug: "storm_spirit" },
+      { name: "Sven", slug: "sven" },
+      { name: "Techies", slug: "techies" },
+      { name: "Templar Assassin", slug: "templar_assassin" },
+      { name: "Terrorblade", slug: "terrorblade" },
+      { name: "Tidehunter", slug: "tidehunter" },
+      { name: "Tinker", slug: "tinker" },
+      { name: "Tiny", slug: "tiny" },
+      { name: "Treant Protector", slug: "treant" },
+      { name: "Troll Warlord", slug: "troll_warlord" },
+      { name: "Tusk", slug: "tusk" },
+      { name: "Undying", slug: "undying" },
+      { name: "Ursa", slug: "ursa" },
+      { name: "Venomancer", slug: "venomancer" },
+      { name: "Viper", slug: "viper" },
+      { name: "Visage", slug: "visage" },
+      { name: "Void Spirit", slug: "void_spirit" },
+      { name: "Warlock", slug: "warlock" },
+      { name: "Weaver", slug: "weaver" },
+      { name: "Windranger", slug: "windrunner" },
+      { name: "Winter Wyvern", slug: "winter_wyvern" },
+      { name: "Witch Doctor", slug: "witch_doctor" },
+      { name: "Wraith King", slug: "skeleton_king" },
+      { name: "Zeus", slug: "zuus" }
+    ];
+
+    const items = [
+      { name: "Aghanim's Scepter", slug: "ultimate_scepter" },
+      { name: "Aghanim's Shard", slug: "aghanims_shard" },
+      { name: "Arcane Boots", slug: "arcane_boots" },
+      { name: "Armlet", slug: "armlet" },
+      { name: "Assault Cuirass", slug: "assault" },
+      { name: "Battle Fury", slug: "bfury" },
+      { name: "Black King Bar", slug: "black_king_bar" },
+      { name: "Blink Dagger", slug: "blink" },
+      { name: "Bloodthorn", slug: "bloodthorn" },
+      { name: "Boots of Travel", slug: "travel_boots" },
+      { name: "Bottle", slug: "bottle" },
+      { name: "Butterfly", slug: "butterfly" },
+      { name: "Crimson Guard", slug: "crimson_guard" },
+      { name: "Daedalus", slug: "greater_crit" },
+      { name: "Dagon", slug: "dagon" },
+      { name: "Desolator", slug: "desolator" },
+      { name: "Diffusal Blade", slug: "diffusal_blade" },
+      { name: "Divine Rapier", slug: "rapier" },
+      { name: "Dragon Lance", slug: "dragon_lance" },
+      { name: "Ethereal Blade", slug: "ethereal_blade" },
+      { name: "Eye of Skadi", slug: "skadi" },
+      { name: "Force Staff", slug: "force_staff" },
+      { name: "Gleipnir", slug: "gungir" },
+      { name: "Guardian Greaves", slug: "guardian_greaves" },
+      { name: "Hand of Midas", slug: "hand_of_midas" },
+      { name: "Heart of Tarrasque", slug: "heart" },
+      { name: "Heaven's Halberd", slug: "heavens_halberd" },
+      { name: "Hurricane Pike", slug: "hurricane_pike" },
+      { name: "Kaya", slug: "kaya" },
+      { name: "Linken's Sphere", slug: "sphere" },
+      { name: "Lotus Orb", slug: "lotus_orb" },
+      { name: "Manta Style", slug: "manta" },
+      { name: "Mask of Madness", slug: "mask_of_madness" },
+      { name: "Meteor Hammer", slug: "meteor_hammer" },
+      { name: "Mjollnir", slug: "mjollnir" },
+      { name: "Monkey King Bar", slug: "monkey_king_bar" },
+      { name: "Moon Shard", slug: "moon_shard" },
+      { name: "Nullifier", slug: "nullifier" },
+      { name: "Octarine Core", slug: "octarine_core" },
+      { name: "Orchid Malevolence", slug: "orchid" },
+      { name: "Overwhelming Blink", slug: "overwhelming_blink" },
+      { name: "Pipe of Insight", slug: "pipe" },
+      { name: "Power Treads", slug: "power_treads" },
+      { name: "Radiance", slug: "radiance" },
+      { name: "Refresher Orb", slug: "refresher" },
+      { name: "Rod of Atos", slug: "rod_of_atos" },
+      { name: "Sange and Yasha", slug: "sange_and_yasha" },
+      { name: "Satanic", slug: "satanic" },
+      { name: "Scythe of Vyse", slug: "sheepstick" },
+      { name: "Shadow Blade", slug: "invis_sword" },
+      { name: "Shiva's Guard", slug: "shivas_guard" },
+      { name: "Silver Edge", slug: "silver_edge" },
+      { name: "Solar Crest", slug: "solar_crest" },
+      { name: "Spirit Vessel", slug: "spirit_vessel" },
+      { name: "Vanguard", slug: "vanguard" },
+      { name: "Veil of Discord", slug: "veil_of_discord" },
+      { name: "Wind Waker", slug: "wind_waker" },
+      { name: "Witch Blade", slug: "witch_blade" }
     ];
 
     const locations = [
@@ -258,6 +542,10 @@
 
     let game = null;
     let timerId = null;
+    let selectedGameType = "heroes";
+    let selectedMode = "random";
+    let hostPeacefulChoice = null;
+    let hostSpyChoice = null;
 
     try {
       if (window.Telegram && window.Telegram.WebApp) {
@@ -268,25 +556,25 @@
       console.log("Telegram API не подключён", error);
     }
 
-    function randomItem(items) {
-      return items[Math.floor(Math.random() * items.length)];
+    function randomItem(list) {
+      return list[Math.floor(Math.random() * list.length)];
     }
 
-    function shuffle(items) {
-      const result = items.slice();
+    function shuffle(list) {
+      const result = list.slice();
 
       for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        const temp = result[i];
+        const temporary = result[i];
         result[i] = result[j];
-        result[j] = temp;
+        result[j] = temporary;
       }
 
       return result;
     }
 
     function escapeHtml(value) {
-      return String(value)
+      return String(value || "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -314,15 +602,70 @@
       }
     }
 
+    function getImageUrl(entry, gameType) {
+      if (gameType === "heroes") {
+        return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/" +
+          entry.slug +
+          ".png";
+      }
+
+      return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/" +
+        entry.slug +
+        ".png";
+    }
+
+    function getEntries() {
+      return selectedGameType === "heroes" ? heroes : items;
+    }
+
+    function getTypeLabel(type) {
+      return type === "heroes" ? "героя" : "предмет";
+    }
+
+    function getTypePlural(type) {
+      return type === "heroes" ? "Герои" : "Предметы";
+    }
+
+    function getLocationText() {
+      if (!game) {
+        return "";
+      }
+
+      return game.gameType === "heroes"
+        ? "<br><span style='font-size:15px'>Локация: " + escapeHtml(game.location) + "</span>"
+        : "";
+    }
+
     function renderHome() {
       clearInterval(timerId);
+
+      hostPeacefulChoice = null;
+      hostSpyChoice = null;
 
       app.innerHTML = `
         <div class="wrap">
           <h1>🕵️ Dota2SpyForSolin</h1>
 
           <div class="card">
-            <h2>Игра на одном устройстве</h2>
+            <h2>Выбери мини-игру</h2>
+
+            <div class="game-type-grid">
+              <button id="heroesTypeButton" class="game-type-button selected">
+                <span class="game-type-icon">🦸</span>
+                Герои
+                <span class="game-type-subtitle">Узнай героя и локацию</span>
+              </button>
+
+              <button id="itemsTypeButton" class="game-type-button">
+                <span class="game-type-icon">🗡️</span>
+                Предметы
+                <span class="game-type-subtitle">Узнай предмет</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 id="settingsTitle">Настройки: Герои</h2>
 
             <label for="gameMode">Режим игры</label>
             <select id="gameMode">
@@ -330,394 +673,44 @@
               <option value="host">🎙️ С ведущим</option>
             </select>
 
-            <div id="modeDescription" class="mode-card small muted">
-              Приложение случайно выбирает героя для мирных, героя для шпионов и локацию.
-            </div>
+            <div id="modeDescription" class="mode-card small muted"></div>
 
-            <label for="players">Количество игроков</label>
-            <input id="players" type="number" min="3" max="20" value="5">
+            <label for="playersCount">Количество игроков</label>
+            <input id="playersCount" type="number" min="3" max="20" value="5">
 
-            <label for="spies">Количество шпионов</label>
-            <input id="spies" type="number" min="1" max="5" value="1">
+            <label for="spiesCount">Количество шпионов</label>
+            <input id="spiesCount" type="number" min="1" max="5" value="1">
 
-            <label for="minutes">Время игры в минутах</label>
-            <input id="minutes" type="number" min="1" max="60" value="8">
+            <label for="minutesCount">Время игры в минутах</label>
+            <input id="minutesCount" type="number" min="1" max="60" value="8">
 
-            <div id="hostSettings" class="hidden">
-              <div class="mode-card">
-                <h2>Настройки ведущего</h2>
+            <div id="hostSettings" class="hidden"></div>
 
-                <label for="peacefulHero">Герой мирных</label>
-                <select id="peacefulHero">
-                  ${heroes.map(function(hero) {
-                    return `<option value="${escapeHtml(hero)}">${escapeHtml(hero)}</option>`;
-                  }).join("")}
-                </select>
-
-                <label for="spyHero">Герой шпионов</label>
-                <select id="spyHero">
-                  ${heroes.map(function(hero) {
-                    return `<option value="${escapeHtml(hero)}">${escapeHtml(hero)}</option>`;
-                  }).join("")}
-                </select>
-
-                <label for="gameLocation">Локация для всех</label>
-                <select id="gameLocation">
-                  ${locations.map(function(location) {
-                    return `<option value="${escapeHtml(location)}">${escapeHtml(location)}</option>`;
-                  }).join("")}
-                </select>
-
-                <p class="muted small">
-                  Мирные увидят своего героя и локацию. Шпионы увидят другого героя и ту же локацию.
-                </p>
-              </div>
-            </div>
-
-            <button class="btn" id="startSetup">🎮 Начать раздачу ролей</button>
+            <button class="btn" id="startGameButton">🎮 Начать раздачу ролей</button>
           </div>
 
           <div class="card">
             <h2>Правила</h2>
             <p class="muted small">
-              Каждый игрок удерживает кнопку, запоминает свою роль, отпускает кнопку и передаёт телефон следующему.
-              Мирные пытаются найти шпионов, а шпионы — не раскрыться.
+              Игроки по очереди удерживают кнопку, смотрят свою роль и передают телефон дальше.
+              Мирные знают правильную информацию, а шпионы получают другую и пытаются не раскрыться.
             </p>
           </div>
         </div>
       `;
 
-      document.getElementById("gameMode").addEventListener("change", updateModeView);
-      document.getElementById("startSetup").addEventListener("click", createGame);
-
-      updateModeView();
-    }
-
-    function updateModeView() {
-      const mode = document.getElementById("gameMode").value;
-      const hostSettings = document.getElementById("hostSettings");
-      const modeDescription = document.getElementById("modeDescription");
-
-      hostSettings.classList.toggle("hidden", mode !== "host");
-
-      if (mode === "host") {
-        modeDescription.textContent =
-          "Ведущий выбирает героя мирных, отдельного героя шпионов и общую локацию.";
-      } else {
-        modeDescription.textContent =
-          "Приложение случайно выбирает героя для мирных, героя для шпионов и локацию.";
-      }
-    }
-
-    function createGame() {
-      const mode = document.getElementById("gameMode").value;
-      const playersInput = Number(document.getElementById("players").value);
-      const spiesInput = Number(document.getElementById("spies").value);
-      const minutesInput = Number(document.getElementById("minutes").value);
-
-      const playersCount = Math.max(3, Math.min(20, playersInput || 5));
-      const spiesCount = Math.max(1, Math.min(playersCount - 1, spiesInput || 1));
-      const minutes = Math.max(1, Math.min(60, minutesInput || 8));
-
-      let peacefulHero;
-      let spyHero;
-      let location;
-
-      if (mode === "host") {
-        peacefulHero = document.getElementById("peacefulHero").value;
-        spyHero = document.getElementById("spyHero").value;
-        location = document.getElementById("gameLocation").value;
-
-        if (peacefulHero === spyHero) {
-          alert("Выбери разных героев для мирных и шпионов.");
-          return;
-        }
-      } else {
-        peacefulHero = randomItem(heroes);
-
-        do {
-          spyHero = randomItem(heroes);
-        } while (spyHero === peacefulHero);
-
-        location = randomItem(locations);
-      }
-
-      const indexes = [];
-
-      for (let i = 0; i < playersCount; i++) {
-        indexes.push(i);
-      }
-
-      const spyIndexes = shuffle(indexes).slice(0, spiesCount);
-
-      game = {
-        mode: mode,
-        playersCount: playersCount,
-        spiesCount: spiesCount,
-        minutes: minutes,
-        peacefulHero: peacefulHero,
-        spyHero: spyHero,
-        location: location,
-        spyIndexes: spyIndexes,
-        currentPlayer: 0
-      };
-
-      haptic("success");
-      renderRoleScreen();
-    }
-
-    function renderRoleScreen() {
-      const playerNumber = game.currentPlayer + 1;
-      const isSpy = game.spyIndexes.includes(game.currentPlayer);
-      const isLast = playerNumber === game.playersCount;
-
-      app.innerHTML = `
-        <div class="wrap">
-          <h1>🕵️ Dota2SpyForSolin</h1>
-
-          <div class="card">
-            <div class="player-number">Игрок ${playerNumber}</div>
-
-            <p class="muted" style="text-align:center">
-              Убедись, что другие игроки не смотрят на экран.
-            </p>
-
-            <button id="roleButton" class="secret-button">
-              Нажми и удерживай,<br>чтобы увидеть роль
-            </button>
-
-            <p class="muted small" style="text-align:center">
-              После просмотра отпусти кнопку — информация снова скроется.
-            </p>
-
-            <button id="nextButton" class="btn alt" disabled>
-              ${isLast ? "🚀 Начать игру" : "Передать игроку " + (playerNumber + 1)}
-            </button>
-          </div>
-
-          <button id="cancelButton" class="btn danger">Отменить игру</button>
-        </div>
-      `;
-
-      const roleButton = document.getElementById("roleButton");
-      const nextButton = document.getElementById("nextButton");
-      let roleWasShown = false;
-      let roleIsVisible = false;
-
-      function showRole() {
-        if (roleIsVisible) {
-          return;
-        }
-
-        roleIsVisible = true;
-        haptic("impact");
-
-        if (isSpy) {
-          roleButton.classList.add("open-spy");
-          roleButton.innerHTML =
-            "🕵️<br>" +
-            "ТЫ ШПИОН<br>" +
-            "<span style='font-size:16px'>Твой герой: " +
-            escapeHtml(game.spyHero) +
-            "</span><br>" +
-            "<span style='font-size:16px'>Локация: " +
-            escapeHtml(game.location) +
-            "</span>";
-        } else {
-          roleButton.classList.add("open-peaceful");
-          roleButton.innerHTML =
-            "🛡️<br>" +
-            "ТЫ МИРНЫЙ<br>" +
-            "<span style='font-size:16px'>Твой герой: " +
-            escapeHtml(game.peacefulHero) +
-            "</span><br>" +
-            "<span style='font-size:16px'>Локация: " +
-            escapeHtml(game.location) +
-            "</span>";
-        }
-      }
-
-      function hideRole() {
-        if (!roleIsVisible) {
-          return;
-        }
-
-        roleIsVisible = false;
-        roleWasShown = true;
-
-        roleButton.classList.remove("open-spy");
-        roleButton.classList.remove("open-peaceful");
-        roleButton.innerHTML = "Нажми и удерживай,<br>чтобы увидеть роль";
-
-        nextButton.disabled = false;
-      }
-
-      roleButton.addEventListener("pointerdown", function(event) {
-        event.preventDefault();
-        showRole();
-      });
-
-      roleButton.addEventListener("pointerup", function(event) {
-        event.preventDefault();
-        hideRole();
-      });
-
-      roleButton.addEventListener("pointerleave", hideRole);
-      roleButton.addEventListener("pointercancel", hideRole);
-
-      nextButton.addEventListener("click", function() {
-        if (!roleWasShown) {
-          return;
-        }
-
-        haptic("success");
-
-        if (game.currentPlayer < game.playersCount - 1) {
-          game.currentPlayer += 1;
-          renderRoleScreen();
-        } else {
-          renderGameScreen();
-        }
-      });
-
-      document.getElementById("cancelButton").addEventListener("click", function() {
-        game = null;
-        renderHome();
-      });
-    }
-
-    function renderGameScreen() {
-      const totalSeconds = game.minutes * 60;
-
-      app.innerHTML = `
-        <div class="wrap">
-          <h1>🕵️ Dota2SpyForSolin</h1>
-
-          <div class="card">
-            <h2>Игра началась</h2>
-            <p class="muted">
-              Задавайте вопросы друг другу. Не называйте героя и локацию слишком прямо.
-            </p>
-
-            <div id="timer" class="timer">${formatTime(totalSeconds)}</div>
-
-            <button id="timerButton" class="btn">▶️ Запустить таймер</button>
-            <button id="finishButton" class="btn yellow">🏁 Закончить раунд</button>
-          </div>
-
-          <button id="cancelButton" class="btn danger">Отменить игру</button>
-        </div>
-      `;
-
-      let seconds = totalSeconds;
-      let running = false;
-
-      const timer = document.getElementById("timer");
-      const timerButton = document.getElementById("timerButton");
-
-      timerButton.addEventListener("click", function() {
-        if (running) {
-          clearInterval(timerId);
-          running = false;
-          timerButton.textContent = "▶️ Продолжить таймер";
-          return;
-        }
-
-        if (seconds <= 0) {
-          return;
-        }
-
-        running = true;
-        timerButton.textContent = "⏸️ Пауза";
-
-        timerId = setInterval(function() {
-          seconds -= 1;
-          timer.textContent = formatTime(seconds);
-
-          if (seconds <= 0) {
-            clearInterval(timerId);
-            running = false;
-            timer.classList.add("finished");
-            timerButton.disabled = true;
-
-            haptic("error");
-
-            setTimeout(function() {
-              alert("Время вышло! Выберите предполагаемого шпиона.");
-            }, 100);
-          }
-        }, 1000);
-      });
-
-      document.getElementById("finishButton").addEventListener("click", function() {
-        clearInterval(timerId);
-        renderResultScreen();
-      });
-
-      document.getElementById("cancelButton").addEventListener("click", function() {
-        clearInterval(timerId);
-        game = null;
-        renderHome();
-      });
-    }
-
-    function renderResultScreen() {
-      const spies = game.spyIndexes
-        .map(function(index) {
-          return "Игрок " + (index + 1);
-        })
-        .join(", ");
-
-      app.innerHTML = `
-        <div class="wrap">
-          <h1>🕵️ Dota2SpyForSolin</h1>
-
-          <div class="card">
-            <h2>Итоги раунда</h2>
-
-            <div class="result">
-              <div class="role-icon">🛡️</div>
-              <h2 class="peaceful-title">Мирные</h2>
-              <p>Герой: <b>${escapeHtml(game.peacefulHero)}</b></p>
-              <p>Локация: <b>${escapeHtml(game.location)}</b></p>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="result">
-              <div class="role-icon">🕵️</div>
-              <h2 class="spy-title">Шпионы</h2>
-              <p>Герой: <b>${escapeHtml(game.spyHero)}</b></p>
-              <p>Локация: <b>${escapeHtml(game.location)}</b></p>
-              <p>Шпионы: <b>${spies}</b></p>
-            </div>
-          </div>
-
-          <button id="newGameButton" class="btn">🔄 Новая игра</button>
-          <button id="settingsButton" class="btn alt">⚙️ К настройкам</button>
-        </div>
-      `;
-
-      document.getElementById("newGameButton").addEventListener("click", function() {
+      document.getElementById("heroesTypeButton").addEventListener("click", function() {
+        selectedGameType = "heroes";
         renderHome();
       });
 
-      document.getElementById("settingsButton").addEventListener("click", function() {
-        game = null;
+      document.getElementById("itemsTypeButton").addEventListener("click", function() {
+        selectedGameType = "items";
         renderHome();
       });
-    }
 
-    function formatTime(seconds) {
-      const minutes = Math.floor(seconds / 60);
-      const restSeconds = seconds % 60;
-
-      return String(minutes).padStart(2, "0") +
-        ":" +
-        String(restSeconds).padStart(2, "0");
-    }
-
-    renderHome();
-  </script>
-</body>
-</html>
+      document.getElementById("gameMode").value = selectedMode;
+      document.getElementById("gameMode").addEventListener("change", function() {
+        selectedMode = document.getElementById("gameMode").value;
+        hostPeacefulChoice = null;
+        hostSpyC
