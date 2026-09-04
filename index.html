@@ -37,9 +37,10 @@
     .error{color:#ff7676;white-space:pre-wrap}
     .ok{color:#7ee787}
     .divider{height:1px;background:#333;margin:18px 0}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .small{font-size:13px}
   </style>
 </head>
-
 <body>
 <div id="app"></div>
 
@@ -125,6 +126,8 @@ let state = JSON.parse(localStorage.spyDotaOnline || 'null');
 let roomData = null;
 let me = null;
 let channel = null;
+let roomPlayersCache = [];
+let lastRenderKey = '';
 
 function tgUser(){
   const u = tg?.initDataUnsafe?.user;
@@ -168,19 +171,19 @@ function home(){
   state = null;
   roomData = null;
   me = null;
+  roomPlayersCache = [];
+  lastRenderKey = '';
   if(channel) supabaseClient.removeChannel(channel);
   channel = null;
   localStorage.removeItem('spyDotaOnline');
 
   app.innerHTML = `<div class="wrap">
     <h1>🕵️ Spy: Dota 2</h1>
-
     <div class="card">
       <h2>Создать комнату</h2>
       <p class="muted">Ты создаёшь комнату и отправляешь код друзьям.</p>
       <button class="btn" onclick="createRoom()">🎮 Создать комнату</button>
     </div>
-
     <div class="card">
       <h2>Войти в комнату</h2>
       <input id="joinCode" maxlength="6" placeholder="Код комнаты" autocomplete="off">
@@ -189,20 +192,35 @@ function home(){
   </div>`;
 }
 
+function normalizeRoomSettings(r){
+  return {
+    mode: r?.mode || 'random',
+    hero: r?.hero || '',
+    location: r?.location || '',
+    spies_count: Number(r?.spies_count || 1),
+    players_count: Number(r?.players_count || 5),
+    current_player: Number(r?.current_player || 0)
+  };
+}
+
 async function createRoom(){
   const user = tgUser();
   const roomCode = code();
-  const hero = heroes[Math.floor(Math.random()*heroes.length)];
-  const location = locations[Math.floor(Math.random()*locations.length)];
+  const mode = document.getElementById('roomMode')?.value || 'random';
+  const hero = mode === 'host' ? (document.getElementById('heroPick')?.value || heroes[0]) : heroes[Math.floor(Math.random()*heroes.length)];
+  const location = mode === 'host' ? (document.getElementById('locationPick')?.value || locations[0]) : locations[Math.floor(Math.random()*locations.length)];
+  const spiesCount = Number(document.getElementById('spiesCount')?.value || 1);
+  const playersCount = Number(document.getElementById('playersCount')?.value || 5);
 
   try{
     const {data: room, error} = await supabaseClient.from('rooms').insert({
       code: roomCode,
       host_telegram_id: user.id,
-      players_count: 5,
-      spies_count: 1,
+      players_count: playersCount,
+      spies_count: spiesCount,
       hero,
       location,
+      mode,
       status:'waiting',
       current_player:0
     }).select().single();
@@ -310,7 +328,8 @@ async function loadRoom(){
 
   if(pError) return showError(pError.message);
 
-  me = players.find(p => Number(p.telegram_id) === Number(state.userId)) || null;
+  roomPlayersCache = players || [];
+  me = roomPlayersCache.find(p => Number(p.telegram_id) === Number(state.userId)) || null;
   if(!me) return showError('Твой игрок не найден');
 
   subscribe(room.id);
@@ -318,24 +337,69 @@ async function loadRoom(){
 }
 
 function subscribe(roomId){
-  if(channel) supabaseClient.removeChannel(channel);
+  if(channel) return;
 
   channel = supabaseClient
     .channel('spy-room-' + roomId)
     .on('postgres_changes',
-      {event:'*',schema:'public',table:'rooms',filter:'id=eq.' + roomId},
+      {event:'UPDATE',schema:'public',table:'rooms',filter:'id=eq.' + roomId},
       async () => { await loadRoom(); }
     )
     .on('postgres_changes',
-      {event:'*',schema:'public',table:'room_players',filter:'room_id=eq.' + roomId},
+      {event:'INSERT',schema:'public',table:'room_players',filter:'room_id=eq.' + roomId},
+      async () => { await loadRoom(); }
+    )
+    .on('postgres_changes',
+      {event:'UPDATE',schema:'public',table:'room_players',filter:'room_id=eq.' + roomId},
+      async () => { await loadRoom(); }
+    )
+    .on('postgres_changes',
+      {event:'DELETE',schema:'public',table:'room_players',filter:'room_id=eq.' + roomId},
       async () => { await loadRoom(); }
     )
     .subscribe();
 }
 
+function setRoomFields(fields){
+  roomData = Object.assign({}, roomData || {}, fields);
+}
+
+function renderKey(){
+  return JSON.stringify({
+    status: roomData?.status || '',
+    code: roomData?.code || '',
+    mode: roomData?.mode || '',
+    hero: roomData?.hero || '',
+    location: roomData?.location || '',
+    spies_count: roomData?.spies_count || '',
+    players: roomPlayersCache.map(p => [p.id,p.telegram_id,p.player_number,p.is_spy]),
+    me: me ? [me.id, me.telegram_id, me.player_number, me.is_spy] : null
+  });
+}
+
+function render(){
+  if(!roomData) return home();
+  const key = renderKey();
+  if(key === lastRenderKey) return;
+  lastRenderKey = key;
+
+  if(roomData.status === 'waiting') return renderWaiting();
+  if(roomData.status === 'playing') return renderPlaying();
+  if(roomData.status === 'finished') return renderFinished();
+  renderWaiting();
+}
+
+function getSpyIndexes(count, spyCount){
+  const indexes = [...Array(count).keys()];
+  for(let i=indexes.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [indexes[i],indexes[j]]=[indexes[j],indexes[i]];
+  }
+  return new Set(indexes.slice(0, spyCount));
+}
+
 async function startGame(){
   if(!state?.isHost) return;
-
   const {data:players, error} = await supabaseClient
     .from('room_players')
     .select('*')
@@ -343,21 +407,13 @@ async function startGame(){
     .order('player_number');
 
   if(error) return alert(error.message);
-
   if(players.length < 3){
     alert('Нужно минимум 3 игрока');
     return;
   }
 
   const spyCount = Math.min(Number(roomData.spies_count) || 1, players.length - 1);
-  const indexes = [...Array(players.length).keys()];
-
-  for(let i=indexes.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [indexes[i],indexes[j]]=[indexes[j],indexes[i]];
-  }
-
-  const spies = new Set(indexes.slice(0, spyCount));
+  const spies = getSpyIndexes(players.length, spyCount);
 
   for(let i=0;i<players.length;i++){
     const {error:e} = await supabaseClient
@@ -379,22 +435,10 @@ function leaveRoom(){
   home();
 }
 
-function render(){
-  if(!roomData) return home();
-  if(roomData.status === 'waiting') return renderWaiting();
-  if(roomData.status === 'playing') return renderPlaying();
-  if(roomData.status === 'finished') return renderFinished();
-  renderWaiting();
-}
-
 async function renderWaiting(){
-  const {data:players} = await supabaseClient
-    .from('room_players')
-    .select('*')
-    .eq('room_id', roomData.id)
-    .order('player_number');
-
-  const list = players || [];
+  const players = roomPlayersCache || [];
+  const mode = roomData.mode || 'random';
+  const isHost = !!state.isHost;
 
   app.innerHTML = `<div class="wrap">
     <h1>🕵️ Комната</h1>
@@ -403,36 +447,30 @@ async function renderWaiting(){
       <div class="muted">КОД КОМНАТЫ</div>
       <div class="code">${esc(roomData.code)}</div>
       <div>
-        <span class="pill">👥 ${list.length} игроков</span>
+        <span class="pill">👥 ${players.length} игроков</span>
         <span class="pill">🕵️ ${roomData.spies_count} шпион</span>
+        <span class="pill">🎮 ${mode === 'host' ? 'ведущий' : 'случайный'}</span>
       </div>
     </div>
 
     <div class="card">
       <h2>Игроки</h2>
       <div class="players">
-        ${list.map((p,i)=>`<div class="player">👤 Игрок ${i+1} ${Number(p.telegram_id)===Number(state.userId)?'<span class="ok">(ты)</span>':''}</div>`).join('')}
+        ${players.map((p,i)=>`<div class="player">👤 Игрок ${i+1} ${Number(p.telegram_id)===Number(state.userId)?'<span class="ok">(ты)</span>':''}</div>`).join('')}
       </div>
-      <div class="status">Друзья могут заходить по этому коду. Экран обновится автоматически.</div>
-      ${state.isHost
-        ? `<button class="btn" onclick="startGame()">▶️ Начать игру</button>`
-        : `<div class="status center">⏳ Ждём ведущего...</div>`}
+
+      ${isHost && mode === 'host' ? `<div class="status">Это режим ведущего. Герой, локация и шпион уже заданы при создании комнаты.</div>` : `<div class="status">Друзья могут заходить по этому коду. Экран обновится автоматически.</div>`}
+
+      ${isHost ? `<button class="btn" onclick="startGame()">▶️ Начать игру</button>` : `<div class="status center">⏳ Ждём ведущего...</div>`}
       <button class="btn alt" onclick="leaveRoom()">Выйти</button>
     </div>
   </div>`;
 }
 
 async function renderPlaying(){
-  const {data:players} = await supabaseClient
-    .from('room_players')
-    .select('*')
-    .eq('room_id', roomData.id)
-    .order('player_number');
-
-  const list = players || [];
-  const myPlayer = list.find(p => Number(p.telegram_id) === Number(state.userId));
+  const players = roomPlayersCache || [];
+  const myPlayer = players.find(p => Number(p.telegram_id) === Number(state.userId));
   me = myPlayer || me;
-
   const spy = !!me?.is_spy;
 
   app.innerHTML = `<div class="wrap">
@@ -458,19 +496,17 @@ async function renderPlaying(){
 
     <div class="card">
       <h3>В комнате</h3>
-      ${list.map((p,i)=>`<div class="player">👤 Игрок ${i+1} ${Number(p.telegram_id)===Number(state.userId)?'— ты':''}</div>`).join('')}
+      ${players.map((p,i)=>`<div class="player">👤 Игрок ${i+1} ${Number(p.telegram_id)===Number(state.userId)?'— ты':''}</div>`).join('')}
     </div>
   </div>`;
 }
 
 async function finishGame(){
   if(!state?.isHost) return alert('Закончить раунд может ведущий.');
-
   const {error} = await supabaseClient
     .from('rooms')
     .update({status:'finished'})
     .eq('id',state.roomId);
-
   if(error) alert(error.message);
 }
 
@@ -489,11 +525,23 @@ async function renderFinished(){
   </div>`;
 }
 
-if(state?.roomId){
-  loadRoom().catch(e => showError(e.message));
-}else{
-  home();
+function setupCreateForm(){
+  const mode = document.getElementById('roomMode')?.value || 'random';
+  document.getElementById('hostOptions').style.display = mode === 'host' ? 'block' : 'none';
 }
-</script>
-</body>
-</html>
+
+function buildHome(){
+  app.innerHTML = `<div class="wrap">
+    <h1>🕵️ Spy: Dota 2</h1>
+
+    <div class="card">
+      <h2>Создать комнату</h2>
+      <p class="muted">Ты создаёшь комнату и отправляешь код друзьям.</p>
+
+      <label>Режим игры</label>
+      <select id="roomMode" onchange="setupCreateForm()">
+        <option value="random">Случайный</option>
+        <option value="host">С ведущим</option>
+      </select>
+
+      <div id="hostOptions" class=
