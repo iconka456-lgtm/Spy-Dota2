@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ru">
 <head>
@@ -6,82 +7,1366 @@
 <meta name="theme-color" content="#101010">
 <title>Dota2SpyForSolin</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <style>
-:root{--bg:#101010;--card:#1d1d1f;--card2:#151515;--line:#3a3a3a;--text:#fff;--muted:#aaa;--green:#76e5a2;--yellow:#ffd166;--red:#ff7b7b;--blue:#7ec8ff}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.wrap{max-width:620px;margin:auto;padding:18px 14px 36px}
-h1{font-size:28px;margin:8px 0 18px}
-h2{font-size:21px;margin:0 0 10px}
-h3{font-size:17px;margin:0 0 8px}
-p{line-height:1.45}
-.card{margin:12px 0;padding:17px;background:var(--card);border:1px solid var(--line);border-radius:18px}
-.muted{color:var(--muted)}
-.small{font-size:13px}
-.hidden{display:none!important}
-.btn{width:100%;margin-top:10px;padding:15px;border:0;border-radius:14px;background:#fff;color:#111;font-weight:700}
-.alt{background:#303035;color:#fff}
-.danger{background:#a83131;color:#fff}
-.yellow{background:var(--yellow);color:#211700}
-.blue{background:var(--blue);color:#071925}
-.btn:disabled{opacity:.45}
-label{display:block;margin:12px 0 6px;color:#d0d0d0;font-size:14px}
-input,select{width:100%;padding:13px;color:#fff;background:#111;border:1px solid #4a4a4a;border-radius:12px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.mode{min-height:140px;padding:15px 8px;background:var(--card2);color:#fff;border:2px solid #45454b;border-radius:18px;font-weight:700}
-.mode .ico{display:block;font-size:44px;margin-bottom:9px}
-.mode small{display:block;color:var(--muted);margin-top:7px;font-weight:400}
-.selected{border-color:var(--yellow)!important;background:#332d19!important}
-.box{margin-top:10px;padding:14px;background:var(--card2);border:1px solid #45454a;border-radius:14px}
-.player{margin:12px 0 16px;color:var(--yellow);font-size:32px;font-weight:800;text-align:center}
-.secret{width:100%;min-height:145px;margin-top:12px;padding:18px;color:#fff;background:#35353a;border:2px solid #53535a;border-radius:18px;font-size:19px;font-weight:800;line-height:1.4;user-select:none;touch-action:none}
-.peace{color:#06180d;background:var(--green);border-color:#b2ffd0}
-.spy{color:#211700;background:var(--yellow);border-color:#ffe39b}
-.timer{margin:18px 0;color:var(--green);font-size:56px;font-weight:800;text-align:center}
-.timer.finished{color:var(--red)}
-.result{padding:16px;text-align:center;background:var(--card2);border-radius:14px}
-.role{font-size:58px;text-align:center}
-.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:8px}
-.gcard{position:relative;min-height:82px;overflow:hidden;padding:4px 2px;background:#111;color:#fff;border:1px solid #46464c;border-radius:9px;font-size:9px;font-weight:700;line-height:1.05;text-align:center}
-.gcard.crossed{opacity:.32;border-color:#8a3333}
-.gcard.crossed:before,.gcard.crossed:after{content:"";position:absolute;z-index:2;left:-15%;top:50%;width:130%;height:5px;background:var(--red);border-radius:99px}
-.gcard.crossed:before{transform:rotate(35deg)}
-.gcard.crossed:after{transform:rotate(-35deg)}
-.pic{display:block;width:100%;height:48px;object-fit:cover;border-radius:6px;background:#252525;margin:0 auto 3px}
-.item .pic{object-fit:contain;padding:3px}
-.status{margin:12px 0;padding:12px;color:#d8ecff;background:#112635;border:1px solid #28516b;border-radius:13px;text-align:center}
-.preview{display:block;width:150px;height:100px;object-fit:cover;margin:12px auto;border-radius:12px;background:#111}
-.preview.item{object-fit:contain;padding:12px}
-.err{margin:20px;padding:16px;background:#3b1717;border:1px solid #f07a7a;border-radius:15px}
-.tiny-note{margin-top:8px;font-size:10px;line-height:1.2;color:#666;text-align:center}
+:root{
+  --bg:#101010;
+  --card:#1d1d1f;
+  --card2:#151515;
+  --line:#3a3a3a;
+  --text:#fff;
+  --muted:#aaa;
+  --green:#76e5a2;
+  --yellow:#ffd166;
+  --red:#ff7b7b;
+  --blue:#7ec8ff;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+
+button,input,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.wrap{
+  max-width:620px;
+  margin:auto;
+  padding:18px 14px 36px;
+}
+
+h1{
+  margin:8px 0 18px;
+  font-size:28px;
+}
+
+h2{
+  margin:0 0 10px;
+  font-size:21px;
+}
+
+h3{
+  margin:0 0 8px;
+  font-size:17px;
+}
+
+p{
+  line-height:1.45;
+}
+
+.card{
+  margin:12px 0;
+  padding:17px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.small{
+  font-size:13px;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.btn{
+  width:100%;
+  margin-top:10px;
+  padding:15px;
+  border:0;
+  border-radius:14px;
+  background:#fff;
+  color:#111;
+  font-weight:700;
+}
+
+.alt{
+  background:#303035;
+  color:#fff;
+}
+
+.danger{
+  background:#a83131;
+  color:#fff;
+}
+
+.yellow{
+  background:var(--yellow);
+  color:#211700;
+}
+
+.blue{
+  background:var(--blue);
+  color:#071925;
+}
+
+.btn:disabled{
+  opacity:.45;
+}
+
+label{
+  display:block;
+  margin:12px 0 6px;
+  color:#d0d0d0;
+  font-size:14px;
+}
+
+input,select{
+  width:100%;
+  padding:13px;
+  color:#fff;
+  background:#111;
+  border:1px solid #4a4a4a;
+  border-radius:12px;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.mode{
+  min-height:140px;
+  padding:15px 8px;
+  background:var(--card2);
+  color:#fff;
+  border:2px solid #45454b;
+  border-radius:18px;
+  font-weight:700;
+}
+
+.mode .ico{
+  display:block;
+  margin-bottom:9px;
+  font-size:44px;
+}
+
+.mode small{
+  display:block;
+  margin-top:7px;
+  color:var(--muted);
+  font-weight:400;
+}
+
+.selected{
+  background:#332d19!important;
+  border-color:var(--yellow)!important;
+}
+
+.box{
+  margin-top:10px;
+  padding:14px;
+  background:var(--card2);
+  border:1px solid #45454a;
+  border-radius:14px;
+}
+
+.player{
+  margin:12px 0 16px;
+  color:var(--yellow);
+  font-size:32px;
+  font-weight:800;
+  text-align:center;
+}
+
+.secret{
+  width:100%;
+  min-height:145px;
+  margin-top:12px;
+  padding:18px;
+  color:#fff;
+  background:#35353a;
+  border:2px solid #53535a;
+  border-radius:18px;
+  font-size:19px;
+  font-weight:800;
+  line-height:1.4;
+  user-select:none;
+  touch-action:none;
+}
+
+.peace{
+  color:#06180d;
+  background:var(--green);
+  border-color:#b2ffd0;
+}
+
+.spy{
+  color:#211700;
+  background:var(--yellow);
+  border-color:#ffe39b;
+}
+
+.timer{
+  margin:18px 0;
+  color:var(--green);
+  font-size:56px;
+  font-weight:800;
+  text-align:center;
+}
+
+.timer.finished{
+  color:var(--red);
+}
+
+.result{
+  padding:16px;
+  text-align:center;
+  background:var(--card2);
+  border-radius:14px;
+}
+
+.role{
+  font-size:58px;
+  text-align:center;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;
+  margin-top:8px;
+}
+
+.gcard{
+  position:relative;
+  min-height:88px;
+  overflow:hidden;
+  padding:3px;
+  background:linear-gradient(145deg,#29292f,#101011);
+  color:#fff;
+  border:1px solid #705b2d;
+  border-radius:10px;
+  box-shadow:0 2px 7px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);
+  font-family:Arial,sans-serif;
+  font-size:9px;
+  font-weight:800;
+  line-height:1.05;
+  letter-spacing:.05px;
+  text-align:center;
+  transition:transform .12s ease,border-color .12s ease,filter .12s ease;
+}
+
+.gcard:active{
+  transform:scale(.94);
+  border-color:#ffd166;
+  filter:brightness(1.25);
+}
+
+.gcard:not(.crossed):hover{
+  border-color:#d7ad48;
+}
+
+.pic{
+  display:block;
+  width:100%;
+  height:55px;
+  margin:0 auto;
+  object-fit:cover;
+  background:#252525;
+  border:1px solid rgba(255,209,102,.25);
+  border-radius:7px;
+}
+
+.gcard span{
+  position:absolute;
+  right:2px;
+  bottom:2px;
+  left:2px;
+  min-height:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2px;
+  overflow:hidden;
+  background:linear-gradient(transparent,rgba(0,0,0,.95) 38%);
+  border-radius:0 0 7px 7px;
+  text-shadow:0 1px 3px #000;
+}
+
+.item .pic{
+  object-fit:contain;
+  padding:4px;
+  background:radial-gradient(circle,#34323a,#101010);
+}
+
+.gcard.crossed{
+  opacity:.38;
+  border-color:#c54c4c;
+  filter:grayscale(.6);
+}
+
+.gcard.crossed:before,
+.gcard.crossed:after{
+  position:absolute;
+  z-index:3;
+  top:50%;
+  left:-15%;
+  width:130%;
+  height:4px;
+  content:"";
+  background:#ff6262;
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:99px;
+  box-shadow:0 0 7px rgba(255,70,70,.9);
+}
+
+.gcard.crossed:before{
+  transform:rotate(35deg);
+}
+
+.gcard.crossed:after{
+  transform:rotate(-35deg);
+}
+
+.status{
+  margin:12px 0;
+  padding:12px;
+  color:#d8ecff;
+  background:#112635;
+  border:1px solid #28516b;
+  border-radius:13px;
+  text-align:center;
+}
+
+.preview{
+  display:block;
+  width:150px;
+  height:100px;
+  margin:12px auto;
+  object-fit:cover;
+  background:#111;
+  border:1px solid #705b2d;
+  border-radius:12px;
+  box-shadow:0 3px 12px rgba(0,0,0,.55);
+}
+
+.preview.item{
+  padding:12px;
+  object-fit:contain;
+  background:radial-gradient(circle,#34323a,#101010);
+}
+
+.err{
+  margin:20px;
+  padding:16px;
+  background:#3b1717;
+  border:1px solid #f07a7a;
+  border-radius:15px;
+}
+
+.tiny-note{
+  margin-top:8px;
+  color:#666;
+  font-size:10px;
+  line-height:1.2;
+  text-align:center;
+}
+
 @media(max-width:360px){
-.cards{gap:4px}
-.gcard{min-height:74px;padding:3px 1px;font-size:8px}
-.pic{height:42px;margin-bottom:2px}
+  .cards{
+    gap:4px;
+  }
+
+  .gcard{
+    min-height:78px;
+    padding:2px;
+    font-size:8px;
+  }
+
+  .pic{
+    height:48px;
+  }
+
+  .gcard span{
+    min-height:19px;
+    padding:1px;
+  }
 }
 </style>
 </head>
-<body><div id="app"></div>
+
+<body>
+<div id="app"></div>
+
 <script>
 var app=document.getElementById('app');
-window.addEventListener('error',function(e){app.innerHTML='<div class="err"><h2>Ошибка запуска</h2><p>'+String(e.message||'Неизвестная ошибка')+'</p><p>Строка: '+String(e.lineno||'?')+'</p></div>'});
-var heroes=[['Abaddon','abaddon'],['Alchemist','alchemist'],['Ancient Apparition','ancient_apparition'],['Anti-Mage','antimage'],['Axe','axe'],['Bane','bane'],['Batrider','batrider'],['Beastmaster','beastmaster'],['Bloodseeker','bloodseeker'],['Bounty Hunter','bounty_hunter'],['Bristleback','bristleback'],['Broodmother','broodmother'],['Chaos Knight','chaos_knight'],['Clinkz','clinkz'],['Clockwerk','rattletrap'],['Crystal Maiden','crystal_maiden'],['Dazzle','dazzle'],['Doom','doom_bringer'],['Dragon Knight','dragon_knight'],['Drow Ranger','drow_ranger'],['Earthshaker','earthshaker'],['Ember Spirit','ember_spirit'],['Enchantress','enchantress'],['Enigma','enigma'],['Faceless Void','faceless_void'],['Gyrocopter','gyrocopter'],['Huskar','huskar'],['Invoker','invoker'],['Jakiro','jakiro'],['Juggernaut','juggernaut'],['Kunkka','kunkka'],['Legion Commander','legion_commander'],['Lich','lich'],['Lifestealer','life_stealer'],['Lina','lina'],['Lion','lion'],['Luna','luna'],['Magnus','magnataur'],['Mars','mars'],['Medusa','medusa'],['Meepo','meepo'],['Mirana','mirana'],['Monkey King','monkey_king'],['Morphling','morphling'],['Muerta','muerta'],['Naga Siren','naga_siren'],["Nature's Prophet",'furion'],['Necrophos','necrolyte'],['Night Stalker','night_stalker'],['Nyx Assassin','nyx_assassin'],['Ogre Magi','ogre_magi'],['Omniknight','omniknight'],['Oracle','oracle'],['Pangolier','pangolier'],['Phantom Assassin','phantom_assassin'],['Phantom Lancer','phantom_lancer'],['Phoenix','phoenix'],['Puck','puck'],['Pudge','pudge'],['Pugna','pugna'],['Queen of Pain','queenofpain'],['Razor','razor'],['Riki','riki'],['Rubick','rubick'],['Sand King','sand_king'],['Shadow Demon','shadow_demon'],['Shadow Fiend','nevermore'],['Shadow Shaman','shadow_shaman'],['Silencer','silencer'],['Skywrath Mage','skywrath_mage'],['Slardar','slardar'],['Slark','slark'],['Snapfire','snapfire'],['Sniper','sniper'],['Spectre','spectre'],['Spirit Breaker','spirit_breaker'],['Storm Spirit','storm_spirit'],['Sven','sven'],['Techies','techies'],['Templar Assassin','templar_assassin'],['Terrorblade','terrorblade'],['Tidehunter','tidehunter'],['Tinker','tinker'],['Tiny','tiny'],['Treant Protector','treant'],['Troll Warlord','troll_warlord'],['Tusk','tusk'],['Undying','undying'],['Ursa','ursa'],['Venomancer','venomancer'],['Viper','viper'],['Visage','visage'],['Void Spirit','void_spirit'],['Warlock','warlock'],['Weaver','weaver'],['Windranger','windrunner'],['Winter Wyvern','winter_wyvern'],['Witch Doctor','witch_doctor'],['Wraith King','skeleton_king'],['Zeus','zuus']].map(function(x){return{name:x[0],slug:x[1]}});
-var items=[['Aghanim Scepter','ultimate_scepter'],['Arcane Boots','arcane_boots'],['Armlet','armlet'],['Assault Cuirass','assault'],['Battle Fury','bfury'],['Black King Bar','black_king_bar'],['Blink Dagger','blink'],['Bloodthorn','bloodthorn'],['Boots of Travel','travel_boots'],['Bottle','bottle'],['Butterfly','butterfly'],['Crimson Guard','crimson_guard'],['Daedalus','greater_crit'],['Dagon','dagon'],['Desolator','desolator'],['Diffusal Blade','diffusal_blade'],['Divine Rapier','rapier'],['Dragon Lance','dragon_lance'],['Ethereal Blade','ethereal_blade'],['Eye of Skadi','skadi'],['Force Staff','force_staff'],['Gleipnir','gungir'],['Guardian Greaves','guardian_greaves'],['Hand of Midas','hand_of_midas'],['Heart of Tarrasque','heart'],['Heavens Halberd','heavens_halberd'],['Hurricane Pike','hurricane_pike'],['Kaya','kaya'],['Linkens Sphere','sphere'],['Lotus Orb','lotus_orb'],['Manta Style','manta'],['Mask of Madness','mask_of_madness'],['Meteor Hammer','meteor_hammer'],['Mjollnir','mjollnir'],['Monkey King Bar','monkey_king_bar'],['Moon Shard','moon_shard'],['Nullifier','nullifier'],['Octarine Core','octarine_core'],['Orchid Malevolence','orchid'],['Pipe of Insight','pipe'],['Power Treads','power_treads'],['Radiance','radiance'],['Refresher Orb','refresher'],['Rod of Atos','rod_of_atos'],['Satanic','satanic'],['Scythe of Vyse','sheepstick'],['Shadow Blade','invis_sword'],['Shivas Guard','shivas_guard'],['Silver Edge','silver_edge'],['Solar Crest','solar_crest'],['Spirit Vessel','spirit_vessel'],['Vanguard','vanguard'],['Veil of Discord','veil_of_discord'],['Wind Waker','wind_waker'],['Witch Blade','witch_blade']].map(function(x){return{name:x[0],slug:x[1]}});
-var locations=['Таверна','Рошанова яма','Мид-лейн','Лес Radiant','Лес Dire','Фонтан Radiant','Фонтан Dire','Секретный магазин','Лагерь Древних'];var spyGame=null,guessGame=null,timerId=null,spyType='heroes',spyMode='random',timerMode='withTime';
-function esc(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;')}function rnd(a){return a[Math.floor(Math.random()*a.length)]}function mix(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=b[i];b[i]=b[j];b[j]=t}return b}function img(o,t){return 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/'+(t==='heroes'?'heroes/':'items/')+o.slug+'.png'}function buzz(){try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.HapticFeedback.impactOccurred('medium')}}catch(e){}}
-try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand()}}catch(e){}
-function home(){clearInterval(timerId);app.innerHTML='<div class="wrap"><h1>🕵️ Dota2SpyForSolin</h1><div class="card"><h2>Выбери мини-игру</h2><div class="grid2"><button id="sp" class="mode"><span class="ico">🕵️</span>Dota Spy<small>Мирные и шпионы</small></button><button id="gu" class="mode"><span class="ico">🔍</span>Угадай<small>Игра на двоих</small></button></div></div><div class="card"><h2>Как играть</h2><p class="muted small">В Dota Spy игроки получают роли и обсуждают героя или предмет. В режиме «Угадай» два игрока загадывают карточки, задают вопросы и вычёркивают неподходящие варианты.</p><div class="tiny-note">сделано Solin для вас</div></div></div>';document.getElementById('sp').onclick=spySettings;document.getElementById('gu').onclick=guessType}
-function spySettings(){app.innerHTML='<div class="wrap"><h1>🕵️ Dota2SpyForSolin</h1><div class="card"><h2>Настройки Dota Spy</h2><div class="grid2"><button id="h" class="mode">🦸<br><br>Герои</button><button id="it" class="mode">🗡️<br><br>Предметы</button></div><label>Режим игры</label><select id="m"><option value="random">🎲 Рандом</option><option value="host">🎙️ С ведущим</option></select><label>Таймер</label><select id="tm"><option value="withTime">⏱️ С временем</option><option value="withoutTime">♾️ Без времени</option></select><label>Количество игроков</label><input id="p" type="number" min="3" max="20" value="5"><label>Количество шпионов</label><input id="s" type="number" min="1" max="5" value="1"><div id="mb"><label>Время в минутах</label><input id="min" type="number" min="1" max="60" value="8"></div><div id="host"></div><button id="start" class="btn">🎮 Начать раздачу ролей</button><button id="back" class="btn alt">← В главное меню</button></div></div>';document.getElementById('h').onclick=function(){spyType='heroes';spySettings()};document.getElementById('it').onclick=function(){spyType='items';spySettings()};document.getElementById('m').value=spyMode;document.getElementById('tm').value=timerMode;document.getElementById('m').onchange=function(){spyMode=this.value;updateSpy()};document.getElementById('tm').onchange=function(){timerMode=this.value;updateSpy()};document.getElementById('start').onclick=startSpy;document.getElementById('back').onclick=home;updateSpy()}
-function updateSpy(){document.getElementById(spyType==='heroes'?'h':'it').classList.add('selected');document.getElementById('mb').classList.toggle('hidden',timerMode==='withoutTime');var d=document.getElementById('host');if(spyMode!=='host'){d.innerHTML='';return}if(spyType==='heroes'){var opts=heroes.map(function(x){return '<option>'+esc(x.name)+'</option>'}).join('');d.innerHTML='<div class="box"><h3>Выбор ведущего</h3><label>Герой мирных</label><select id="ph">'+opts+'</select><label>Герой шпионов</label><select id="sh">'+opts+'</select><label>Локация</label><select id="lo">'+locations.map(function(x){return '<option>'+esc(x)+'</option>'}).join('')+'</select></div>'}else{var opts2=items.map(function(x){return '<option value="'+x.slug+'">'+esc(x.name)+'</option>'}).join('');d.innerHTML='<div class="box"><h3>Выбор ведущего</h3><label>Предмет мирных</label><select id="pi">'+opts2+'</select><label>Предмет шпионов</label><select id="si">'+opts2+'</select></div>'}}
-function startSpy(){var p=Math.max(3,Math.min(20,Number(document.getElementById('p').value)||5)),s=Math.max(1,Math.min(p-1,Number(document.getElementById('s').value)||1)),mins=Math.max(1,Math.min(60,Number(document.getElementById('min').value)||8)),a,b,l='';if(spyType==='heroes'){if(spyMode==='host'){a=document.getElementById('ph').value;b=document.getElementById('sh').value;l=document.getElementById('lo').value;if(a===b){alert('Выбери разных героев');return}}else{a=rnd(heroes).name;do{b=rnd(heroes).name}while(a===b);l=rnd(locations)}}else{if(spyMode==='host'){a=items.filter(function(x){return x.slug===document.getElementById('pi').value})[0];b=items.filter(function(x){return x.slug===document.getElementById('si').value})[0];if(a.slug===b.slug){alert('Выбери разные предметы');return}}else{a=rnd(items);do{b=rnd(items)}while(a.slug===b.slug)}}spyGame={type:spyType,timer:timerMode,p:p,mins:mins,a:a,b:b,l:l,spies:mix(Array.from({length:p},function(_,i){return i})).slice(0,s),cur:0};spyRole()}
-function spyRole(){var n=spyGame.cur+1,sp=spyGame.spies.indexOf(spyGame.cur)!==-1,last=n===spyGame.p;app.innerHTML='<div class="wrap"><h1>🕵️ Dota2SpyForSolin</h1><div class="card"><div class="player">Игрок '+n+'</div><p class="muted" style="text-align:center">Остальные не смотрят на экран.</p><button id="role" class="secret">Нажми и удерживай,<br>чтобы увидеть роль</button><button id="next" class="btn alt" disabled>'+(last?'🚀 Начать игру':'Передать игроку '+(n+1))+'</button></div><button id="can" class="btn danger">Отменить игру</button></div>';var r=document.getElementById('role'),nx=document.getElementById('next'),vis=false,shown=false;function show(){if(vis)return;vis=true;shown=true;r.classList.add(sp?'spy':'peace');var q=sp?spyGame.b:spyGame.a,name=spyGame.type==='heroes'?q:q.name;r.innerHTML=(sp?'🕵️<br>ТЫ ШПИОН':'🛡️<br>ТЫ МИРНЫЙ')+'<br><span style="font-size:16px">'+esc(name)+'</span>'+(spyGame.type==='heroes'?'<br><span style="font-size:15px">Локация: '+esc(spyGame.l)+'</span>':'');buzz()}function hide(){if(!vis)return;vis=false;r.classList.remove('spy','peace');r.innerHTML='Нажми и удерживай,<br>чтобы увидеть роль';nx.disabled=false}r.onpointerdown=function(e){e.preventDefault();show()};r.onpointerup=function(e){e.preventDefault();hide()};r.onpointerleave=hide;r.onpointercancel=hide;nx.onclick=function(){if(!shown)return;if(spyGame.cur<spyGame.p-1){spyGame.cur++;spyRole()}else spyPlay()};document.getElementById('can').onclick=home}
-function spyPlay(){var timed=spyGame.timer==='withTime',sec=spyGame.mins*60;app.innerHTML='<div class="wrap"><h1>🕵️ Dota2SpyForSolin</h1><div class="card"><h2>Игра началась</h2><p class="muted">Задавайте вопросы и не называйте ответ прямо.</p><div id="time" class="timer">'+(timed?fmt(sec):'∞')+'</div>'+(timed?'<button id="tb" class="btn">▶️ Запустить таймер</button>':'<div class="status">♾️ Игра без времени</div>')+'<button id="fin" class="btn yellow">🏁 Закончить раунд</button></div><button id="can" class="btn danger">Отменить игру</button></div>';if(timed){var run=false,t=document.getElementById('time'),bt=document.getElementById('tb');bt.onclick=function(){if(run){clearInterval(timerId);run=false;bt.textContent='▶️ Продолжить таймер';return}if(sec<=0)return;run=true;bt.textContent='⏸️ Пауза';timerId=setInterval(function(){sec--;t.textContent=fmt(sec);if(sec<=0){clearInterval(timerId);t.classList.add('finished');bt.disabled=true}},1000)}}document.getElementById('fin').onclick=spyResult;document.getElementById('can').onclick=home}
-function spyResult(){clearInterval(timerId);var sp=spyGame.spies.map(function(i){return 'Игрок '+(i+1)}).join(', '),a=spyGame.type==='heroes'?spyGame.a:spyGame.a.name,b=spyGame.type==='heroes'?spyGame.b:spyGame.b.name;app.innerHTML='<div class="wrap"><h1>🕵️ Итоги раунда</h1><div class="card"><div class="result"><div class="role">🛡️</div><h2>Мирные</h2><p><b>'+esc(a)+'</b></p>'+(spyGame.type==='heroes'?'<p>Локация: <b>'+esc(spyGame.l)+'</b></p>':'')+'</div></div><div class="card"><div class="result"><div class="role">🕵️</div><h2>Шпионы</h2><p><b>'+esc(b)+'</b></p><p>'+esc(sp)+'</p></div></div><button id="ho" class="btn">🏠 В главное меню</button></div>';document.getElementById('ho').onclick=home}
-function guessType(){app.innerHTML='<div class="wrap"><h1>🔍 Угадай героя / предмет</h1><div class="card"><h2>Игра на двоих</h2><p class="muted">Каждый загадывает карточку. Задавайте вопросы и зачёркивайте варианты.</p><div class="grid2"><button id="gh" class="mode"><span class="ico">🦸</span>Герои<small>20 портретов</small></button><button id="gi" class="mode"><span class="ico">🗡️</span>Предметы<small>20 иконок</small></button></div><button id="ba" class="btn alt">← В главное меню</button></div></div>';document.getElementById('gh').onclick=function(){newGuess('heroes')};document.getElementById('gi').onclick=function(){newGuess('items')};document.getElementById('ba').onclick=home}
-function newGuess(t){guessGame={type:t,cards:mix(t==='heroes'?heroes:items).slice(0,20),one:null,two:null,active:1,cross:[[],[]]};choose(1)}
-function cards(play){return guessGame.cards.map(function(c,i){var cr=play&&guessGame.cross[guessGame.active-1].indexOf(i)!==-1;return '<button class="gcard '+(guessGame.type==='items'?'item ':'')+(cr?'crossed':'')+'" data-c="'+i+'"><img class="pic" src="'+img(c,guessGame.type)+'" alt="" loading="lazy"><span>'+esc(c.name)+'</span></button>'}).join('')}
-function choose(p){app.innerHTML='<div class="wrap"><h1>🔍 Угадай</h1><div class="card"><div class="player">Игрок '+p+'</div><p class="muted" style="text-align:center">Выбери свою секретную карточку.</p><div class="cards">'+cards(false)+'</div><button id="ca" class="btn danger">Отменить игру</button></div></div>';document.querySelectorAll('[data-c]').forEach(function(b){b.onclick=function(){if(p===1)guessGame.one=guessGame.cards[Number(this.dataset.c)];else guessGame.two=guessGame.cards[Number(this.dataset.c)];confirmSecret(p)}});document.getElementById('ca').onclick=home}
-function confirmSecret(p){var q=p===1?guessGame.one:guessGame.two;app.innerHTML='<div class="wrap"><h1>🔍 Угадай</h1><div class="card"><div class="player">Игрок '+p+'</div><p class="muted" style="text-align:center">Ты загадал:</p><div class="result"><img class="preview '+(guessGame.type==='items'?'item':'')+'" src="'+img(q,guessGame.type)+'" alt=""><h2>'+esc(q.name)+'</h2></div><button id="ok" class="btn">'+(p===1?'Передать телефон игроку 2':'🚀 Начать игру')+'</button><button id="ch" class="btn alt">← Выбрать другую</button></div></div>';document.getElementById('ok').onclick=function(){if(p===1){app.innerHTML='<div class="wrap"><h1>🔍 Угадай</h1><div class="card"><div class="player">Передай телефон</div><button id="go" class="btn">Игрок 2: выбрать карточку</button></div></div>';document.getElementById('go').onclick=function(){choose(2)}}else{guessGame.active=1;board()}};document.getElementById('ch').onclick=function(){choose(p)}}
-function board(){var p=guessGame.active;app.innerHTML='<div class="wrap"><h1>🔍 Угадай</h1><div class="status">Сейчас ходит <b>Игрок '+p+'</b>.<br
+
+window.addEventListener('error',function(e){
+  app.innerHTML=
+    '<div class="err">' +
+    '<h2>Ошибка запуска</h2>' +
+    '<p>'+String(e.message||'Неизвестная ошибка')+'</p>' +
+    '<p>Строка: '+String(e.lineno||'?')+'</p>' +
+    '</div>';
+});
+
+var heroes=[
+  ['Abaddon','abaddon'],
+  ['Alchemist','alchemist'],
+  ['Ancient Apparition','ancient_apparition'],
+  ['Anti-Mage','antimage'],
+  ['Axe','axe'],
+  ['Bane','bane'],
+  ['Batrider','batrider'],
+  ['Beastmaster','beastmaster'],
+  ['Bloodseeker','bloodseeker'],
+  ['Bounty Hunter','bounty_hunter'],
+  ['Bristleback','bristleback'],
+  ['Broodmother','broodmother'],
+  ['Chaos Knight','chaos_knight'],
+  ['Clinkz','clinkz'],
+  ['Clockwerk','rattletrap'],
+  ['Crystal Maiden','crystal_maiden'],
+  ['Dazzle','dazzle'],
+  ['Doom','doom_bringer'],
+  ['Dragon Knight','dragon_knight'],
+  ['Drow Ranger','drow_ranger'],
+  ['Earthshaker','earthshaker'],
+  ['Ember Spirit','ember_spirit'],
+  ['Enchantress','enchantress'],
+  ['Enigma','enigma'],
+  ['Faceless Void','faceless_void'],
+  ['Gyrocopter','gyrocopter'],
+  ['Huskar','huskar'],
+  ['Invoker','invoker'],
+  ['Jakiro','jakiro'],
+  ['Juggernaut','juggernaut'],
+  ['Kunkka','kunkka'],
+  ['Legion Commander','legion_commander'],
+  ['Lich','lich'],
+  ['Lifestealer','life_stealer'],
+  ['Lina','lina'],
+  ['Lion','lion'],
+  ['Luna','luna'],
+  ['Magnus','magnataur'],
+  ['Mars','mars'],
+  ['Medusa','medusa'],
+  ['Meepo','meepo'],
+  ['Mirana','mirana'],
+  ['Monkey King','monkey_king'],
+  ['Morphling','morphling'],
+  ['Muerta','muerta'],
+  ['Naga Siren','naga_siren'],
+  ["Nature's Prophet",'furion'],
+  ['Necrophos','necrolyte'],
+  ['Night Stalker','night_stalker'],
+  ['Nyx Assassin','nyx_assassin'],
+  ['Ogre Magi','ogre_magi'],
+  ['Omniknight','omniknight'],
+  ['Oracle','oracle'],
+  ['Pangolier','pangolier'],
+  ['Phantom Assassin','phantom_assassin'],
+  ['Phantom Lancer','phantom_lancer'],
+  ['Phoenix','phoenix'],
+  ['Puck','puck'],
+  ['Pudge','pudge'],
+  ['Pugna','pugna'],
+  ['Queen of Pain','queenofpain'],
+  ['Razor','razor'],
+  ['Riki','riki'],
+  ['Rubick','rubick'],
+  ['Sand King','sand_king'],
+  ['Shadow Demon','shadow_demon'],
+  ['Shadow Fiend','nevermore'],
+  ['Shadow Shaman','shadow_shaman'],
+  ['Silencer','silencer'],
+  ['Skywrath Mage','skywrath_mage'],
+  ['Slardar','slardar'],
+  ['Slark','slark'],
+  ['Snapfire','snapfire'],
+  ['Sniper','sniper'],
+  ['Spectre','spectre'],
+  ['Spirit Breaker','spirit_breaker'],
+  ['Storm Spirit','storm_spirit'],
+  ['Sven','sven'],
+  ['Techies','techies'],
+  ['Templar Assassin','templar_assassin'],
+  ['Terrorblade','terrorblade'],
+  ['Tidehunter','tidehunter'],
+  ['Tinker','tinker'],
+  ['Tiny','tiny'],
+  ['Treant Protector','treant'],
+  ['Troll Warlord','troll_warlord'],
+  ['Tusk','tusk'],
+  ['Undying','undying'],
+  ['Ursa','ursa'],
+  ['Venomancer','venomancer'],
+  ['Viper','viper'],
+  ['Visage','visage'],
+  ['Void Spirit','void_spirit'],
+  ['Warlock','warlock'],
+  ['Weaver','weaver'],
+  ['Windranger','windrunner'],
+  ['Winter Wyvern','winter_wyvern'],
+  ['Witch Doctor','witch_doctor'],
+  ['Wraith King','skeleton_king'],
+  ['Zeus','zuus']
+].map(function(x){
+  return{name:x[0],slug:x[1]};
+});
+
+var items=[
+  ['Aghanim Scepter','ultimate_scepter'],
+  ['Arcane Boots','arcane_boots'],
+  ['Armlet','armlet'],
+  ['Assault Cuirass','assault'],
+  ['Battle Fury','bfury'],
+  ['Black King Bar','black_king_bar'],
+  ['Blink Dagger','blink'],
+  ['Bloodthorn','bloodthorn'],
+  ['Boots of Travel','travel_boots'],
+  ['Bottle','bottle'],
+  ['Butterfly','butterfly'],
+  ['Crimson Guard','crimson_guard'],
+  ['Daedalus','greater_crit'],
+  ['Dagon','dagon'],
+  ['Desolator','desolator'],
+  ['Diffusal Blade','diffusal_blade'],
+  ['Divine Rapier','rapier'],
+  ['Dragon Lance','dragon_lance'],
+  ['Ethereal Blade','ethereal_blade'],
+  ['Eye of Skadi','skadi'],
+  ['Force Staff','force_staff'],
+  ['Gleipnir','gungir'],
+  ['Guardian Greaves','guardian_greaves'],
+  ['Hand of Midas','hand_of_midas'],
+  ['Heart of Tarrasque','heart'],
+  ['Heavens Halberd','heavens_halberd'],
+  ['Hurricane Pike','hurricane_pike'],
+  ['Kaya','kaya'],
+  ['Linkens Sphere','sphere'],
+  ['Lotus Orb','lotus_orb'],
+  ['Manta Style','manta'],
+  ['Mask of Madness','mask_of_madness'],
+  ['Meteor Hammer','meteor_hammer'],
+  ['Mjollnir','mjollnir'],
+  ['Monkey King Bar','monkey_king_bar'],
+  ['Moon Shard','moon_shard'],
+  ['Nullifier','nullifier'],
+  ['Octarine Core','octarine_core'],
+  ['Orchid Malevolence','orchid'],
+  ['Pipe of Insight','pipe'],
+  ['Power Treads','power_treads'],
+  ['Radiance','radiance'],
+  ['Refresher Orb','refresher'],
+  ['Rod of Atos','rod_of_atos'],
+  ['Satanic','satanic'],
+  ['Scythe of Vyse','sheepstick'],
+  ['Shadow Blade','invis_sword'],
+  ['Shivas Guard','shivas_guard'],
+  ['Silver Edge','silver_edge'],
+  ['Solar Crest','solar_crest'],
+  ['Spirit Vessel','spirit_vessel'],
+  ['Vanguard','vanguard'],
+  ['Veil of Discord','veil_of_discord'],
+  ['Wind Waker','wind_waker'],
+  ['Witch Blade','witch_blade']
+].map(function(x){
+  return{name:x[0],slug:x[1]};
+});
+
+var locations=[
+  'Таверна',
+  'Рошанова яма',
+  'Мид-лейн',
+  'Лес Radiant',
+  'Лес Dire',
+  'Фонтан Radiant',
+  'Фонтан Dire',
+  'Секретный магазин',
+  'Лагерь Древних'
+];
+
+var spyGame=null;
+var guessGame=null;
+var timerId=null;
+var spyType='heroes';
+var spyMode='random';
+var timerMode='withTime';
+
+function esc(v){
+  return String(v)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+}
+
+function rnd(a){
+  return a[Math.floor(Math.random()*a.length)];
+}
+
+function mix(a){
+  var b=a.slice();
+
+  for(var i=b.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var t=b[i];
+    b[i]=b[j];
+    b[j]=t;
+  }
+
+  return b;
+}
+
+function img(o,t){
+  return 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/' +
+    (t==='heroes'?'heroes/':'items/') +
+    o.slug +
+    '.png';
+}
+
+function buzz(){
+  try{
+    if(window.Telegram&&Telegram.WebApp){
+      Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+    }
+  }catch(e){}
+}
+
+try{
+  if(window.Telegram&&Telegram.WebApp){
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+  }
+}catch(e){}
+
+function home(){
+  clearInterval(timerId);
+
+  app.innerHTML=
+    '<div class="wrap">' +
+    '<h1>🕵️ Dota2SpyForSolin</h1>' +
+
+    '<div class="card">' +
+    '<h2>Выбери мини-игру</h2>' +
+    '<div class="grid2">' +
+    '<button id="sp" class="mode">' +
+    '<span class="ico">🕵️</span>Dota Spy' +
+    '<small>Мирные и шпионы</small>' +
+    '</button>' +
+    '<button id="gu" class="mode">' +
+    '<span class="ico">🔍</span>Угадай' +
+    '<small>Игра на двоих</small>' +
+    '</button>' +
+    '</div>' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<h2>Как играть</h2>' +
+    '<p class="muted small">' +
+    'В Dota Spy игроки получают роли и обсуждают героя или предмет. ' +
+    'В режиме «Угадай» два игрока загадывают карточки, задают вопросы ' +
+    'и вычёркивают неподходящие варианты.' +
+    '</p>' +
+    '<div class="tiny-note">сделано Solin для вас</div>' +
+    '</div>' +
+
+    '</div>';
+
+  document.getElementById('sp').onclick=spySettings;
+  document.getElementById('gu').onclick=guessType;
+}
+
+function spySettings(){
+  app.innerHTML=
+    '<div class="wrap">' +
+    '<h1>🕵️ Dota2SpyForSolin</h1>' +
+
+    '<div class="card">' +
+    '<h2>Настройки Dota Spy</h2>' +
+
+    '<div class="grid2">' +
+    '<button id="h" class="mode">🦸<br><br>Герои</button>' +
+    '<button id="it" class="mode">🗡️<br><br>Предметы</button>' +
+    '</div>' +
+
+    '<label>Режим игры</label>' +
+    '<select id="m">' +
+    '<option value="random">🎲 Рандом</option>' +
+    '<option value="host">🎙️ С ведущим</option>' +
+    '</select>' +
+
+    '<label>Таймер</label>' +
+    '<select id="tm">' +
+    '<option value="withTime">⏱️ С временем</option>' +
+    '<option value="withoutTime">♾️ Без времени</option>' +
+    '</select>' +
+
+    '<label>Количество игроков</label>' +
+    '<input id="p" type="number" min="3" max="20" value="5">' +
+
+    '<label>Количество шпионов</label>' +
+    '<input id="s" type="number" min="1" max="5" value="1">' +
+
+    '<div id="mb">' +
+    '<label>Время в минутах</label>' +
+    '<input id="min" type="number" min="1" max="60" value="8">' +
+    '</div>' +
+
+    '<div id="host"></div>' +
+
+    '<button id="start" class="btn">🎮 Начать раздачу ролей</button>' +
+    '<button id="back" class="btn alt">← В главное меню</button>' +
+    '</div>' +
+    '</div>';
+
+  document.getElementById('h').onclick=function(){
+    spyType='heroes';
+    spySettings();
+  };
+
+  document.getElementById('it').onclick=function(){
+    spyType='items';
+    spySettings();
+  };
+
+  document.getElementById('m').value=spyMode;
+  document.getElementById('tm').value=timerMode;
+
+  document.getElementById('m').onchange=function(){
+    spyMode=this.value;
+    updateSpy();
+  };
+
+  document.getElementById('tm').onchange=function(){
+    timerMode=this.value;
+    updateSpy();
+  };
+
+  document.getElementById('start').onclick=startSpy;
+  document.getElementById('back').onclick=home;
+
+  updateSpy();
+}
+
+function updateSpy(){
+  document
+    .getElementById(spyType==='heroes'?'h':'it')
+    .classList.add('selected');
+
+  document
+    .getElementById('mb')
+    .classList.toggle('hidden',timerMode==='withoutTime');
+
+  var d=document.getElementById('host');
+
+  if(spyMode!=='host'){
+    d.innerHTML='';
+    return;
+  }
+
+  if(spyType==='heroes'){
+    var opts=heroes.map(function(x){
+      return '<option>'+esc(x.name)+'</option>';
+    }).join('');
+
+    d.innerHTML=
+      '<div class="box">' +
+      '<h3>Выбор ведущего</h3>' +
+
+      '<label>Герой мирных</label>' +
+      '<select id="ph">'+opts+'</select>' +
+
+      '<label>Герой шпионов</label>' +
+      '<select id="sh">'+opts+'</select>' +
+
+      '<label>Локация</label>' +
+      '<select id="lo">' +
+      locations.map(function(x){
+        return '<option>'+esc(x)+'</option>';
+      }).join('') +
+      '</select>' +
+      '</div>';
+  }else{
+    var opts2=items.map(function(x){
+      return '<option value="'+x.slug+'">'+esc(x.name)+'</option>';
+    }).join('');
+
+    d.innerHTML=
+      '<div class="box">' +
+      '<h3>Выбор ведущего</h3>' +
+
+      '<label>Предмет мирных</label>' +
+      '<select id="pi">'+opts2+'</select>' +
+
+      '<label>Предмет шпионов</label>' +
+      '<select id="si">'+opts2+'</select>' +
+      '</div>';
+  }
+}
+
+function startSpy(){
+  var p=Math.max(3,Math.min(20,Number(document.getElementById('p').value)||5));
+  var s=Math.max(1,Math.min(p-1,Number(document.getElementById('s').value)||1));
+  var mins=Math.max(1,Math.min(60,Number(document.getElementById('min').value)||8));
+
+  var a;
+  var b;
+  var l='';
+
+  if(spyType==='heroes'){
+    if(spyMode==='host'){
+      a=document.getElementById('ph').value;
+      b=document.getElementById('sh').value;
+      l=document.getElementById('lo').value;
+
+      if(a===b){
+        alert('Выбери разных героев');
+        return;
+      }
+    }else{
+      a=rnd(heroes).name;
+
+      do{
+        b=rnd(heroes).name;
+      }while(a===b);
+
+      l=rnd(locations);
+    }
+  }else{
+    if(spyMode==='host'){
+      a=items.filter(function(x){
+        return x.slug===document.getElementById('pi').value;
+      })[0];
+
+      b=items.filter(function(x){
+        return x.slug===document.getElementById('si').value;
+      })[0];
+
+      if(a.slug===b.slug){
+        alert('Выбери разные предметы');
+        return;
+      }
+    }else{
+      a=rnd(items);
+
+      do{
+        b=rnd(items);
+      }while(a.slug===b.slug);
+    }
+  }
+
+  spyGame={
+    type:spyType,
+    timer:timerMode,
+    p:p,
+    mins:mins,
+    a:a,
+    b:b,
+    l:l,
+    spies:mix(Array.from({length:p},function(_,i){return i;})).slice(0,s),
+    cur:0
+  };
+
+  spyRole();
+}
+
+function spyRole(){
+  var n=spyGame.cur+1;
+  var sp=spyGame.spies.indexOf(spyGame.cur)!==-1;
+  var last=n===spyGame.p;
+
+  app.innerHTML=
+    '<div class="wrap">' +
+    '<h1>🕵️ Dota2SpyForSolin</h1>' +
+
+    '<div class="card">' +
+    '<div class="player">Игрок '+n+'</div>' +
+    '<p class="muted" style="text-align:center">Остальные не смотрят на экран.</p>' +
+
+    '<button id="role" class="secret">' +
+    'Нажми и удерживай,<br>чтобы увидеть роль' +
+    '</button>' +
+
+    '<button id="next" class="btn alt" disabled>' +
+    (last?'🚀 Начать игру':'Передать игроку '+(n+1)) +
+    '</button>' +
+    '</div>' +
+
+    '<button id="can" class="btn danger">Отменить игру</button>' +
+    '</div>';
+
+  var r=document.getElementById('role');
+  var nx=document.getElementById('next');
+  var vis=false;
+  var shown=false;
+
+  function show(){
+    if(vis){
+      return;
+    }
+
+    vis=true;
+    shown=true;
+    r.classList.add(sp?'spy':'peace');
+
+    var q=sp?spyGame.b:spyGame.a;
+    var name=spyGame.type==='heroes'?q:q.name;
+
+    r.innerHTML=
+      (sp?'🕵️<br>ТЫ ШПИОН':'🛡️<br>ТЫ МИРНЫЙ') +
+      '<br><span style="font-size:16px">'+esc(name)+'</span>' +
+      (spyGame.type==='heroes'
+        ?'<br><span style="font-size:15px">Локация: '+esc(spyGame.l)+'</span>'
+        :''
+      );
+
+    buzz();
+  }
+
+  function hide(){
+    if(!vis){
+      return;
+    }
+
+    vis=false;
+    r.classList.remove('spy','peace');
+    r.innerHTML='Нажми и удерживай,<br>чтобы увидеть роль';
+    nx.disabled=false;
+  }
+
+  r.onpointerdown=function(e){
+    e.preventDefault();
+    show();
+  };
+
+  r.onpointerup=function(e){
+    e.preventDefault();
+    hide();
+  };
+
+  r.onpointerleave=hide;
+  r.onpointercancel=hide;
+
+  nx.onclick=function(){
+    if(!shown){
+      return;
+    }
+
+    if(spyGame.cur<spyGame.p-1){
+      spyGame.cur++;
+      spyRole();
+    }else{
+      spyPlay();
+    }
+  };
+
+  document.getElementById('can').onclick=home;
+}
+
+function spyPlay(){
+  var timed=spyGame.timer==='withTime';
+  var sec=spyGame.mins*60;
+
+  app.innerHTML=
+    '<div class="wrap">' +
+    '<h1>🕵️ Dota2SpyForSolin</h1>' +
+
+    '<div class="card">' +
+    '<h2>Игра началась</h2>' +
+    '<p class="muted">Задавайте вопросы и не называйте ответ прямо.</p>' +
+
+    '<div id="time" class="timer">'+(timed?fmt(sec):'∞')+'</div>' +
+
+    (timed
+      ?'<button id="tb" class="btn">▶️ Запустить таймер</button>'
+      :'<div class="status">♾️ Игра без времени</div>'
+    ) +
+
+    '<button id="fin" class="btn yellow">🏁 Закончить раунд</button>' +
+    '</div>' +
+
+    '<button id="can" class="btn danger">Отменить игру</button>' +
+    '</div>';
+
+  if(timed){
+    var run=false;
+    var t=document.getElementById('time');
+    var bt=document.getElementById('tb');
+
+    bt.onclick=function(){
+      if(run){
+        clearInterval(timerId);
+        run=false;
+        bt.textContent='▶️ Продолжить таймер';
+        return;
+      }
+
+      if(sec<=0){
+        return;
+      }
+
+      run=true;
+      bt.textContent='⏸️ Пауза';
+
+      timerId=setInterval(function(){
+        sec--;
+        t.textContent=fmt(sec);
+
+        if(sec<=0){
+          clearInterval(timerId);
+          t.classList.add('finished');
+          bt.disabled=true;
+        }
+      },1000);
+    };
+  }
+
+  document.getElementById('fin').onclick=spyResult;
+  document.getElementById('can').onclick=home;
+}
+
+function spyResult(){
+  clearInterval(timerId);
+
+  var sp=spyGame.spies.map(function(i){
+    return 'Игрок '+(i+1);
+  }).join(', ');
+
+  var a=spyGame.type==='heroes'?spyGame.a:spyGame.a.name;
+  var b=spyGame.type==='heroes'?spyGame.b:spyGame.b.name;
+
+  app.innerHTML=
+    '<div class="wrap">' +
+    '<h1>🕵️ Итоги раунда</h1>' +
+
+    '<div class="card">' +
+    '<div class="result">' +
+    '<div class="role">🛡️</div>' +
+    '<h2>Мирные</h2>' +
+    '<p><b>'+esc(a)+'</b></p>' +
+    (spyGame.type==='heroes'
+      ?'<p>Локация: <b>'+esc(spyGame.l)+'</b></p>'
+      :''
+    ) +
+    '</div>' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<div class="result">' +
+    '<div class="role">🕵️</div>' +
+    '<h2>Шпионы</h2>' +
+    '<p><b>'+esc(b)+'</b></p>' +
+    '<p>'+esc(sp)+'</p>' +
+    '</div>' +
+    '</div>' +
+
+    '<button id="ho" class="btn">🏠 В главное меню</button>' +
+    '</div>';
+
+  document.getElementById('ho').onclick=home;
+}
+
+function guessType(){
+  app.innerHTML=
+    '<div class="wrap">' +
+    '<h1>🔍 Угадай героя / предмет</h1>' +
+
+    '<div class="card">' +
+    '<h2>Игра на двоих</h2>' +
+    '<p class="muted">' +
+    'Каждый загадывает карточку. Задавайте вопросы и зачёркивайте варианты.' +
+    '</p>' +
+
+    '<div class="grid2">' +
+    '<button id="gh" class="mode">' +
+    '<span class="ico">🦸</span>Герои' +
+    '<small>20 портретов</small>' +
+    '</button>' +
+
+    '<button id="gi" class="mode">' +
+    '<span class="ico">🗡️</span>Предметы' +
+    '<small>20 иконок</small>' +
+    '</button>' +
+    '</div>' +
+
+    '<button id="ba" class="btn alt">← В главное меню</button>' +
+    '</div>' +
+    '</div>';
+
+  document.getElementById('gh').onclick=function(){
+    newGuess('heroes');
+  };
+
+  document.getElementById('gi').onclick=function(){
+    newGuess('items');
+  };
+
+  document.getElementById('ba').onclick=home;
+}
+
+function newGuess(t){
+  guessGame={
+    type:t,
+    cards:mix(t==='heroes'?heroes:items).slice(0,20),
+    one:null,
+    two:null,
+    active:1,
+    cross:[[],[]]
+  };
+
+  choose(1);
+}
+
+function cards(play){
+  return guessGame.cards.map(function(c,i){
+    var cr=play&&guessGame.cross[guessGame.active-1].indexOf(i)!==-1;
+
+    return (
+      '<button class="gcard ' +
+      (guessGame.type==='items'?'item ':'') +
+      (cr?'crossed':'') +
+      '" data-c="'+i+'">' +
+      '<img class="pic" src="'+img(c,guessGame.type)+'" alt="" loading="lazy">' +
+      '<span>'+esc(c.name)+'</span>' +
+      '</button>'
+    );
+  }).join('');
+}
+
+function choose(p){
+  app.innerHTML=
+    '<div class="wrap">' +
+    '<h1>🔍 Угадай</h1>' +
+
+    '<div class="card">' +
+    '<div class="player">Игрок '+p+'</div>' +
+    '<p class="muted" style="text-align:center">Выбери свою секретную карточку.</p>' +
+    '<div class="cards">'+cards(false)+'</div>' +
+    '<button id="ca" class="btn danger">Отменить игру</button>' +
+    '</div>' +
+    '</div>';
+
+  document.querySelectorAll('[data-c]').forEach(function(b){
+    b.onclick=function(){
+      if(p===1){
+        guessGame.one=guessGame.cards[Number(this.dataset.c)];
+      }else{
+        guessGame.two=guessGame.cards[Number(this.dataset.c)];
+      }
+
+      confirmSecret(p);
+    };
+  });
+
+  document.getElementById('ca').onclick=home;
+}
+
+function confirmSecret(p){
+  var q=p===1?guessGame.one:guessGame.two;
+
+  app.innerHTML=
+    '<div class="wrap">' +
+    '<h1>🔍 Угадай</h1>' +
+
+    '<div class="card">' +
+    '<div class="player">Игрок '+p+'</div>' +
+    '<p class="muted" style="text-align:center">Ты загадал:</p>' +
+
+    '<div class="result">' +
+    '<img class="preview '+(guessGame.type==='items'?'item':'')+'" src="'+img(q,guessGame.type)+'" alt="">' +
+    '<h2>'+esc(q.name)+'</h2>' +
+    '</div>' +
+
+    '<button id="ok" class="btn">' +
+    (p===1?'Передать телефон игроку 2':'🚀 Начать игру') +
+    '</button>' +
+
+    '<button id="ch" class="btn alt">← Выбрать другую</button>' +
+    '</div>' +
+    '</div>';
+
+  document.getElementById('ok').onclick=function(){
+    if(p===1){
+      app.innerHTML=
+        '<div class="wrap">' +
+        '<h1>🔍 Угадай</h1>' +
+        '<div class="card">' +
+        '<div class="player">Передай телефон</div>' +
+        '<button id="go" class="btn">Игрок 2: выбрать карточку</button>' +
+        '</div>' +
+        '</div>';
+
+      document.getElementById('go').onclick=function(){
+        choose(2);
+      };
+    }else{
+      guessGame.active=1;
+      board();
+    }
+  };
+
+  document.getElementById('ch').onclick=function(){
+    choose(p);
+  };
+}
+
+function board(){
+  var p=guessGame.active;
+
+  app.innerHTML=
+    '<div class="wrap">' +
+    '<h1>🔍 Угадай</h1>' +
+
+    '<div class="status">' +
+    'Сейчас ходит <b>Игрок '+p+'</b>.<br>' +
+    'Нажми карточку, чтобы зачеркнуть её.' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<div class="cards">'+cards(true)+'</div>' +
+
+    '<button id="sw" class="btn blue">' +
+    '🔄 Передать ход игроку '+(p===1?'2':'1') +
+    '</button>' +
+
+    '<button id="fi" class="btn yellow">🏁 Закончить без победителя</button>' +
+    '<button id="ca" class="btn danger">Отменить игру</button>' +
+    '</div>' +
+    '</div>';
+
+  document.querySelectorAll('[data-c]').forEach(function(b){
+    b.onclick=function(){
+      toggle(Number(this.dataset.c));
+    };
+  });
+
+  document.getElementById('sw').onclick=function(){
+    guessGame.active=p===1?2:1;
+    board();
+  };
+
+  document.getElementById('fi').onclick=function(){
+    guessResult(0);
+  };
+
+  document.getElementById('ca').onclick=home;
+}
+
+function toggle(i){
+  var a=guessGame.cross[guessGame.active-1];
+  var z=a.indexOf(i);
+
+  if(z!==-1){
+    a.splice(z,1);
+    board();
+    return;
+  }
+
+  a.push(i);
+
+  var enemy=guessGame.active===1?guessGame.two:guessGame.one;
+
+  if(guessGame.cards[i].slug===enemy.slug){
+    guessResult(guessGame.active);
+  }else{
+    board();
+  }
+}
+
+function guessResult(w){
+  var txt=w===0?'🏁 Игра закончена':'🏆 Победил игрок '+w+'!';
+
+  app.innerHTML=
+    '<div class="wrap">' +
+    '<h1>🔍 Итоги игры</h1>' +
+
+    '<div class="card">' +
+    '<div class="result">' +
+    '<div class="role">'+(w?'🏆':'🤝')+'</div>' +
+    '<h2>'+txt+'</h2>' +
+    '<p class="muted">' +
+    (w
+      ?'Игрок зачеркнул секретную карточку соперника.'
+      :'Никто не зачеркнул секретную карточку.'
+    ) +
+    '</p>' +
+    '</div>' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<h2>Игрок 1 загадал</h2>' +
+    '<div class="result">' +
+    '<img class="preview '+(guessGame.type==='items'?'item':'')+'" src="'+img(guessGame.one,guessGame.type)+'" alt="">' +
+    '<h2>'+esc(guessGame.one.name)+'</h2>' +
+    '</div>' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<h2>Игрок 2 загадал</h2>' +
+    '<div class="result">' +
+    '<img class="preview '+(guessGame.type==='items'?'item':'')+'" src="'+img(guessGame.two,guessGame.type)+'" alt="">' +
+    '<h2>'+esc(guessGame.two.name)+'</h2>' +
+    '</div>' +
+    '</div>' +
+
+    '<button id="ng" class="btn">🔄 Новая партия</button>' +
+    '<button id="ho" class="btn alt">🏠 В главное меню</button>' +
+    '</div>';
+
+  document.getElementById('ng').onclick=function(){
+    newGuess(guessGame.type);
+  };
+
+  document.getElementById('ho').onclick=home;
+}
+
+function fmt(s){
+  return String(Math.floor(s/60)).padStart(2,'0') +
+    ':' +
+    String(s%60).padStart(2,'0');
+}
+
+home();
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
