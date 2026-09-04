@@ -2,20 +2,20 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#101010">
-  <title>Dota2SpyForSolin</title>
+  <title>Dota 2 Spy</title>
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
 
   <style>
     :root {
       --bg: #101010;
       --card: #1d1d1f;
-      --card2: #121212;
-      --line: #353535;
-      --text: #fff;
-      --muted: #9a9a9a;
+      --card2: #151515;
+      --line: #3a3a3a;
+      --text: #ffffff;
+      --muted: #aaaaaa;
       --green: #76e5a2;
       --yellow: #ffd166;
       --red: #ff7b7b;
@@ -34,7 +34,9 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    button, input, select {
+    button,
+    input,
+    select {
       font: inherit;
     }
 
@@ -44,9 +46,9 @@
 
     .wrap {
       width: 100%;
-      max-width: 620px;
+      max-width: 600px;
       margin: 0 auto;
-      padding: 18px 14px calc(42px + env(safe-area-inset-bottom));
+      padding: 18px 14px calc(36px + env(safe-area-inset-bottom));
     }
 
     h1 {
@@ -79,20 +81,6 @@
       font-size: 13px;
     }
 
-    .ok {
-      color: var(--green);
-    }
-
-    .warn {
-      color: var(--yellow);
-    }
-
-    .error {
-      color: var(--red);
-      white-space: pre-wrap;
-      line-height: 1.45;
-    }
-
     .hidden {
       display: none !important;
     }
@@ -110,7 +98,7 @@
 
     .btn.alt {
       color: #fff;
-      background: #2b2b2f;
+      background: #303035;
     }
 
     .btn.danger {
@@ -119,103 +107,65 @@
     }
 
     .btn.yellow {
-      color: #201700;
+      color: #211700;
       background: var(--yellow);
     }
 
     .btn:disabled {
       cursor: default;
-      opacity: .45;
+      opacity: 0.45;
     }
 
     label {
       display: block;
-      margin: 11px 0 5px;
-      color: #c6c6c6;
+      margin: 12px 0 6px;
+      color: #d0d0d0;
       font-size: 14px;
     }
 
-    input, select {
+    input,
+    select {
       width: 100%;
       padding: 13px;
       color: #fff;
-      background: #101010;
-      border: 1px solid #444;
+      background: #111;
+      border: 1px solid #4a4a4a;
       border-radius: 12px;
       outline: none;
     }
 
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .status {
-      margin-top: 12px;
-      padding: 11px 12px;
-      color: #c8c8c8;
-      background: var(--card2);
-      border-radius: 12px;
-      line-height: 1.45;
-    }
-
-    .role {
-      margin: 14px 0;
-      font-size: 68px;
-      text-align: center;
-    }
-
-    .secret {
-      margin: 15px 0;
-      padding: 16px;
-      text-align: center;
-      background: var(--card2);
-      border-radius: 14px;
-    }
-
-    .hero-image {
-      display: block;
-      width: 190px;
-      height: 107px;
-      margin: 0 auto 12px;
-      object-fit: cover;
-      background: #000;
-      border-radius: 10px;
-    }
-
     .player-number {
-      margin: 18px 0 10px;
+      margin: 12px 0 16px;
       color: var(--yellow);
-      font-size: 30px;
+      font-size: 32px;
       font-weight: 800;
       text-align: center;
     }
 
-    .hold-button {
-      min-height: 130px;
-      margin-top: 16px;
-      padding: 20px;
+    .secret-button {
+      width: 100%;
+      min-height: 135px;
+      margin-top: 12px;
+      padding: 18px;
       color: #fff;
-      background: #343438;
-      border: 2px solid #535357;
+      background: #35353a;
+      border: 2px solid #53535a;
       border-radius: 18px;
       font-size: 19px;
       font-weight: 800;
-      line-height: 1.35;
+      line-height: 1.4;
       user-select: none;
       touch-action: none;
     }
 
-    .hold-button.holding {
-      color: #171100;
+    .secret-button.open {
+      color: #1f1700;
       background: var(--yellow);
-      border-color: #ffe09a;
-      transform: scale(.985);
+      border-color: #ffe39b;
     }
 
     .timer {
-      margin: 16px 0;
+      margin: 20px 0;
       color: var(--green);
       font-size: 58px;
       font-weight: 800;
@@ -227,10 +177,17 @@
       color: var(--red);
     }
 
-    .rules {
-      margin: 0;
-      padding-left: 20px;
-      line-height: 1.55;
+    .result {
+      padding: 16px;
+      text-align: center;
+      background: var(--card2);
+      border-radius: 14px;
+    }
+
+    .role-icon {
+      margin: 8px 0;
+      font-size: 64px;
+      text-align: center;
     }
   </style>
 </head>
@@ -239,7 +196,6 @@
   <div id="app"></div>
 
   <script>
-    const APP_NAME = "Dota2SpyForSolin";
     const app = document.getElementById("app");
 
     const heroes = [
@@ -277,127 +233,37 @@
       "Лагерь Древних"
     ];
 
-    const heroSlugs = {
-      "Abaddon": "abaddon",
-      "Alchemist": "alchemist",
-      "Ancient Apparition": "ancient_apparition",
-      "Anti-Mage": "antimage",
-      "Axe": "axe",
-      "Bane": "bane",
-      "Batrider": "batrider",
-      "Beastmaster": "beastmaster",
-      "Bloodseeker": "bloodseeker",
-      "Bounty Hunter": "bounty_hunter",
-      "Bristleback": "bristleback",
-      "Broodmother": "broodmother",
-      "Chaos Knight": "chaos_knight",
-      "Clinkz": "clinkz",
-      "Clockwerk": "rattletrap",
-      "Crystal Maiden": "crystal_maiden",
-      "Dazzle": "dazzle",
-      "Doom": "doom_bringer",
-      "Dragon Knight": "dragon_knight",
-      "Drow Ranger": "drow_ranger",
-      "Earthshaker": "earthshaker",
-      "Ember Spirit": "ember_spirit",
-      "Enchantress": "enchantress",
-      "Enigma": "enigma",
-      "Faceless Void": "faceless_void",
-      "Gyrocopter": "gyrocopter",
-      "Huskar": "huskar",
-      "Invoker": "invoker",
-      "Jakiro": "jakiro",
-      "Juggernaut": "juggernaut",
-      "Kunkka": "kunkka",
-      "Legion Commander": "legion_commander",
-      "Lich": "lich",
-      "Lifestealer": "life_stealer",
-      "Lina": "lina",
-      "Lion": "lion",
-      "Luna": "luna",
-      "Magnus": "magnataur",
-      "Mars": "mars",
-      "Medusa": "medusa",
-      "Meepo": "meepo",
-      "Mirana": "mirana",
-      "Monkey King": "monkey_king",
-      "Morphling": "morphling",
-      "Muerta": "muerta",
-      "Naga Siren": "naga_siren",
-      "Nature's Prophet": "furion",
-      "Necrophos": "necrolyte",
-      "Night Stalker": "night_stalker",
-      "Nyx Assassin": "nyx_assassin",
-      "Ogre Magi": "ogre_magi",
-      "Omniknight": "omniknight",
-      "Oracle": "oracle",
-      "Pangolier": "pangolier",
-      "Phantom Assassin": "phantom_assassin",
-      "Phantom Lancer": "phantom_lancer",
-      "Phoenix": "phoenix",
-      "Puck": "puck",
-      "Pudge": "pudge",
-      "Pugna": "pugna",
-      "Queen of Pain": "queenofpain",
-      "Razor": "razor",
-      "Riki": "riki",
-      "Rubick": "rubick",
-      "Sand King": "sand_king",
-      "Shadow Demon": "shadow_demon",
-      "Shadow Fiend": "nevermore",
-      "Shadow Shaman": "shadow_shaman",
-      "Silencer": "silencer",
-      "Skywrath Mage": "skywrath_mage",
-      "Slardar": "slardar",
-      "Slark": "slark",
-      "Snapfire": "snapfire",
-      "Sniper": "sniper",
-      "Spectre": "spectre",
-      "Spirit Breaker": "spirit_breaker",
-      "Storm Spirit": "storm_spirit",
-      "Sven": "sven",
-      "Techies": "techies",
-      "Templar Assassin": "templar_assassin",
-      "Terrorblade": "terrorblade",
-      "Tidehunter": "tidehunter",
-      "Tinker": "tinker",
-      "Tiny": "tiny",
-      "Treant Protector": "treant",
-      "Troll Warlord": "troll_warlord",
-      "Tusk": "tusk",
-      "Undying": "undying",
-      "Ursa": "ursa",
-      "Venomancer": "venomancer",
-      "Viper": "viper",
-      "Visage": "visage",
-      "Void Spirit": "void_spirit",
-      "Warlock": "warlock",
-      "Weaver": "weaver",
-      "Windranger": "windrunner",
-      "Winter Wyvern": "winter_wyvern",
-      "Witch Doctor": "witch_doctor",
-      "Wraith King": "skeleton_king",
-      "Zeus": "zuus"
-    };
-
     let game = null;
-    let timerInterval = null;
+    let timerId = null;
 
     try {
-      const tg = window.Telegram && window.Telegram.WebApp
-        ? window.Telegram.WebApp
-        : null;
-
-      if (tg) {
-        tg.ready();
-        tg.expand();
+      if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
       }
     } catch (error) {
-      console.warn("Telegram WebApp API недоступен", error);
+      console.log("Telegram API не подключён", error);
+    }
+
+    function randomItem(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function shuffle(items) {
+      const result = items.slice();
+
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = result[i];
+        result[i] = result[j];
+        result[j] = temp;
+      }
+
+      return result;
     }
 
     function escapeHtml(value) {
-      return String(value || "")
+      return String(value)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -405,161 +271,91 @@
         .replace(/'/g, "&#039;");
     }
 
-    function randomItem(list) {
-      return list[Math.floor(Math.random() * list.length)];
-    }
-
-    function shuffle(list) {
-      const copy = list.slice();
-
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const temp = copy[i];
-        copy[i] = copy[j];
-        copy[j] = temp;
-      }
-
-      return copy;
-    }
-
-    function getHeroImage(hero) {
-      const slug = heroSlugs[hero];
-      if (!slug) return "";
-
-      return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/" +
-        slug +
-        ".png";
-    }
-
-    function vibrate(type) {
+    function haptic() {
       try {
-        const tg = window.Telegram && window.Telegram.WebApp;
+        const tg = window.Telegram.WebApp;
 
         if (tg && tg.HapticFeedback) {
-          if (type === "error") tg.HapticFeedback.notificationOccurred("error");
-          else if (type === "success") tg.HapticFeedback.notificationOccurred("success");
-          else tg.HapticFeedback.impactOccurred("medium");
+          tg.HapticFeedback.impactOccurred("medium");
         }
       } catch (error) {
-        console.warn(error);
+        console.log(error);
       }
     }
 
     function renderHome() {
-      clearInterval(timerInterval);
+      clearInterval(timerId);
 
       app.innerHTML = `
         <div class="wrap">
-          <h1>🕵️ ${APP_NAME}</h1>
+          <h1>🕵️ Dota 2 Spy</h1>
 
           <div class="card">
-            <h2>Игра на одном телефоне</h2>
+            <h2>Игра на одном устройстве</h2>
             <p class="muted">
-              Настрой игру, раздай роли по очереди и передавай телефон следующему игроку.
+              Настрой количество игроков, раздай роли по очереди и передавай телефон.
             </p>
 
-            <label for="playersCount">Количество игроков</label>
-            <input id="playersCount" type="number" min="3" max="20" value="5">
+            <label for="players">Количество игроков</label>
+            <input id="players" type="number" min="3" max="20" value="5">
 
-            <label for="spiesCount">Количество шпионов</label>
-            <input id="spiesCount" type="number" min="1" max="5" value="1">
+            <label for="spies">Количество шпионов</label>
+            <input id="spies" type="number" min="1" max="5" value="1">
 
-            <label for="roundMinutes">Время обсуждения (минуты)</label>
-            <input id="roundMinutes" type="number" min="1" max="60" value="8">
+            <label for="minutes">Время игры в минутах</label>
+            <input id="minutes" type="number" min="1" max="60" value="8">
 
-            <label for="gameMode">Режим</label>
-            <select id="gameMode">
-              <option value="random">🎲 Случайный герой и локация</option>
-              <option value="host">🎙️ Ведущий выбирает героя и локацию</option>
-            </select>
-
-            <div id="hostOptions" class="hidden">
-              <label for="selectedHero">Герой</label>
-              <select id="selectedHero">
-                ${heroes.map(hero => `
-                  <option value="${escapeHtml(hero)}">${escapeHtml(hero)}</option>
-                `).join("")}
-              </select>
-
-              <label for="selectedLocation">Локация</label>
-              <select id="selectedLocation">
-                ${locations.map(location => `
-                  <option value="${escapeHtml(location)}">${escapeHtml(location)}</option>
-                `).join("")}
-              </select>
-            </div>
-
-            <button class="btn" id="createGameButton">🎮 Создать игру</button>
+            <button class="btn" id="startSetup">🎮 Начать раздачу ролей</button>
           </div>
 
           <div class="card">
-            <h2>Правила раздачи</h2>
-            <ol class="rules muted">
-              <li>Игрок берёт телефон.</li>
-              <li>Нажимает и удерживает кнопку, чтобы увидеть роль.</li>
-              <li>Отпускает кнопку — роль скрывается.</li>
-              <li>Передаёт телефон следующему игроку.</li>
-            </ol>
+            <h2>Как играть</h2>
+            <p class="muted small">
+              Игрок удерживает кнопку, запоминает роль, отпускает кнопку и передаёт телефон следующему.
+              Обычные игроки знают героя и локацию. Шпион знает только то, что он шпион.
+            </p>
           </div>
         </div>
       `;
 
-      document.getElementById("gameMode").addEventListener("change", function() {
-        const mode = document.getElementById("gameMode").value;
-        document.getElementById("hostOptions").classList.toggle("hidden", mode !== "host");
-      });
-
-      document.getElementById("createGameButton").addEventListener("click", createGame);
+      document.getElementById("startSetup").addEventListener("click", createGame);
     }
 
     function createGame() {
-      const wantedPlayers = Number(document.getElementById("playersCount").value || 5);
-      const wantedSpies = Number(document.getElementById("spiesCount").value || 1);
-      const wantedMinutes = Number(document.getElementById("roundMinutes").value || 8);
-      const mode = document.getElementById("gameMode").value;
+      const playersInput = Number(document.getElementById("players").value);
+      const spiesInput = Number(document.getElementById("spies").value);
+      const minutesInput = Number(document.getElementById("minutes").value);
 
-      const playersCount = Math.max(3, Math.min(20, wantedPlayers));
-      const spiesCount = Math.max(1, Math.min(playersCount - 1, wantedSpies));
-      const minutes = Math.max(1, Math.min(60, wantedMinutes));
+      const playersCount = Math.max(3, Math.min(20, playersInput || 5));
+      const spiesCount = Math.max(1, Math.min(playersCount - 1, spiesInput || 1));
+      const minutes = Math.max(1, Math.min(60, minutesInput || 8));
 
-      const hero = mode === "host"
-        ? document.getElementById("selectedHero").value
-        : randomItem(heroes);
+      const indexes = [];
 
-      const location = mode === "host"
-        ? document.getElementById("selectedLocation").value
-        : randomItem(locations);
+      for (let i = 0; i < playersCount; i++) {
+        indexes.push(i);
+      }
 
-      const roles = Array(playersCount).fill(false);
-
-      shuffle(roles.map((_, index) => index))
-        .slice(0, spiesCount)
-        .forEach(function(index) {
-          roles[index] = true;
-        });
+      const spyIndexes = shuffle(indexes).slice(0, spiesCount);
 
       game = {
         playersCount: playersCount,
         spiesCount: spiesCount,
         minutes: minutes,
-        hero: hero,
-        location: location,
-        roles: roles,
+        hero: randomItem(heroes),
+        location: randomItem(locations),
+        spyIndexes: spyIndexes,
         currentPlayer: 0
       };
 
-      vibrate("success");
-      renderPassScreen();
+      haptic();
+      renderRoleScreen();
     }
 
-    function renderPassScreen() {
-      if (!game) {
-        renderHome();
-        return;
-      }
-
+    function renderRoleScreen() {
       const playerNumber = game.currentPlayer + 1;
-      const isLastPlayer = playerNumber === game.playersCount;
+      const isSpy = game.spyIndexes.includes(game.currentPlayer);
+      const isLast = playerNumber === game.playersCount;
 
       app.innerHTML = `
         <div class="wrap">
@@ -569,97 +365,87 @@
             <div class="player-number">Игрок ${playerNumber}</div>
 
             <p class="muted" style="text-align:center">
-              Убедись, что остальные не смотрят на экран.
+              Остальные игроки не должны смотреть на экран.
             </p>
 
-            <button class="hold-button" id="holdRoleButton">
-              Нажми и удерживай,<br>чтобы увидеть свою роль
+            <button id="roleButton" class="secret-button">
+              Нажми и удерживай,<br>чтобы увидеть роль
             </button>
 
-            <div class="status small">
-              После просмотра отпусти кнопку. Роль снова скроется.
-            </div>
+            <p class="muted small" style="text-align:center">
+              Отпусти кнопку, когда запомнишь роль.
+            </p>
 
-            <button class="btn alt" id="nextPlayerButton" disabled>
-              ${isLastPlayer ? "🚀 Все роли розданы" : "Передать игроку " + (playerNumber + 1)}
+            <button id="nextButton" class="btn alt" disabled>
+              ${isLast ? "🚀 Начать игру" : "Передать игроку " + (playerNumber + 1)}
             </button>
           </div>
 
-          <button class="btn danger" id="cancelGameButton">Отменить игру</button>
+          <button id="cancelButton" class="btn danger">Отменить игру</button>
         </div>
       `;
 
-      const holdButton = document.getElementById("holdRoleButton");
-      const nextButton = document.getElementById("nextPlayerButton");
-      let wasOpened = false;
+      const roleButton = document.getElementById("roleButton");
+      const nextButton = document.getElementById("nextButton");
+      let roleWasShown = false;
 
       function showRole() {
-        holdButton.classList.add("holding");
+        roleButton.classList.add("open");
 
-        if (game.roles[game.currentPlayer]) {
-          holdButton.innerHTML = "🕵️<br>ТЫ ШПИОН";
+        if (isSpy) {
+          roleButton.innerHTML = "🕵️<br>ТЫ ШПИОН";
         } else {
-          holdButton.innerHTML = `
-            🛡️<br>
-            ${escapeHtml(game.hero)}<br>
-            <span style="font-size:15px">Локация: ${escapeHtml(game.location)}</span>
-          `;
+          roleButton.innerHTML =
+            "🛡️<br>" +
+            escapeHtml(game.hero) +
+            "<br><span style='font-size:15px'>Локация: " +
+            escapeHtml(game.location) +
+            "</span>";
         }
 
-        vibrate("impact");
+        haptic();
       }
 
       function hideRole() {
-        holdButton.classList.remove("holding");
-        holdButton.innerHTML = "Нажми и удерживай,<br>чтобы увидеть свою роль";
-
-        if (!wasOpened) {
-          wasOpened = true;
-          nextButton.disabled = false;
-        }
+        roleButton.classList.remove("open");
+        roleButton.innerHTML = "Нажми и удерживай,<br>чтобы увидеть роль";
+        roleWasShown = true;
+        nextButton.disabled = false;
       }
 
-      holdButton.addEventListener("pointerdown", function(event) {
+      roleButton.addEventListener("pointerdown", function(event) {
         event.preventDefault();
-        holdButton.setPointerCapture(event.pointerId);
         showRole();
       });
 
-      holdButton.addEventListener("pointerup", function(event) {
+      roleButton.addEventListener("pointerup", function(event) {
         event.preventDefault();
         hideRole();
       });
 
-      holdButton.addEventListener("pointercancel", hideRole);
-      holdButton.addEventListener("lostpointercapture", hideRole);
+      roleButton.addEventListener("pointerleave", hideRole);
+      roleButton.addEventListener("pointercancel", hideRole);
 
       nextButton.addEventListener("click", function() {
-        if (!wasOpened) return;
-
-        vibrate("success");
+        if (!roleWasShown) {
+          return;
+        }
 
         if (game.currentPlayer < game.playersCount - 1) {
           game.currentPlayer += 1;
-          renderPassScreen();
+          renderRoleScreen();
         } else {
-          renderRoundScreen();
+          renderGameScreen();
         }
       });
 
-      document.getElementById("cancelGameButton").addEventListener("click", function() {
-        if (confirm("Точно отменить текущую игру?")) {
-          game = null;
-          renderHome();
-        }
+      document.getElementById("cancelButton").addEventListener("click", function() {
+        game = null;
+        renderHome();
       });
     }
 
-    function renderRoundScreen() {
-      if (!game) {
-        renderHome();
-        return;
-      }
-
+    function renderGameScreen() {
       const totalSeconds = game.minutes * 60;
 
       app.innerHTML = `
@@ -667,73 +453,120 @@
           <h1>🕵️ Игра началась</h1>
 
           <div class="card">
-            <h2 class="ok">Роли розданы</h2>
+            <h2>Обсуждение</h2>
             <p class="muted">
-              Задавайте друг другу вопросы. Игроки знают героя и локацию, а шпионы пытаются это выяснить.
+              Задавайте вопросы друг другу. Не называйте героя и локацию прямо.
             </p>
 
-            <div class="timer" id="timer">${formatTime(totalSeconds)}</div>
+            <div id="timer" class="timer">${formatTime(totalSeconds)}</div>
 
-            <button class="btn" id="startTimerButton">▶️ Запустить таймер</button>
-            <button class="btn alt" id="pauseTimerButton" disabled>⏸️ Пауза</button>
-            <button class="btn yellow" id="finishGameButton">🏁 Завершить игру</button>
+            <button id="timerButton" class="btn">▶️ Запустить таймер</button>
+            <button id="finishButton" class="btn yellow">🏁 Закончить раунд</button>
           </div>
 
-          <div class="card">
-            <h2>Важно</h2>
-            <p class="muted">
-              Не называйте героя и локацию прямо — иначе шпиону будет слишком легко.
-            </p>
-          </div>
-
-          <button class="btn danger" id="cancelGameButton">Отменить игру</button>
+          <button id="cancelButton" class="btn danger">Отменить игру</button>
         </div>
       `;
 
-      let secondsLeft = totalSeconds;
-      let isRunning = false;
+      let seconds = totalSeconds;
+      let running = false;
 
-      const timerElement = document.getElementById("timer");
-      const startButton = document.getElementById("startTimerButton");
-      const pauseButton = document.getElementById("pauseTimerButton");
+      const timer = document.getElementById("timer");
+      const timerButton = document.getElementById("timerButton");
 
-      function updateTimer() {
-        timerElement.textContent = formatTime(secondsLeft);
-
-        if (secondsLeft <= 0) {
-          clearInterval(timerInterval);
-          isRunning = false;
-          timerElement.classList.add("finished");
-          startButton.disabled = true;
-          pauseButton.disabled = true;
-          vibrate("error");
-
-          setTimeout(function() {
-            alert("Время вышло! Обсудите и выберите предполагаемого шпиона.");
-          }, 100);
+      timerButton.addEventListener("click", function() {
+        if (running) {
+          clearInterval(timerId);
+          running = false;
+          timerButton.textContent = "▶️ Продолжить таймер";
+          return;
         }
-      }
 
-      function startTimer() {
-        if (isRunning || secondsLeft <= 0) return;
+        running = true;
+        timerButton.textContent = "⏸️ Пауза";
 
-        isRunning = true;
-        startButton.disabled = true;
-        pauseButton.disabled = false;
+        timerId = setInterval(function() {
+          seconds -= 1;
+          timer.textContent = formatTime(seconds);
 
-        timerInterval = setInterval(function() {
-          secondsLeft -= 1;
-          updateTimer();
+          if (seconds <= 0) {
+            clearInterval(timerId);
+            timer.classList.add("finished");
+            timerButton.disabled = true;
+            haptic();
+
+            setTimeout(function() {
+              alert("Время вышло! Выберите предполагаемого шпиона.");
+            }, 100);
+          }
         }, 1000);
-      }
+      });
 
-      function pauseTimer() {
-        if (!isRunning) return;
+      document.getElementById("finishButton").addEventListener("click", function() {
+        clearInterval(timerId);
+        renderResultScreen();
+      });
 
-        clearInterval(timerInterval);
-        isRunning = false;
-        startButton.disabled = false;
-        pauseButton.disabled = true;
-      }
+      document.getElementById("cancelButton").addEventListener("click", function() {
+        clearInterval(timerId);
+        game = null;
+        renderHome();
+      });
+    }
 
-      startButton.addEventLi
+    function renderResultScreen() {
+      const spies = game.spyIndexes
+        .map(function(index) {
+          return "Игрок " + (index + 1);
+        })
+        .join(", ");
+
+      app.innerHTML = `
+        <div class="wrap">
+          <h1>🕵️ Итоги раунда</h1>
+
+          <div class="card">
+            <h2>Герой и локация</h2>
+            <div class="result">
+              <div class="role-icon">🛡️</div>
+              <h2>${escapeHtml(game.hero)}</h2>
+              <p>Локация: <b>${escapeHtml(game.location)}</b></p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Шпионы</h2>
+            <div class="result">
+              <div class="role-icon">🕵️</div>
+              <p><b>${spies}</b></p>
+            </div>
+          </div>
+
+          <button id="newGameButton" class="btn">🔄 Новая игра</button>
+          <button id="settingsButton" class="btn alt">⚙️ К настройкам</button>
+        </div>
+      `;
+
+      document.getElementById("newGameButton").addEventListener("click", function() {
+        renderHome();
+      });
+
+      document.getElementById("settingsButton").addEventListener("click", function() {
+        game = null;
+        renderHome();
+      });
+    }
+
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const restSeconds = seconds % 60;
+
+      return String(minutes).padStart(2, "0") +
+        ":" +
+        String(restSeconds).padStart(2, "0");
+    }
+
+    renderHome();
+  </script>
+</body>
+</html>
