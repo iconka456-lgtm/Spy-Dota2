@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#101010">
-  <title>Dota 2 Spy</title>
+  <title>Dota2SpyForSolin</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
 
@@ -19,6 +19,7 @@
       --green: #76e5a2;
       --yellow: #ffd166;
       --red: #ff7b7b;
+      --blue: #74b9ff;
     }
 
     * {
@@ -134,6 +135,14 @@
       outline: none;
     }
 
+    .mode-card {
+      padding: 14px;
+      margin-top: 10px;
+      border: 1px solid #45454a;
+      border-radius: 14px;
+      background: var(--card2);
+    }
+
     .player-number {
       margin: 12px 0 16px;
       color: var(--yellow);
@@ -144,7 +153,7 @@
 
     .secret-button {
       width: 100%;
-      min-height: 135px;
+      min-height: 145px;
       margin-top: 12px;
       padding: 18px;
       color: #fff;
@@ -158,8 +167,14 @@
       touch-action: none;
     }
 
-    .secret-button.open {
-      color: #1f1700;
+    .secret-button.open-peaceful {
+      color: #06180d;
+      background: var(--green);
+      border-color: #b2ffd0;
+    }
+
+    .secret-button.open-spy {
+      color: #211700;
       background: var(--yellow);
       border-color: #ffe39b;
     }
@@ -188,6 +203,14 @@
       margin: 8px 0;
       font-size: 64px;
       text-align: center;
+    }
+
+    .peaceful-title {
+      color: var(--green);
+    }
+
+    .spy-title {
+      color: var(--yellow);
     }
   </style>
 </head>
@@ -271,11 +294,19 @@
         .replace(/'/g, "&#039;");
     }
 
-    function haptic() {
+    function haptic(type) {
       try {
-        const tg = window.Telegram.WebApp;
+        const tg = window.Telegram && window.Telegram.WebApp;
 
-        if (tg && tg.HapticFeedback) {
+        if (!tg || !tg.HapticFeedback) {
+          return;
+        }
+
+        if (type === "success") {
+          tg.HapticFeedback.notificationOccurred("success");
+        } else if (type === "error") {
+          tg.HapticFeedback.notificationOccurred("error");
+        } else {
           tg.HapticFeedback.impactOccurred("medium");
         }
       } catch (error) {
@@ -288,13 +319,20 @@
 
       app.innerHTML = `
         <div class="wrap">
-          <h1>🕵️ Dota 2 Spy</h1>
+          <h1>🕵️ Dota2SpyForSolin</h1>
 
           <div class="card">
             <h2>Игра на одном устройстве</h2>
-            <p class="muted">
-              Настрой количество игроков, раздай роли по очереди и передавай телефон.
-            </p>
+
+            <label for="gameMode">Режим игры</label>
+            <select id="gameMode">
+              <option value="random">🎲 Рандом</option>
+              <option value="host">🎙️ С ведущим</option>
+            </select>
+
+            <div id="modeDescription" class="mode-card small muted">
+              Приложение случайно выбирает героя для мирных, героя для шпионов и локацию.
+            </div>
 
             <label for="players">Количество игроков</label>
             <input id="players" type="number" min="3" max="20" value="5">
@@ -305,23 +343,74 @@
             <label for="minutes">Время игры в минутах</label>
             <input id="minutes" type="number" min="1" max="60" value="8">
 
+            <div id="hostSettings" class="hidden">
+              <div class="mode-card">
+                <h2>Настройки ведущего</h2>
+
+                <label for="peacefulHero">Герой мирных</label>
+                <select id="peacefulHero">
+                  ${heroes.map(function(hero) {
+                    return `<option value="${escapeHtml(hero)}">${escapeHtml(hero)}</option>`;
+                  }).join("")}
+                </select>
+
+                <label for="spyHero">Герой шпионов</label>
+                <select id="spyHero">
+                  ${heroes.map(function(hero) {
+                    return `<option value="${escapeHtml(hero)}">${escapeHtml(hero)}</option>`;
+                  }).join("")}
+                </select>
+
+                <label for="gameLocation">Локация для всех</label>
+                <select id="gameLocation">
+                  ${locations.map(function(location) {
+                    return `<option value="${escapeHtml(location)}">${escapeHtml(location)}</option>`;
+                  }).join("")}
+                </select>
+
+                <p class="muted small">
+                  Мирные увидят своего героя и локацию. Шпионы увидят другого героя и ту же локацию.
+                </p>
+              </div>
+            </div>
+
             <button class="btn" id="startSetup">🎮 Начать раздачу ролей</button>
           </div>
 
           <div class="card">
-            <h2>Как играть</h2>
+            <h2>Правила</h2>
             <p class="muted small">
-              Игрок удерживает кнопку, запоминает роль, отпускает кнопку и передаёт телефон следующему.
-              Обычные игроки знают героя и локацию. Шпион знает только то, что он шпион.
+              Каждый игрок удерживает кнопку, запоминает свою роль, отпускает кнопку и передаёт телефон следующему.
+              Мирные пытаются найти шпионов, а шпионы — не раскрыться.
             </p>
           </div>
         </div>
       `;
 
+      document.getElementById("gameMode").addEventListener("change", updateModeView);
       document.getElementById("startSetup").addEventListener("click", createGame);
+
+      updateModeView();
+    }
+
+    function updateModeView() {
+      const mode = document.getElementById("gameMode").value;
+      const hostSettings = document.getElementById("hostSettings");
+      const modeDescription = document.getElementById("modeDescription");
+
+      hostSettings.classList.toggle("hidden", mode !== "host");
+
+      if (mode === "host") {
+        modeDescription.textContent =
+          "Ведущий выбирает героя мирных, отдельного героя шпионов и общую локацию.";
+      } else {
+        modeDescription.textContent =
+          "Приложение случайно выбирает героя для мирных, героя для шпионов и локацию.";
+      }
     }
 
     function createGame() {
+      const mode = document.getElementById("gameMode").value;
       const playersInput = Number(document.getElementById("players").value);
       const spiesInput = Number(document.getElementById("spies").value);
       const minutesInput = Number(document.getElementById("minutes").value);
@@ -329,6 +418,29 @@
       const playersCount = Math.max(3, Math.min(20, playersInput || 5));
       const spiesCount = Math.max(1, Math.min(playersCount - 1, spiesInput || 1));
       const minutes = Math.max(1, Math.min(60, minutesInput || 8));
+
+      let peacefulHero;
+      let spyHero;
+      let location;
+
+      if (mode === "host") {
+        peacefulHero = document.getElementById("peacefulHero").value;
+        spyHero = document.getElementById("spyHero").value;
+        location = document.getElementById("gameLocation").value;
+
+        if (peacefulHero === spyHero) {
+          alert("Выбери разных героев для мирных и шпионов.");
+          return;
+        }
+      } else {
+        peacefulHero = randomItem(heroes);
+
+        do {
+          spyHero = randomItem(heroes);
+        } while (spyHero === peacefulHero);
+
+        location = randomItem(locations);
+      }
 
       const indexes = [];
 
@@ -339,16 +451,18 @@
       const spyIndexes = shuffle(indexes).slice(0, spiesCount);
 
       game = {
+        mode: mode,
         playersCount: playersCount,
         spiesCount: spiesCount,
         minutes: minutes,
-        hero: randomItem(heroes),
-        location: randomItem(locations),
+        peacefulHero: peacefulHero,
+        spyHero: spyHero,
+        location: location,
         spyIndexes: spyIndexes,
         currentPlayer: 0
       };
 
-      haptic();
+      haptic("success");
       renderRoleScreen();
     }
 
@@ -359,13 +473,13 @@
 
       app.innerHTML = `
         <div class="wrap">
-          <h1>🕵️ Раздача ролей</h1>
+          <h1>🕵️ Dota2SpyForSolin</h1>
 
           <div class="card">
             <div class="player-number">Игрок ${playerNumber}</div>
 
             <p class="muted" style="text-align:center">
-              Остальные игроки не должны смотреть на экран.
+              Убедись, что другие игроки не смотрят на экран.
             </p>
 
             <button id="roleButton" class="secret-button">
@@ -373,7 +487,7 @@
             </button>
 
             <p class="muted small" style="text-align:center">
-              Отпусти кнопку, когда запомнишь роль.
+              После просмотра отпусти кнопку — информация снова скроется.
             </p>
 
             <button id="nextButton" class="btn alt" disabled>
@@ -388,28 +502,53 @@
       const roleButton = document.getElementById("roleButton");
       const nextButton = document.getElementById("nextButton");
       let roleWasShown = false;
+      let roleIsVisible = false;
 
       function showRole() {
-        roleButton.classList.add("open");
+        if (roleIsVisible) {
+          return;
+        }
+
+        roleIsVisible = true;
+        haptic("impact");
 
         if (isSpy) {
-          roleButton.innerHTML = "🕵️<br>ТЫ ШПИОН";
+          roleButton.classList.add("open-spy");
+          roleButton.innerHTML =
+            "🕵️<br>" +
+            "ТЫ ШПИОН<br>" +
+            "<span style='font-size:16px'>Твой герой: " +
+            escapeHtml(game.spyHero) +
+            "</span><br>" +
+            "<span style='font-size:16px'>Локация: " +
+            escapeHtml(game.location) +
+            "</span>";
         } else {
+          roleButton.classList.add("open-peaceful");
           roleButton.innerHTML =
             "🛡️<br>" +
-            escapeHtml(game.hero) +
-            "<br><span style='font-size:15px'>Локация: " +
+            "ТЫ МИРНЫЙ<br>" +
+            "<span style='font-size:16px'>Твой герой: " +
+            escapeHtml(game.peacefulHero) +
+            "</span><br>" +
+            "<span style='font-size:16px'>Локация: " +
             escapeHtml(game.location) +
             "</span>";
         }
-
-        haptic();
       }
 
       function hideRole() {
-        roleButton.classList.remove("open");
-        roleButton.innerHTML = "Нажми и удерживай,<br>чтобы увидеть роль";
+        if (!roleIsVisible) {
+          return;
+        }
+
+        roleIsVisible = false;
         roleWasShown = true;
+
+        roleButton.classList.remove("open-spy");
+        roleButton.classList.remove("open-peaceful");
+        roleButton.innerHTML = "Нажми и удерживай,<br>чтобы увидеть роль";
+
         nextButton.disabled = false;
       }
 
@@ -431,6 +570,8 @@
           return;
         }
 
+        haptic("success");
+
         if (game.currentPlayer < game.playersCount - 1) {
           game.currentPlayer += 1;
           renderRoleScreen();
@@ -450,12 +591,12 @@
 
       app.innerHTML = `
         <div class="wrap">
-          <h1>🕵️ Игра началась</h1>
+          <h1>🕵️ Dota2SpyForSolin</h1>
 
           <div class="card">
-            <h2>Обсуждение</h2>
+            <h2>Игра началась</h2>
             <p class="muted">
-              Задавайте вопросы друг другу. Не называйте героя и локацию прямо.
+              Задавайте вопросы друг другу. Не называйте героя и локацию слишком прямо.
             </p>
 
             <div id="timer" class="timer">${formatTime(totalSeconds)}</div>
@@ -482,6 +623,10 @@
           return;
         }
 
+        if (seconds <= 0) {
+          return;
+        }
+
         running = true;
         timerButton.textContent = "⏸️ Пауза";
 
@@ -491,9 +636,11 @@
 
           if (seconds <= 0) {
             clearInterval(timerId);
+            running = false;
             timer.classList.add("finished");
             timerButton.disabled = true;
-            haptic();
+
+            haptic("error");
 
             setTimeout(function() {
               alert("Время вышло! Выберите предполагаемого шпиона.");
@@ -523,22 +670,26 @@
 
       app.innerHTML = `
         <div class="wrap">
-          <h1>🕵️ Итоги раунда</h1>
+          <h1>🕵️ Dota2SpyForSolin</h1>
 
           <div class="card">
-            <h2>Герой и локация</h2>
+            <h2>Итоги раунда</h2>
+
             <div class="result">
               <div class="role-icon">🛡️</div>
-              <h2>${escapeHtml(game.hero)}</h2>
+              <h2 class="peaceful-title">Мирные</h2>
+              <p>Герой: <b>${escapeHtml(game.peacefulHero)}</b></p>
               <p>Локация: <b>${escapeHtml(game.location)}</b></p>
             </div>
           </div>
 
           <div class="card">
-            <h2>Шпионы</h2>
             <div class="result">
               <div class="role-icon">🕵️</div>
-              <p><b>${spies}</b></p>
+              <h2 class="spy-title">Шпионы</h2>
+              <p>Герой: <b>${escapeHtml(game.spyHero)}</b></p>
+              <p>Локация: <b>${escapeHtml(game.location)}</b></p>
+              <p>Шпионы: <b>${spies}</b></p>
             </div>
           </div>
 
