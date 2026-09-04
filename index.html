@@ -3,146 +3,376 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101010">
   <title>Dota2SpyForSolin</title>
-
-  <script>
-    window.addEventListener("error", function(event) {
-      document.addEventListener("DOMContentLoaded", function() {
-        var app = document.getElementById("app");
-
-        if (app) {
-          app.innerHTML =
-            "<div style='font-family:Arial;padding:20px;color:white;background:#101010;min-height:100vh'>" +
-            "<h2>Ошибка JavaScript</h2>" +
-            "<pre style='white-space:pre-wrap;color:#ff7777'>" +
-            String(event.message) +
-            "
-Строка: " + event.lineno +
-            "
-Файл: " + event.filename +
-            "</pre>" +
-            "</div>";
-        }
-      });
-    });
-
-    window.addEventListener("unhandledrejection", function(event) {
-      var app = document.getElementById("app");
-
-      if (app) {
-        app.innerHTML =
-          "<div style='font-family:Arial;padding:20px;color:white;background:#101010;min-height:100vh'>" +
-          "<h2>Ошибка загрузки</h2>" +
-          "<pre style='white-space:pre-wrap;color:#ff7777'>" +
-          String(event.reason?.message || event.reason || "Неизвестная ошибка") +
-          "</pre>" +
-          "</div>";
-      }
-    });
-  </script>
 
   <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --bg: #101010;
+      --card: #1d1d1f;
+      --card2: #121212;
+      --line: #353535;
+      --text: #fff;
+      --muted: #9a9a9a;
+      --green: #76e5a2;
+      --yellow: #ffd166;
+      --red: #ff7b7b;
     }
+
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      color: white;
-      background: #101010;
-      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
     }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
 
     .wrap {
-      max-width: 600px;
+      width: 100%;
+      max-width: 620px;
       margin: 0 auto;
-      padding: 20px 15px;
+      padding: 18px 14px 42px;
     }
 
-    .card {
-      padding: 18px;
-      margin-top: 14px;
-      border: 1px solid #393939;
-      border-radius: 16px;
-      background: #1d1d1f;
+    h1 {
+      margin: 8px 0 18px;
+      font-size: 28px;
     }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 21px;
+    }
+
+    p { line-height: 1.45; }
+
+    .card {
+      margin: 12px 0;
+      padding: 17px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
+
+    .muted { color: var(--muted); }
+    .small { font-size: 13px; }
+    .ok { color: var(--green); }
+    .warn { color: var(--yellow); }
+    .error {
+      color: var(--red);
+      white-space: pre-wrap;
+      line-height: 1.45;
+    }
+
+    .hidden { display: none !important; }
 
     .btn {
       width: 100%;
-      margin-top: 12px;
+      margin-top: 10px;
       padding: 15px;
       border: 0;
-      border-radius: 12px;
+      border-radius: 14px;
       color: #111;
-      background: white;
-      font-weight: bold;
+      background: #fff;
+      font-weight: 700;
     }
 
     .btn.alt {
-      color: white;
-      background: #333;
+      color: #fff;
+      background: #2b2b2f;
     }
 
-    input {
+    .btn.danger {
+      color: #fff;
+      background: #a83131;
+    }
+
+    .btn:disabled {
+      cursor: default;
+      opacity: .45;
+    }
+
+    label {
+      display: block;
+      margin: 11px 0 5px;
+      color: #c6c6c6;
+      font-size: 14px;
+    }
+
+    input, select {
       width: 100%;
-      margin-top: 8px;
       padding: 13px;
-      border: 1px solid #555;
+      color: #fff;
+      background: #101010;
+      border: 1px solid #444;
+      border-radius: 12px;
+      outline: none;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .code {
+      margin: 12px 0 18px;
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      text-align: center;
+    }
+
+    .status {
+      margin-top: 12px;
+      padding: 11px 12px;
+      color: #b8b8b8;
+      background: var(--card2);
+      border-radius: 12px;
+      line-height: 1.4;
+    }
+
+    .players {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .player {
+      padding: 12px;
+      background: var(--card2);
+      border-radius: 12px;
+    }
+
+    .hero-image {
+      display: block;
+      width: 190px;
+      height: 107px;
+      margin: 0 auto 12px;
+      object-fit: cover;
+      background: #000;
       border-radius: 10px;
-      color: white;
-      background: #111;
     }
 
-    .muted {
-      color: #aaa;
+    .role {
+      margin: 14px 0;
+      font-size: 62px;
+      text-align: center;
     }
 
-    .error {
-      color: #ff7777;
-      white-space: pre-wrap;
+    .secret {
+      margin: 15px 0;
+      padding: 16px;
+      text-align: center;
+      background: var(--card2);
+      border-radius: 14px;
     }
   </style>
 </head>
 
 <body>
-  <div id="app">
-    <div class="wrap">
-      <h1>🕵️ Dota2SpyForSolin</h1>
-      <div class="card">
-        Загрузка...
-      </div>
-    </div>
-  </div>
+  <div id="app"></div>
 
   <script>
-    var app = document.getElementById("app");
+    const APP_NAME = "Dota2SpyForSolin";
 
-    function screenError(text) {
-      app.innerHTML =
-        "<div class='wrap'>" +
-        "<h1>🕵️ Dota2SpyForSolin</h1>" +
-        "<div class='card'>" +
-        "<h2>Ошибка</h2>" +
-        "<div class='error'>" + String(text).replace(/</g, "&lt;") + "</div>" +
-        "</div>" +
-        "</div>";
-    }
+    const SUPABASE_URL = "https://hyvcpcwoxxcuhjgrhars.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_EPkobMICKNonO148D6QmHA_8I6gJdPy";
+
+    const app = document.getElementById("app");
+
+    const heroes = [
+      "Abaddon", "Alchemist", "Ancient Apparition", "Anti-Mage",
+      "Axe", "Bane", "Batrider", "Beastmaster", "Bloodseeker",
+      "Bounty Hunter", "Bristleback", "Broodmother", "Chaos Knight",
+      "Clinkz", "Clockwerk", "Crystal Maiden", "Dazzle", "Doom",
+      "Dragon Knight", "Drow Ranger", "Earthshaker", "Ember Spirit",
+      "Enchantress", "Enigma", "Faceless Void", "Gyrocopter", "Huskar",
+      "Invoker", "Jakiro", "Juggernaut", "Kunkka", "Legion Commander",
+      "Lich", "Lifestealer", "Lina", "Lion", "Luna", "Magnus", "Mars",
+      "Medusa", "Meepo", "Mirana", "Monkey King", "Morphling", "Muerta",
+      "Naga Siren", "Nature's Prophet", "Necrophos", "Night Stalker",
+      "Nyx Assassin", "Ogre Magi", "Omniknight", "Oracle", "Pangolier",
+      "Phantom Assassin", "Phantom Lancer", "Phoenix", "Puck", "Pudge",
+      "Pugna", "Queen of Pain", "Razor", "Riki", "Rubick", "Sand King",
+      "Shadow Demon", "Shadow Fiend", "Shadow Shaman", "Silencer",
+      "Skywrath Mage", "Slardar", "Slark", "Snapfire", "Sniper",
+      "Spectre", "Spirit Breaker", "Storm Spirit", "Sven", "Techies",
+      "Templar Assassin", "Terrorblade", "Tidehunter", "Tinker", "Tiny",
+      "Treant Protector", "Troll Warlord", "Tusk", "Undying", "Ursa",
+      "Venomancer", "Viper", "Visage", "Void Spirit", "Warlock", "Weaver",
+      "Windranger", "Winter Wyvern", "Witch Doctor", "Wraith King", "Zeus"
+    ];
+
+    const locations = [
+      "Таверна",
+      "Рошанова яма",
+      "Мид-лейн",
+      "Лес Radiant",
+      "Лес Dire",
+      "Фонтан Radiant",
+      "Фонтан Dire",
+      "Секретный магазин",
+      "Лагерь Древних"
+    ];
+
+    const heroSlugs = {
+      "Abaddon": "abaddon",
+      "Alchemist": "alchemist",
+      "Ancient Apparition": "ancient_apparition",
+      "Anti-Mage": "antimage",
+      "Axe": "axe",
+      "Bane": "bane",
+      "Batrider": "batrider",
+      "Beastmaster": "beastmaster",
+      "Bloodseeker": "bloodseeker",
+      "Bounty Hunter": "bounty_hunter",
+      "Bristleback": "bristleback",
+      "Broodmother": "broodmother",
+      "Chaos Knight": "chaos_knight",
+      "Clinkz": "clinkz",
+      "Clockwerk": "rattletrap",
+      "Crystal Maiden": "crystal_maiden",
+      "Dazzle": "dazzle",
+      "Doom": "doom_bringer",
+      "Dragon Knight": "dragon_knight",
+      "Drow Ranger": "drow_ranger",
+      "Earthshaker": "earthshaker",
+      "Ember Spirit": "ember_spirit",
+      "Enchantress": "enchantress",
+      "Enigma": "enigma",
+      "Faceless Void": "faceless_void",
+      "Gyrocopter": "gyrocopter",
+      "Huskar": "huskar",
+      "Invoker": "invoker",
+      "Jakiro": "jakiro",
+      "Juggernaut": "juggernaut",
+      "Kunkka": "kunkka",
+      "Legion Commander": "legion_commander",
+      "Lich": "lich",
+      "Lifestealer": "life_stealer",
+      "Lina": "lina",
+      "Lion": "lion",
+      "Luna": "luna",
+      "Magnus": "magnataur",
+      "Mars": "mars",
+      "Medusa": "medusa",
+      "Meepo": "meepo",
+      "Mirana": "mirana",
+      "Monkey King": "monkey_king",
+      "Morphling": "morphling",
+      "Muerta": "muerta",
+      "Naga Siren": "naga_siren",
+      "Nature's Prophet": "furion",
+      "Necrophos": "necrolyte",
+      "Night Stalker": "night_stalker",
+      "Nyx Assassin": "nyx_assassin",
+      "Ogre Magi": "ogre_magi",
+      "Omniknight": "omniknight",
+      "Oracle": "oracle",
+      "Pangolier": "pangolier",
+      "Phantom Assassin": "phantom_assassin",
+      "Phantom Lancer": "phantom_lancer",
+      "Phoenix": "phoenix",
+      "Puck": "puck",
+      "Pudge": "pudge",
+      "Pugna": "pugna",
+      "Queen of Pain": "queenofpain",
+      "Razor": "razor",
+      "Riki": "riki",
+      "Rubick": "rubick",
+      "Sand King": "sand_king",
+      "Shadow Demon": "shadow_demon",
+      "Shadow Fiend": "nevermore",
+      "Shadow Shaman": "shadow_shaman",
+      "Silencer": "silencer",
+      "Skywrath Mage": "skywrath_mage",
+      "Slardar": "slardar",
+      "Slark": "slark",
+      "Snapfire": "snapfire",
+      "Sniper": "sniper",
+      "Spectre": "spectre",
+      "Spirit Breaker": "spirit_breaker",
+      "Storm Spirit": "storm_spirit",
+      "Sven": "sven",
+      "Techies": "techies",
+      "Templar Assassin": "templar_assassin",
+      "Terrorblade": "terrorblade",
+      "Tidehunter": "tidehunter",
+      "Tinker": "tinker",
+      "Tiny": "tiny",
+      "Treant Protector": "treant",
+      "Troll Warlord": "troll_warlord",
+      "Tusk": "tusk",
+      "Undying": "undying",
+      "Ursa": "ursa",
+      "Venomancer": "venomancer",
+      "Viper": "viper",
+      "Visage": "visage",
+      "Void Spirit": "void_spirit",
+      "Warlock": "warlock",
+      "Weaver": "weaver",
+      "Windranger": "windrunner",
+      "Winter Wyvern": "winter_wyvern",
+      "Witch Doctor": "witch_doctor",
+      "Wraith King": "skeleton_king",
+      "Zeus": "zuus"
+    };
+
+    let tg = null;
 
     try {
-      if (!window.supabase || !window.supabase.createClient) {
-        throw new Error(
-          "Supabase не загрузился. Проверь интернет, затем полностью закрой Telegram и открой приложение снова."
-        );
+      tg = window.Telegram && window.Telegram.WebApp
+        ? window.Telegram.WebApp
+        : null;
+
+      if (tg) {
+        tg.ready();
+        tg.expand();
       }
+    } catch (error) {
+      console.warn("Telegram WebApp API недоступен", error);
+    }
 
-      var SUPABASE_URL = "https://hyvcpcwoxxcuhjgrhars.supabase.co";
-      var SUPABASE_KEY = "sb_publishable_EPkobMICKNonO148D6QmHA_8I6gJdPy";
+    if (!window.supabase || !window.supabase.createClient) {
+      showFatalError(
+        "Supabase не загрузился. Проверь интернет, затем полностью закрой Telegram и открой приложение снова."
+      );
+    } else {
+      startGameApp();
+    }
 
-      var db = window.supabase.createClient(
+    function showFatalError(message) {
+      app.innerHTML = `
+        <div class="wrap">
+          <h1>🕵️ ${APP_NAME}</h1>
+          <div class="card">
+            <h2>Не удалось загрузить игру</h2>
+            <div class="error">${escapeHtml(message)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function startGameApp() {
+      const db = window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY,
         {
@@ -154,53 +384,352 @@
         }
       );
 
-      try {
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.ready();
-          window.Telegram.WebApp.expand();
+      let state = loadState();
+      let room = null;
+      let players = [];
+      let me = null;
+      let busy = false;
+      let refreshTimer = null;
+      let channel = null;
+
+      function loadState() {
+        try {
+          return JSON.parse(localStorage.getItem("dota2spy_state") || "null");
+        } catch (error) {
+          return null;
         }
-      } catch (telegramError) {}
+      }
 
-      app.innerHTML =
-        "<div class='wrap'>" +
-        "<h1>🕵️ Dota2SpyForSolin</h1>" +
-        "<div class='card'>" +
-        "<h2 class='muted'>Приложение загрузилось</h2>" +
-        "<p>Если ты видишь этот экран — чёрный экран исправлен.</p>" +
-        "<input id='testCode' placeholder='Тестовый код комнаты'>" +
-        "<button class='btn' onclick='testSupabase()'>Проверить подключение к Supabase</button>" +
-        "<div id='result' class='muted' style='margin-top:12px'></div>" +
-        "</div>" +
-        "</div>";
+      function saveState() {
+        localStorage.setItem("dota2spy_state", JSON.stringify(state));
+      }
 
-      window.testSupabase = async function() {
-        var result = document.getElementById("result");
-        result.textContent = "Проверяю подключение...";
+      function clearState() {
+        localStorage.removeItem("dota2spy_state");
+      }
+
+      function getIdentity() {
+        const telegramUser = window.Telegram &&
+          window.Telegram.WebApp &&
+          window.Telegram.WebApp.initDataUnsafe
+          ? window.Telegram.WebApp.initDataUnsafe.user
+          : null;
+
+        if (telegramUser && telegramUser.id) {
+          return {
+            id: Number(telegramUser.id),
+            name: telegramUser.first_name || telegramUser.username || "Игрок"
+          };
+        }
+
+        let guestId = localStorage.getItem("dota2spy_guest_id");
+
+        if (!guestId) {
+          guestId = String(Date.now()) + String(Math.floor(Math.random() * 99999));
+          localStorage.setItem("dota2spy_guest_id", guestId);
+        }
+
+        return {
+          id: Number(guestId),
+          name: "Гость"
+        };
+      }
+
+      function randomItem(list) {
+        return list[Math.floor(Math.random() * list.length)];
+      }
+
+      function makeRoomCode() {
+        return Math.random().toString(36).slice(2, 8).toUpperCase();
+      }
+
+      function getHeroImage(hero) {
+        const slug = heroSlugs[hero];
+
+        if (!slug) return "";
+
+        return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/" +
+          slug +
+          ".png";
+      }
+
+      function showError(message) {
+        app.innerHTML = `
+          <div class="wrap">
+            <h1>🕵️ ${APP_NAME}</h1>
+            <div class="card">
+              <h2>Ошибка</h2>
+              <div class="error">${escapeHtml(message)}</div>
+              <button class="btn" id="homeButton">На главную</button>
+            </div>
+          </div>
+        `;
+
+        document.getElementById("homeButton").addEventListener("click", goHome);
+      }
+
+      function goHome() {
+        clearTimeout(refreshTimer);
+
+        if (channel) {
+          db.removeChannel(channel);
+          channel = null;
+        }
+
+        room = null;
+        players = [];
+        me = null;
+        state = null;
+
+        clearState();
+        renderHome();
+      }
+
+      function renderHome() {
+        app.innerHTML = `
+          <div class="wrap">
+            <h1>🕵️ ${APP_NAME}</h1>
+
+            <div class="card">
+              <h2>Создать комнату</h2>
+              <p class="muted">Создай комнату, скопируй код и отправь друзьям.</p>
+
+              <label for="roomMode">Режим игры</label>
+              <select id="roomMode">
+                <option value="random">🎲 Случайный режим</option>
+                <option value="host">🎙️ Режим с ведущим</option>
+              </select>
+
+              <div class="row">
+                <div>
+                  <label for="playersCount">Игроков</label>
+                  <input id="playersCount" type="number" min="3" max="10" value="5">
+                </div>
+
+                <div>
+                  <label for="spiesCount">Шпионов</label>
+                  <input id="spiesCount" type="number" min="1" max="4" value="1">
+                </div>
+              </div>
+
+              <div id="hostOptions" class="hidden">
+                <label for="selectedHero">Герой</label>
+                <select id="selectedHero">
+                  ${heroes.map(hero => `<option value="${escapeHtml(hero)}">${escapeHtml(hero)}</option>`).join("")}
+                </select>
+
+                <label for="selectedLocation">Локация</label>
+                <select id="selectedLocation">
+                  ${locations.map(location => `<option value="${escapeHtml(location)}">${escapeHtml(location)}</option>`).join("")}
+                </select>
+
+                <div class="status small">
+                  Ведущий выбирает героя и локацию. Роли распределятся при старте.
+                </div>
+              </div>
+
+              <button class="btn" id="createButton">🎮 Создать комнату</button>
+            </div>
+
+            <div class="card">
+              <h2>Войти в комнату</h2>
+              <input id="joinCode" maxlength="6" placeholder="Код комнаты" autocomplete="off">
+              <button class="btn alt" id="joinButton">🚪 Войти</button>
+            </div>
+          </div>
+        `;
+
+        document.getElementById("roomMode").addEventListener("change", toggleHostMode);
+        document.getElementById("createButton").addEventListener("click", createRoom);
+        document.getElementById("joinButton").addEventListener("click", joinRoom);
+      }
+
+      function toggleHostMode() {
+        const mode = document.getElementById("roomMode").value;
+        document.getElementById("hostOptions").classList.toggle("hidden", mode !== "host");
+      }
+
+      async function createRoom() {
+        if (busy) return;
+
+        busy = true;
 
         try {
-          var response = await db
-            .from("rooms")
-            .select("id")
-            .limit(1);
+          const current = getIdentity();
 
-          if (response.error) {
-            throw response.error;
+          const mode = document.getElementById("roomMode").value;
+          const wantedPlayers = Number(document.getElementById("playersCount").value || 5);
+          const wantedSpies = Number(document.getElementById("spiesCount").value || 1);
+
+          const playersCount = Math.max(3, Math.min(10, wantedPlayers));
+          const spiesCount = Math.max(1, Math.min(playersCount - 1, wantedSpies));
+
+          const hero = mode === "host"
+            ? document.getElementById("selectedHero").value
+            : randomItem(heroes);
+
+          const location = mode === "host"
+            ? document.getElementById("selectedLocation").value
+            : randomItem(locations);
+
+          let newRoom = null;
+          let lastError = null;
+
+          for (let attempt = 0; attempt < 5; attempt++) {
+            const result = await db
+              .from("rooms")
+              .insert({
+                code: makeRoomCode(),
+                host_telegram_id: current.id,
+                players_count: playersCount,
+                spies_count: spiesCount,
+                hero: hero,
+                location: location,
+                mode: mode,
+                status: "waiting",
+                current_player: 0
+              })
+              .select()
+              .single();
+
+            if (!result.error) {
+              newRoom = result.data;
+              break;
+            }
+
+            lastError = result.error;
           }
 
-          result.innerHTML =
-            "<span style='color:#76e5a2'>✅ Supabase подключён. Таблица rooms доступна.</span>";
-        } catch (error) {
-          result.innerHTML =
-            "<span style='color:#ff7777'>❌ Ошибка Supabase: " +
-            String(error.message || error) +
-            "</span>";
-        }
-      };
+          if (!newRoom) {
+            throw lastError || new Error("Не удалось создать комнату");
+          }
 
-    } catch (error) {
-      console.error(error);
-      screenError(error.message || error);
-    }
-  </script>
-</body>
-</html>
+          const playerResult = await db
+            .from("room_players")
+            .insert({
+              room_id: newRoom.id,
+              telegram_id: current.id,
+              player_number: 0,
+              is_spy: false
+            })
+            .select()
+            .single();
+
+          if (playerResult.error) {
+            throw playerResult.error;
+          }
+
+          state = {
+            roomId: newRoom.id,
+            roomCode: newRoom.code,
+            userId: current.id,
+            isHost: true
+          };
+
+          room = newRoom;
+          players = [playerResult.data];
+          me = playerResult.data;
+
+          saveState();
+          subscribeToRoom();
+          renderRoom();
+
+        } catch (error) {
+          console.error(error);
+
+          showError(
+            "Не удалось создать комнату:
+" +
+            (error.message || "Неизвестная ошибка")
+          );
+        } finally {
+          busy = false;
+        }
+      }
+
+      async function joinRoom() {
+        if (busy) return;
+
+        const code = document.getElementById("joinCode").value.trim().toUpperCase();
+
+        if (code.length < 4) {
+          alert("Введи код комнаты");
+          return;
+        }
+
+        busy = true;
+
+        try {
+          const current = getIdentity();
+
+          const roomResult = await db
+            .from("rooms")
+            .select("*")
+            .eq("code", code)
+            .maybeSingle();
+
+          if (roomResult.error) throw roomResult.error;
+          if (!roomResult.data) throw new Error("Комната не найдена");
+
+          const foundRoom = roomResult.data;
+
+          if (foundRoom.status !== "waiting") {
+            throw new Error("Игра в этой комнате уже началась");
+          }
+
+          const playersResult = await db
+            .from("room_players")
+            .select("*")
+            .eq("room_id", foundRoom.id)
+            .order("player_number");
+
+          if (playersResult.error) throw playersResult.error;
+
+          let currentPlayers = playersResult.data || [];
+
+          let joinedPlayer = currentPlayers.find(function(player) {
+            return Number(player.telegram_id) === Number(current.id);
+          });
+
+          if (!joinedPlayer) {
+            if (currentPlayers.length >= Number(foundRoom.players_count)) {
+              throw new Error("Комната уже заполнена");
+            }
+
+            const insertResult = await db
+              .from("room_players")
+              .insert({
+                room_id: foundRoom.id,
+                telegram_id: current.id,
+                player_number: currentPlayers.length,
+                is_spy: false
+              })
+              .select()
+              .single();
+
+            if (insertResult.error) throw insertResult.error;
+
+            joinedPlayer = insertResult.data;
+            currentPlayers.push(joinedPlayer);
+          }
+
+          state = {
+            roomId: foundRoom.id,
+            roomCode: foundRoom.code,
+            userId: current.id,
+            isHost: Number(foundRoom.host_telegram_id) === Number(current.id)
+          };
+
+          room = foundRoom;
+          players = currentPlayers;
+          me = joinedPlayer;
+
+          saveState();
+          subscribeToRoom();
+          renderRoom();
+
+        } catch (error) {
+          console.error(error);
+
+          showError(
+      
