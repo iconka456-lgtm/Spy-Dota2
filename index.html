@@ -150,98 +150,210 @@ window.addEventListener('error',function(e){
 });
 
 var heroes=[
-  ['Abaddon','abaddon'],['Alchemist','alchemist'],['Ancient Apparition','ancient_apparition'],['Anti-Mage','antimage'],
-  ['Axe','axe'],['Bane','bane'],['Batrider','batrider'],['Beastmaster','beastmaster'],['Bloodseeker','bloodseeker'],
-  ['Bounty Hunter','bounty_hunter'],['Bristleback','bristleback'],['Broodmother','broodmother'],['Chaos Knight','chaos_knight'],
-  ['Clinkz','clinkz'],['Clockwerk','rattletrap'],['Crystal Maiden','crystal_maiden'],['Dazzle','dazzle'],['Doom','doom_bringer'],
-  ['Dragon Knight','dragon_knight'],['Drow Ranger','drow_ranger'],['Earthshaker','earthshaker'],['Ember Spirit','ember_spirit'],
-  ['Enchantress','enchantress'],['Enigma','enigma'],['Faceless Void','faceless_void'],['Gyrocopter','gyrocopter'],
-  ['Huskar','huskar'],['Invoker','invoker'],['Jakiro','jakiro'],['Juggernaut','juggernaut'],['Kunkka','kunkka'],
-  ['Legion Commander','legion_commander'],['Lich','lich'],['Lifestealer','life_stealer'],['Lina','lina'],['Lion','lion'],
-  ['Luna','luna'],['Magnus','magnataur'],['Mars','mars'],['Medusa','medusa'],['Meepo','meepo'],['Mirana','mirana'],
-  ['Monkey King','monkey_king'],['Morphling','morphling'],['Muerta','muerta'],['Naga Siren','naga_siren'],["Nature's Prophet",'furion'],
-  ['Necrophos','necrolyte'],['Night Stalker','night_stalker'],['Nyx Assassin','nyx_assassin'],['Ogre Magi','ogre_magi'],
-  ['Omniknight','omniknight'],['Oracle','oracle'],['Pangolier','pangolier'],['Phantom Assassin','phantom_assassin'],
-  ['Phantom Lancer','phantom_lancer'],['Phoenix','phoenix'],['Puck','puck'],['Pudge','pudge'],['Pugna','pugna'],
-  ['Queen of Pain','queenofpain'],['Razor','razor'],['Riki','riki'],['Rubick','rubick'],['Sand King','sand_king'],
-  ['Shadow Demon','shadow_demon'],['Shadow Fiend','nevermore'],['Shadow Shaman','shadow_shaman'],['Silencer','silencer'],
-  ['Skywrath Mage','skywrath_mage'],['Slardar','slardar'],['Slark','slark'],['Snapfire','snapfire'],['Sniper','sniper'],
-  ['Spectre','spectre'],['Spirit Breaker','spirit_breaker'],['Storm Spirit','storm_spirit'],['Sven','sven'],['Techies','techies'],
-  ['Templar Assassin','templar_assassin'],['Terrorblade','terrorblade'],['Tidehunter','tidehunter'],['Tinker','tinker'],
-  ['Tiny','tiny'],['Treant Protector','treant'],['Troll Warlord','troll_warlord'],['Tusk','tusk'],['Undying','undying'],
-  ['Ursa','ursa'],['Venomancer','venomancer'],['Viper','viper'],['Visage','visage'],['Void Spirit','void_spirit'],
-  ['Warlock','warlock'],['Weaver','weaver'],['Windranger','windrunner'],['Winter Wyvern','winter_wyvern'],['Witch Doctor','witch_doctor'],
-  ['Wraith King','skeleton_king'],['Zeus','zuus']
-].map(function(x){return{name:x[0],slug:x[1]};});
+{name:"Abaddon",slug:"abaddon",attr:"Strength"},
+{name:"Alchemist",slug:"alchemist",attr:"Strength"},
+{name:"Ancient Apparition",slug:"ancient_apparition",attr:"Intelligence"},
+{name:"Anti-Mage",slug:"antimage",attr:"Agility"},
+{name:"Arc Warden",slug:"arc_warden",attr:"Universal"},
+{name:"Axe",slug:"axe",attr:"Strength"},
+{name:"Bane",slug:"bane",attr:"Intelligence"},
+{name:"Batrider",slug:"batrider",attr:"Universal"},
+{name:"Beastmaster",slug:"beastmaster",attr:"Strength"},
+{name:"Bloodseeker",slug:"bloodseeker",attr:"Agility"},
+{name:"Bounty Hunter",slug:"bounty_hunter",attr:"Universal"},
+{name:"Brewmaster",slug:"brewmaster",attr:"Strength"},
+{name:"Bristleback",slug:"bristleback",attr:"Strength"},
+{name:"Broodmother",slug:"broodmother",attr:"Agility"},
+{name:"Centaur Warrunner",slug:"centaur",attr:"Strength"},
+{name:"Chaos Knight",slug:"chaos_knight",attr:"Strength"},
+{name:"Chen",slug:"chen",attr:"Universal"},
+{name:"Clinkz",slug:"clinkz",attr:"Agility"},
+{name:"Clockwerk",slug:"rattletrap",attr:"Strength"},
+{name:"Crystal Maiden",slug:"crystal_maiden",attr:"Intelligence"},
+{name:"Dark Seer",slug:"dark_seer",attr:"Universal"},
+{name:"Dark Willow",slug:"dark_willow",attr:"Intelligence"},
+{name:"Dawnbreaker",slug:"dawnbreaker",attr:"Strength"},
+{name:"Dazzle",slug:"dazzle",attr:"Universal"},
+{name:"Death Prophet",slug:"death_prophet",attr:"Intelligence"},
+{name:"Disruptor",slug:"disruptor",attr:"Intelligence"},
+{name:"Doom",slug:"doom_bringer",attr:"Strength"},
+{name:"Dragon Knight",slug:"dragon_knight",attr:"Strength"},
+{name:"Drow Ranger",slug:"drow_ranger",attr:"Agility"},
+{name:"Earth Spirit",slug:"earth_spirit",attr:"Universal"},
+{name:"Earthshaker",slug:"earthshaker",attr:"Strength"},
+{name:"Elder Titan",slug:"elder_titan",attr:"Strength"},
+{name:"Ember Spirit",slug:"ember_spirit",attr:"Agility"},
+{name:"Enchantress",slug:"enchantress",attr:"Universal"},
+{name:"Enigma",slug:"enigma",attr:"Universal"},
+{name:"Faceless Void",slug:"faceless_void",attr:"Agility"},
+{name:"Grimstroke",slug:"grimstroke",attr:"Intelligence"},
+{name:"Gyrocopter",slug:"gyrocopter",attr:"Universal"},
+{name:"Hoodwink",slug:"hoodwink",attr:"Universal"},
+{name:"Huskar",slug:"huskar",attr:"Strength"},
+{name:"Invoker",slug:"invoker",attr:"Universal"},
+{name:"Io",slug:"wisp",attr:"Universal"},
+{name:"Jakiro",slug:"jakiro",attr:"Intelligence"},
+{name:"Juggernaut",slug:"juggernaut",attr:"Agility"},
+{name:"Keeper of the Light",slug:"keeper_of_the_light",attr:"Intelligence"},
+{name:"Kunkka",slug:"kunkka",attr:"Strength"},
+{name:"Legion Commander",slug:"legion_commander",attr:"Strength"},
+{name:"Leshrac",slug:"leshrac",attr:"Intelligence"},
+{name:"Lich",slug:"lich",attr:"Intelligence"},
+{name:"Lifestealer",slug:"life_stealer",attr:"Strength"},
+{name:"Lina",slug:"lina",attr:"Intelligence"},
+{name:"Lion",slug:"lion",attr:"Intelligence"},
+{name:"Lone Druid",slug:"lone_druid",attr:"Universal"},
+{name:"Luna",slug:"luna",attr:"Agility"},
+{name:"Lycan",slug:"lycan",attr:"Universal"},
+{name:"Magnus",slug:"magnataur",attr:"Strength"},
+{name:"Marci",slug:"marci",attr:"Universal"},
+{name:"Mars",slug:"mars",attr:"Strength"},
+{name:"Medusa",slug:"medusa",attr:"Agility"},
+{name:"Meepo",slug:"meepo",attr:"Universal"},
+{name:"Mirana",slug:"mirana",attr:"Universal"},
+{name:"Monkey King",slug:"monkey_king",attr:"Universal"},
+{name:"Morphling",slug:"morphling",attr:"Agility"},
+{name:"Muerta",slug:"muerta",attr:"Agility"},
+{name:"Naga Siren",slug:"naga_siren",attr:"Agility"},
+{name:"Nature's Prophet",slug:"furion",attr:"Universal"},
+{name:"Necrophos",slug:"necrolyte",attr:"Intelligence"},
+{name:"Night Stalker",slug:"night_stalker",attr:"Strength"},
+{name:"Nyx Assassin",slug:"nyx_assassin",attr:"Universal"},
+{name:"Ogre Magi",slug:"ogre_magi",attr:"Universal"},
+{name:"Omniknight",slug:"omniknight",attr:"Strength"},
+{name:"Oracle",slug:"oracle",attr:"Universal"},
+{name:"Outworld Destroyer",slug:"obsidian_destroyer",attr:"Intelligence"},
+{name:"Pangolier",slug:"pangolier",attr:"Universal"},
+{name:"Phantom Assassin",slug:"phantom_assassin",attr:"Agility"},
+{name:"Phantom Lancer",slug:"phantom_lancer",attr:"Agility"},
+{name:"Phoenix",slug:"phoenix",attr:"Universal"},
+{name:"Primal Beast",slug:"primal_beast",attr:"Strength"},
+{name:"Puck",slug:"puck",attr:"Intelligence"},
+{name:"Pudge",slug:"pudge",attr:"Strength"},
+{name:"Pugna",slug:"pugna",attr:"Intelligence"},
+{name:"Queen of Pain",slug:"queenofpain",attr:"Intelligence"},
+{name:"Razor",slug:"razor",attr:"Universal"},
+{name:"Riki",slug:"riki",attr:"Agility"},
+{name:"Rubick",slug:"rubick",attr:"Universal"},
+{name:"Sand King",slug:"sand_king",attr:"Universal"},
+{name:"Shadow Demon",slug:"shadow_demon",attr:"Universal"},
+{name:"Shadow Fiend",slug:"nevermore",attr:"Agility"},
+{name:"Shadow Shaman",slug:"shadow_shaman",attr:"Intelligence"},
+{name:"Silencer",slug:"silencer",attr:"Universal"},
+{name:"Skywrath Mage",slug:"skywrath_mage",attr:"Intelligence"},
+{name:"Slardar",slug:"slardar",attr:"Strength"},
+{name:"Slark",slug:"slark",attr:"Agility"},
+{name:"Snapfire",slug:"snapfire",attr:"Universal"},
+{name:"Sniper",slug:"sniper",attr:"Agility"},
+{name:"Spectre",slug:"spectre",attr:"Agility"},
+{name:"Spirit Breaker",slug:"spirit_breaker",attr:"Strength"},
+{name:"Storm Spirit",slug:"storm_spirit",attr:"Intelligence"},
+{name:"Sven",slug:"sven",attr:"Strength"},
+{name:"Techies",slug:"techies",attr:"Universal"},
+{name:"Templar Assassin",slug:"templar_assassin",attr:"Agility"},
+{name:"Terrorblade",slug:"terrorblade",attr:"Agility"},
+{name:"Tidehunter",slug:"tidehunter",attr:"Strength"},
+{name:"Timbersaw",slug:"shredder",attr:"Universal"},
+{name:"Tinker",slug:"tinker",attr:"Intelligence"},
+{name:"Tiny",slug:"tiny",attr:"Strength"},
+{name:"Treant Protector",slug:"treant",attr:"Strength"},
+{name:"Troll Warlord",slug:"troll_warlord",attr:"Agility"},
+{name:"Tusk",slug:"tusk",attr:"Strength"},
+{name:"Underlord",slug:"abyssal_underlord",attr:"Strength"},
+{name:"Undying",slug:"undying",attr:"Strength"},
+{name:"Ursa",slug:"ursa",attr:"Agility"},
+{name:"Vengeful Spirit",slug:"vengefulspirit",attr:"Agility"},
+{name:"Venomancer",slug:"venomancer",attr:"Universal"},
+{name:"Viper",slug:"viper",attr:"Agility"},
+{name:"Visage",slug:"visage",attr:"Universal"},
+{name:"Void Spirit",slug:"void_spirit",attr:"Universal"},
+{name:"Warlock",slug:"warlock",attr:"Universal"},
+{name:"Weaver",slug:"weaver",attr:"Agility"},
+{name:"Windranger",slug:"windrunner",attr:"Universal"},
+{name:"Winter Wyvern",slug:"winter_wyvern",attr:"Universal"},
+{name:"Witch Doctor",slug:"witch_doctor",attr:"Intelligence"},
+{name:"Wraith King",slug:"skeleton_king",attr:"Strength"},
+{name:"Zeus",slug:"zuus",attr:"Intelligence"},
+{name:"Kez",slug:"kez",attr:"Universal"}
+];
 
 var items=[
-  ['Aghanim Scepter','ultimate_scepter'],['Arcane Boots','arcane_boots'],['Armlet','armlet'],['Assault Cuirass','assault'],
-  ['Battle Fury','bfury'],['Black King Bar','black_king_bar'],['Blink Dagger','blink'],['Bloodthorn','bloodthorn'],
-  ['Boots of Travel','travel_boots'],['Bottle','bottle'],['Butterfly','butterfly'],['Crimson Guard','crimson_guard'],
-  ['Daedalus','greater_crit'],['Dagon','dagon'],['Desolator','desolator'],['Diffusal Blade','diffusal_blade'],
-  ['Divine Rapier','rapier'],['Dragon Lance','dragon_lance'],['Ethereal Blade','ethereal_blade'],['Eye of Skadi','skadi'],
-  ['Force Staff','force_staff'],['Gleipnir','gungir'],['Guardian Greaves','guardian_greaves'],['Hand of Midas','hand_of_midas'],
-  ['Heart of Tarrasque','heart'],['Heavens Halberd','heavens_halberd'],['Hurricane Pike','hurricane_pike'],['Kaya','kaya'],
-  ['Linkens Sphere','sphere'],['Lotus Orb','lotus_orb'],['Manta Style','manta'],['Mask of Madness','mask_of_madness'],
-  ['Meteor Hammer','meteor_hammer'],['Mjollnir','mjollnir'],['Monkey King Bar','monkey_king_bar'],['Moon Shard','moon_shard'],
-  ['Nullifier','nullifier'],['Octarine Core','octarine_core'],['Orchid Malevolence','orchid'],['Pipe of Insight','pipe'],
-  ['Power Treads','power_treads'],['Radiance','radiance'],['Refresher Orb','refresher'],['Rod of Atos','rod_of_atos'],
-  ['Satanic','satanic'],['Scythe of Vyse','sheepstick'],['Shadow Blade','invis_sword'],['Shivas Guard','shivas_guard'],
-  ['Silver Edge','silver_edge'],['Solar Crest','solar_crest'],['Spirit Vessel','spirit_vessel'],['Vanguard','vanguard'],
-  ['Veil of Discord','veil_of_discord'],['Wind Waker','wind_waker'],['Witch Blade','witch_blade']
-].map(function(x){return{name:x[0],slug:x[1]};});
+{name:"Aghanim Scepter",slug:"ultimate_scepter"},
+{name:"Arcane Boots",slug:"arcane_boots"},
+{name:"Armlet",slug:"armlet"},
+{name:"Assault Cuirass",slug:"assault"},
+{name:"Battle Fury",slug:"bfury"},
+{name:"Black King Bar",slug:"black_king_bar"},
+{name:"Blink Dagger",slug:"blink"},
+{name:"Bloodstone",slug:"bloodstone"},
+{name:"Bloodthorn",slug:"bloodthorn"},
+{name:"Boots of Travel",slug:"travel_boots"},
+{name:"Bottle",slug:"bottle"},
+{name:"Butterfly",slug:"butterfly"},
+{name:"Crimson Guard",slug:"crimson_guard"},
+{name:"Daedalus",slug:"greater_crit"},
+{name:"Dagon",slug:"dagon"},
+{name:"Desolator",slug:"desolator"},
+{name:"Diffusal Blade",slug:"diffusal_blade"},
+{name:"Dragon Lance",slug:"dragon_lance"},
+{name:"Ethereal Blade",slug:"ethereal_blade"},
+{name:"Eye of Skadi",slug:"skadi"},
+{name:"Force Staff",slug:"force_staff"},
+{name:"Gleipnir",slug:"gungir"},
+{name:"Guardian Greaves",slug:"guardian_greaves"},
+{name:"Hand of Midas",slug:"hand_of_midas"},
+{name:"Heart of Tarrasque",slug:"heart"},
+{name:"Heaven's Halberd",slug:"heavens_halberd"},
+{name:"Hurricane Pike",slug:"hurricane_pike"},
+{name:"Kaya",slug:"kaya"},
+{name:"Linken's Sphere",slug:"sphere"},
+{name:"Lotus Orb",slug:"lotus_orb"},
+{name:"Manta Style",slug:"manta"},
+{name:"Mask of Madness",slug:"mask_of_madness"},
+{name:"Mjollnir",slug:"mjollnir"},
+{name:"Monkey King Bar",slug:"monkey_king_bar"},
+{name:"Moon Shard",slug:"moon_shard"},
+{name:"Nullifier",slug:"nullifier"},
+{name:"Octarine Core",slug:"octarine_core"},
+{name:"Orchid Malevolence",slug:"orchid"},
+{name:"Pipe of Insight",slug:"pipe"},
+{name:"Power Treads",slug:"power_treads"},
+{name:"Radiance",slug:"radiance"},
+{name:"Refresher Orb",slug:"refresher"},
+{name:"Rod of Atos",slug:"rod_of_atos"},
+{name:"Satanic",slug:"satanic"},
+{name:"Scythe of Vyse",slug:"sheepstick"},
+{name:"Shadow Blade",slug:"invis_sword"},
+{name:"Shiva's Guard",slug:"shivas_guard"},
+{name:"Silver Edge",slug:"silver_edge"},
+{name:"Solar Crest",slug:"solar_crest"},
+{name:"Spirit Vessel",slug:"spirit_vessel"},
+{name:"Vanguard",slug:"vanguard"},
+{name:"Veil of Discord",slug:"veil_of_discord"},
+{name:"Wind Waker",slug:"wind_waker"},
+{name:"Witch Blade",slug:"witch_blade"}
+];
 
-var hints={
-  heroes:[
-    {q:'Кто из героев любит использовать трент-подобную природу и споры?', a:'Treant Protector'},
-    {q:'Кто может становиться невидимым и быстро исчезать из драки?', a:'Riki'},
-    {q:'Кто кидает крюк и притягивает врага к себе?', a:'Pudge'},
-    {q:'Кто часто наносит урон издалека и очень любит точность?', a:'Sniper'},
-    {q:'Кто управляет огнём и очень ярко светится на линии?', a:'Lina'},
-    {q:'Кто любит иллюзии и много обмана в бою?', a:'Phantom Lancer'},
-    {q:'Кто выглядит как огромный каменный голем и ломает врагов силой?', a:'Tiny'},
-    {q:'Кто призывает волков и играет от контроля карты?', a:'Lycan'}
-  ],
-  items:[
-    {q:'Что даёт мгновенное перемещение через небольшую стену?', a:'Blink Dagger'},
-    {q:'Что собирают, когда нужно сильно пробивать броню?', a:'Desolator'},
-    {q:'Что защищает от магии почти полностью на несколько секунд?', a:'Black King Bar'},
-    {q:'Что очень часто берут на керри для сильного урона и крита?', a:'Daedalus'},
-    {q:'Что возвращает силы и превращает тебя в очень живучего героя?', a:'Heart of Tarrasque'},
-    {q:'Что помогает быстрее передвигаться и догонять врага?', a:'Power Treads'},
-    {q:'Что делает иллюзии и помогает запутать соперника?', a:'Manta Style'},
-    {q:'Что сильно усиливает магический урон и ману?', a:'Kaya'}
-  ]
-};
+var heroHints = [
+["Сильный инициатор, ближний бой, любит врываться", "Strength"],
+["Быстрый керри, дальний бой, любит урон с руки", "Agility"],
+["Маг с контролем, дальний бой, сильные заклинания", "Intelligence"],
+["Гибкий герой, полезен в любой роли", "Universal"]
+];
 
 var spyGame=null;
 var guessGame=null;
 var timerId=null;
 var spyType='heroes';
-var spyMode='random';
+var spyMode='hidden';
 var timerMode='withTime';
 
-function esc(v){
-  return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-}
+function esc(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
 function rnd(a){return a[Math.floor(Math.random()*a.length)];}
-function mix(a){
-  var b=a.slice();
-  for(var i=b.length-1;i>0;i--){
-    var j=Math.floor(Math.random()*(i+1));
-    var t=b[i]; b[i]=b[j]; b[j]=t;
-  }
-  return b;
-}
-function img(o,t){
-  return 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/'+(t==='heroes'?'heroes/':'items/')+o.slug+'.png';
-}
-function buzz(){
-  try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.HapticFeedback.impactOccurred('medium');}}catch(e){}
-}
-function setTG(){
-  try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}}catch(e){}
-}
+function mix(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+function img(o,t){return 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/'+(t==='heroes'?'heroes/':'items/')+o.slug+'.png';}
+function buzz(){try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.HapticFeedback.impactOccurred('medium');}}catch(e){}}
+function setTG(){try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}}catch(e){}}
 setTG();
 
 function home(){
@@ -252,22 +364,22 @@ function home(){
     '<div class="card">'+
     '<h2>Выбери режим</h2>'+
     '<div class="grid2">'+
-    '<button id="sp" class="mode"><span class="ico">🕵️</span>Шпион<small>Мирные и шпионы</small></button>'+
-    '<button id="gu" class="mode"><span class="ico">🔍</span>Угадай в карточках<small>20 героев или предметов</small></button>'+
+    '<button id="sp" class="mode"><span class="ico">🕵️</span>Шпион<small>Скрытая роль</small></button>'+
+    '<button id="gu" class="mode"><span class="ico">🔍</span>Угадай в карточках<small>20 карточек</small></button>'+
     '<button id="rn" class="mode"><span class="ico">🎲</span>Случайный режим<small>Герой / предмет / оба</small></button>'+
-    '<button id="de" class="mode"><span class="ico">❓</span>Угадай по описанию<small>Текстовая мини-игра</small></button>'+
+    '<button id="sr" class="mode"><span class="ico">⭐</span>Угадай по силе<small>Викторина</small></button>'+
     '</div>'+
     '</div>'+
     '<div class="card">'+
     '<h2>Как играть</h2>'+
-    '<p class="muted small">В Dota Spy игроки получают роли и обсуждают героя или предмет. В режиме «Угадай в карточках» два игрока загадывают карточки, задают вопросы и вычёркивают неподходящие варианты.</p>'+
+    '<p class="muted small">В шпионе роли скрыты до конца. В угадайке по карточкам каждый выбирает свою секретную карточку из общего пула. В режиме по силе надо угадать главный атрибут героя.</p>'+
     '<div class="tiny-note">сделано Solin для вас</div>'+
     '</div>'+
     '</div>';
   document.getElementById('sp').onclick=spySettings;
   document.getElementById('gu').onclick=guessType;
   document.getElementById('rn').onclick=randomMenu;
-  document.getElementById('de').onclick=describeMenu;
+  document.getElementById('sr').onclick=strengthQuiz;
 }
 
 function spySettings(){
@@ -275,13 +387,13 @@ function spySettings(){
     '<div class="wrap">'+
     '<h1>🕵️ Dota2SpyForSolin</h1>'+
     '<div class="card">'+
-    '<h2>Настройки Dota Spy</h2>'+
+    '<h2>Настройки шпиона</h2>'+
     '<div class="grid2">'+
-    '<button id="h" class="mode">🦸<br><br>Герои</button>'+
-    '<button id="it" class="mode">🗡️<br><br>Предметы</button>'+
+    '<button id="h" class="mode"><span class="ico">🦸</span>Герои<small>Все герои Dota 2</small></button>'+
+    '<button id="it" class="mode"><span class="ico">🗡️</span>Предметы<small>Секретный пул</small></button>'+
     '</div>'+
     '<label>Режим игры</label>'+
-    '<select id="m"><option value="random">🎲 Рандом</option><option value="host">🎙️ С ведущим</option></select>'+
+    '<select id="m"><option value="hidden">🔒 Скрытый шпион</option><option value="host">🎙️ С ведущим</option></select>'+
     '<label>Таймер</label>'+
     '<select id="tm"><option value="withTime">⏱️ С временем</option><option value="withoutTime">♾️ Без времени</option></select>'+
     '<label>Количество игроков</label>'+
@@ -361,7 +473,6 @@ function startSpy(){
 
 function spyRole(){
   var n=spyGame.cur+1;
-  var sp=spyGame.spies.indexOf(spyGame.cur)!==-1;
   var last=n===spyGame.p;
   app.innerHTML=
     '<div class="wrap">'+
@@ -369,7 +480,7 @@ function spyRole(){
     '<div class="card">'+
     '<div class="player">Игрок '+n+'</div>'+
     '<p class="muted" style="text-align:center">Остальные не смотрят на экран.</p>'+
-    '<button id="role" class="secret">Нажми и удерживай,<br>чтобы увидеть роль</button>'+
+    '<button id="role" class="secret">Нажми и удерживай,<br>чтобы увидеть карточку</button>'+
     '<button id="next" class="btn alt" disabled>'+(last?'🚀 Начать игру':'Передать игроку '+(n+1))+'</button>'+
     '</div>'+
     '<button id="can" class="btn danger">Отменить игру</button>'+
@@ -381,17 +492,16 @@ function spyRole(){
   function show(){
     if(vis)return;
     vis=true;shown=true;
-    r.classList.add(sp?'spy':'peace');
-    var q=sp?spyGame.b:spyGame.a;
-    var name=spyGame.type==='heroes'?q:q.name;
-    r.innerHTML=(sp?'🕵️<br>ТЫ ШПИОН':'🛡️<br>ТЫ МИРНЫЙ')+'<br><span style="font-size:16px">'+esc(name)+'</span>'+(spyGame.type==='heroes'?'<br><span style="font-size:15px">Локация: '+esc(spyGame.l)+'</span>':'');
+    var q=spyGame.type==='heroes'?spyGame.a:spyGame.a.name;
+    r.classList.add('spy');
+    r.innerHTML='🔒<br>Секретная карточка<br><span style="font-size:16px">'+esc(String(q))+'</span>';
     buzz();
   }
   function hide(){
     if(!vis)return;
     vis=false;
-    r.classList.remove('spy','peace');
-    r.innerHTML='Нажми и удерживай,<br>чтобы увидеть роль';
+    r.classList.remove('spy');
+    r.innerHTML='Нажми и удерживай,<br>чтобы увидеть карточку';
     nx.disabled=false;
   }
   r.onpointerdown=function(e){e.preventDefault();show();};
@@ -414,7 +524,7 @@ function spyPlay(){
     '<h1>🕵️ Dota2SpyForSolin</h1>'+
     '<div class="card">'+
     '<h2>Игра началась</h2>'+
-    '<p class="muted">Задавайте вопросы и не называйте ответ прямо.</p>'+
+    '<p class="muted">Роли скрыты. Играйте и не выдавайте себя.</p>'+
     '<div id="time" class="timer">'+(timed?fmt(sec):'∞')+'</div>'+
     (timed?'<button id="tb" class="btn">▶️ Запустить таймер</button>':'<div class="status">♾️ Игра без времени</div>')+
     '<button id="fin" class="btn yellow">🏁 Закончить раунд</button>'+
@@ -441,9 +551,9 @@ function spyPlay(){
 
 function spyResult(){
   clearInterval(timerId);
+  var a=spyGame.type==='heroes'?spyGame.a.name:spyGame.a.name;
+  var b=spyGame.type==='heroes'?spyGame.b.name:spyGame.b.name;
   var sp=spyGame.spies.map(function(i){return 'Игрок '+(i+1);}).join(', ');
-  var a=spyGame.type==='heroes'?spyGame.a:spyGame.a.name;
-  var b=spyGame.type==='heroes'?spyGame.b:spyGame.b.name;
   app.innerHTML=
     '<div class="wrap">'+
     '<h1>🕵️ Итоги раунда</h1>'+
@@ -460,10 +570,10 @@ function guessType(){
     '<h1>🔍 Угадай героя / предмет</h1>'+
     '<div class="card">'+
     '<h2>Игра на двоих</h2>'+
-    '<p class="muted">Каждый загадывает карточку. Задавайте вопросы и вычёркивайте варианты.</p>'+
+    '<p class="muted">Каждый загадывает карточку из общего пула героев или предметов.</p>'+
     '<div class="grid2">'+
-    '<button id="gh" class="mode"><span class="ico">🦸</span>Герои<small>20 портретов</small></button>'+
-    '<button id="gi" class="mode"><span class="ico">🗡️</span>Предметы<small>20 иконок</small></button>'+
+    '<button id="gh" class="mode"><span class="ico">🦸</span>Герои<small>Все герои Dota 2</small></button>'+
+    '<button id="gi" class="mode"><span class="ico">🗡️</span>Предметы<small>Секретный пул</small></button>'+
     '</div>'+
     '<button id="ba" class="btn alt">← В главное меню</button>'+
     '</div>'+
@@ -494,7 +604,7 @@ function choose(p){
     '<p class="muted" style="text-align:center">Выбери свою секретную карточку.</p>'+
     '<div class="cards">'+cards(false)+'</div>'+
     '<div class="choice-row">'+
-    '<button id="guessbtn" class="choice-btn active">Я угадал героя</button>'+
+    '<button id="guessbtn" class="choice-btn active">Выбираю секрет</button>'+
     '<button id="skipbtn" class="choice-btn">Пока нет</button>'+
     '</div>'+
     '<button id="ca" class="btn danger">Отменить игру</button>'+
@@ -561,10 +671,10 @@ function board(){
   app.innerHTML=
     '<div class="wrap">'+
     '<h1>🔍 Угадай</h1>'+
-    '<div class="status">Сейчас ходит <b>Игрок '+p+'</b>.<br>Нажми карточку, чтобы зачеркнуть её. Если хочешь закончить раньше — нажми кнопку быстрого выбора.</div>'+
+    '<div class="status">Сейчас ходит <b>Игрок '+p+'</b>.<br>Нажми карточку, чтобы зачеркнуть её.</div>'+
     '<div class="card">'+
     '<div class="cards">'+cards(true)+'</div>'+
-    '<button id="pick" class="btn green">✅ Я угадал героя соперника</button>'+
+    '<button id="pick" class="btn green">✅ Я угадал карточку соперника</button>'+
     '<button id="sw" class="btn blue">🔄 Передать ход игроку '+(p===1?'2':'1')+'</button>'+
     '<button id="fi" class="btn yellow">🏁 Закончить без победителя</button>'+
     '<button id="ca" class="btn danger">Отменить игру</button>'+
@@ -627,14 +737,14 @@ function randomMenu(){
     '<div class="grid2">'+
     '<button id="r1" class="mode"><span class="ico">🦸</span>Случайный герой<small>Один герой</small></button>'+
     '<button id="r2" class="mode"><span class="ico">🗡️</span>Случайный предмет<small>Один предмет</small></button>'+
-    '<button id="r3" class="mode"><span class="ico">✨</span>Герой + предмет<small>Оба вместе</small></button>'+
+    '<button id="r3" class="mode"><span class="ico">✨</span>Герой + сборка<small>3–5 предметов</small></button>'+
     '<button id="rb" class="mode"><span class="ico">⬅️</span>Назад<small>В главное меню</small></button>'+
     '</div>'+
     '</div>'+
     '</div>';
   document.getElementById('r1').onclick=function(){randomShow('hero');};
   document.getElementById('r2').onclick=function(){randomShow('item');};
-  document.getElementById('r3').onclick=function(){randomShow('both');};
+  document.getElementById('r3').onclick=function(){randomShow('build');};
   document.getElementById('rb').onclick=home;
 }
 
@@ -643,11 +753,16 @@ function randomShow(mode){
   var it=rnd(items);
   var body='';
   if(mode==='hero'){
-    body='<div class="result"><img class="preview" src="'+img(h,'heroes')+'" alt=""><h2>'+esc(h.name)+'</h2></div>';
+    body='<div class="result"><img class="preview" src="'+img(h,'heroes')+'" alt=""><h2>'+esc(h.name)+'</h2><div class="status">'+esc(h.attr)+'</div></div>';
   }else if(mode==='item'){
     body='<div class="result"><img class="preview item" src="'+img(it,'items')+'" alt=""><h2>'+esc(it.name)+'</h2></div>';
   }else{
-    body='<div class="result"><img class="preview" src="'+img(h,'heroes')+'" alt=""><h2>'+esc(h.name)+'</h2><div class="status">+ '+esc(it.name)+'</div><img class="preview item" src="'+img(it,'items')+'" alt=""></div>';
+    var pool=mix(items).slice(0,5);
+    var cnt=3+Math.floor(Math.random()*3);
+    var build=pool.slice(0,cnt);
+    body='<div class="result"><img class="preview" src="'+img(h,'heroes')+'" alt=""><h2>'+esc(h.name)+'</h2><div class="status">'+esc(h.attr)+' • Сборка</div>'+
+      build.map(function(x){return '<img class="preview item" style="width:100%;height:74px;margin:10px auto 0" src="'+img(x,'items')+'" alt=""><h3 style="margin:6px 0 0">'+esc(x.name)+'</h3>';}).join('')+
+    '</div>';
   }
   app.innerHTML=
     '<div class="wrap">'+
@@ -662,75 +777,47 @@ function randomShow(mode){
   document.getElementById('back').onclick=randomMenu;
 }
 
-function describeMenu(){
+function strengthQuiz(){
+  var list=mix(heroes).slice(0,4);
+  var correct=rnd(list);
+  if(!correct) correct=rnd(heroes);
+  var q='Какой главный атрибут у '+correct.name+'?';
+  var options=mix(['Strength','Agility','Intelligence','Universal']);
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>❓ Угадай по описанию</h1>'+
+    '<h1>⭐ Угадай по силе</h1>'+
     '<div class="card">'+
-    '<h2>Выбери тип</h2>'+
+    '<div class="status">'+esc(q)+'</div>'+
     '<div class="grid2">'+
-    '<button id="dh" class="mode"><span class="ico">🦸</span>Герой<small>Описание героя</small></button>'+
-    '<button id="di" class="mode"><span class="ico">🗡️</span>Предмет<small>Описание предмета</small></button>'+
-    '<button id="db" class="mode"><span class="ico">⬅️</span>Назад<small>В главное меню</small></button>'+
-    '<div></div>'+
-    '</div>'+
-    '</div>'+
-    '</div>';
-  document.getElementById('dh').onclick=function(){describePlay('heroes');};
-  document.getElementById('di').onclick=function(){describePlay('items');};
-  document.getElementById('db').onclick=home;
-}
-
-function describePlay(type){
-  var pool=hints[type];
-  var card=rnd(pool);
-  var all=(type==='heroes'?heroes:items).slice();
-  var correct=all.filter(function(x){return x[0]===card.a;})[0];
-  var opts=[correct];
-  while(opts.length<4){
-    var x=rnd(all);
-    if(opts.indexOf(x)===-1) opts.push(x);
-  }
-  opts=mix(opts);
-  app.innerHTML=
-    '<div class="wrap">'+
-    '<h1>❓ Угадай по описанию</h1>'+
-    '<div class="card">'+
-    '<div class="status">'+esc(card.q)+'</div>'+
-    '<div class="grid2">'+
-    opts.map(function(x,i){
-      return '<button class="mode" data-o="'+i+'"><span class="ico">'+(type==='heroes'?'🦸':'🗡️')+'</span>'+esc(x[0])+'</button>';
+    options.map(function(o){
+      return '<button class="mode" data-opt="'+esc(o)+'"><span class="ico">⭐</span>'+esc(o)+'</button>';
     }).join('')+
+    '<button id="next" class="btn green" style="grid-column:1/-1">Следующий вопрос</button>'+
+    '<button id="back" class="btn alt" style="grid-column:1/-1">В меню</button>'+
     '</div>'+
-    '<button id="next" class="btn green">Следующая загадка</button>'+
-    '<button id="back" class="btn alt">В меню</button>'+
     '</div>'+
     '</div>';
-  document.querySelectorAll('[data-o]').forEach(function(b){
+  document.querySelectorAll('[data-opt]').forEach(function(b){
     b.onclick=function(){
-      var idx=Number(this.dataset.o);
-      var picked=opts[idx][0]===card.a;
-      this.classList.add(picked?'selected':'danger');
-      if(picked) this.textContent='✅ Верно';
-      else this.textContent='❌ Неверно';
+      var o=this.dataset.opt;
+      var ok=o===correct.attr;
+      this.classList.add(ok?'selected':'danger');
+      this.textContent=ok?'✅ Верно':'❌ Неверно';
     };
   });
-  document.getElementById('next').onclick=function(){describePlay(type);};
-  document.getElementById('back').onclick=describeMenu;
+  document.getElementById('next').onclick=strengthQuiz;
+  document.getElementById('back').onclick=home;
 }
 
-function randomModeMenu(){
-  randomMenu();
-}
-
-function fmt(s){
-  return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-}
-
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
 home();
 </script>
 </body>
 </html>
+
+
+
+
 
 
 
