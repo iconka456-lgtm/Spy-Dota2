@@ -5,96 +5,322 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#101010">
 <title>Dota2SpyForSolin</title>
+
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <style>
 :root{
   --bg:#101010;
   --card:#1d1d1f;
   --card2:#151515;
   --line:#3a3a3a;
-  --text:#fff;
-  --muted:#aaa;
+  --text:#ffffff;
+  --muted:#aaaaaa;
   --green:#76e5a2;
   --yellow:#ffd166;
   --red:#ff7b7b;
   --blue:#7ec8ff;
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.wrap{max-width:620px;margin:auto;padding:18px 14px 36px}
-h1{margin:8px 0 18px;font-size:28px}
-h2{margin:0 0 10px;font-size:21px}
-h3{margin:0 0 8px;font-size:17px}
-p{line-height:1.45}
-.card{margin:12px 0;padding:17px;background:var(--card);border:1px solid var(--line);border-radius:18px}
-.muted{color:var(--muted)}
-.small{font-size:13px}
-.hidden{display:none!important}
-.btn{width:100%;margin-top:10px;padding:15px;border:0;border-radius:14px;background:#fff;color:#111;font-weight:700}
-.alt{background:#303035;color:#fff}
-.danger{background:#a83131;color:#fff}
-.yellow{background:var(--yellow);color:#211700}
-.blue{background:var(--blue);color:#071925}
-.green{background:var(--green);color:#06180d}
-.btn:disabled{opacity:.45}
-label{display:block;margin:12px 0 6px;color:#d0d0d0;font-size:14px}
-input,select{width:100%;padding:13px;color:#fff;background:#111;border:1px solid #4a4a4a;border-radius:12px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.mode{min-height:140px;padding:15px 8px;background:var(--card2);color:#fff;border:2px solid #45454b;border-radius:18px;font-weight:700}
-.mode .ico{display:block;font-size:44px;margin-bottom:9px}
-.mode small{display:block;margin-top:7px;color:var(--muted);font-weight:400}
-.selected{border-color:var(--yellow)!important;background:#332d19!important}
-.box{margin-top:10px;padding:14px;background:var(--card2);border:1px solid #45454a;border-radius:14px}
-.player{margin:12px 0 16px;color:var(--yellow);font-size:32px;font-weight:800;text-align:center}
-.secret{width:100%;min-height:145px;margin-top:12px;padding:18px;color:#fff;background:#35353a;border:2px solid #53535a;border-radius:18px;font-size:19px;font-weight:800;line-height:1.4;user-select:none;touch-action:none}
-.peace{color:#06180d;background:var(--green);border-color:#b2ffd0}
-.spy{color:#211700;background:var(--yellow);border-color:#ffe39b}
-.timer{margin:18px 0;color:var(--green);font-size:56px;font-weight:800;text-align:center}
-.timer.finished{color:var(--red)}
-.result{padding:16px;text-align:center;background:var(--card2);border-radius:14px}
-.role{font-size:58px;text-align:center}
-.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+
+button,input,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.wrap{
+  max-width:620px;
+  margin:auto;
+  padding:18px 14px 36px;
+}
+
+h1{
+  margin:8px 0 18px;
+  font-size:28px;
+}
+
+.home-title{
+  text-align:center;
+  margin-top:20px;
+  margin-bottom:24px;
+}
+
+h2{
+  margin:0 0 10px;
+  font-size:21px;
+}
+
+h3{
+  margin:0 0 8px;
+  font-size:17px;
+}
+
+p{
+  line-height:1.45;
+}
+
+.card{
+  margin:12px 0;
+  padding:17px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.small{
+  font-size:13px;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.btn{
+  width:100%;
+  margin-top:10px;
+  padding:15px;
+  border:0;
+  border-radius:14px;
+  background:#ffffff;
+  color:#111111;
+  font-weight:700;
+}
+
+.alt{
+  background:#303035;
+  color:#ffffff;
+}
+
+.danger{
+  background:#a83131;
+  color:#ffffff;
+}
+
+.yellow{
+  background:var(--yellow);
+  color:#211700;
+}
+
+.blue{
+  background:var(--blue);
+  color:#071925;
+}
+
+.green{
+  background:var(--green);
+  color:#06180d;
+}
+
+.btn:disabled{
+  opacity:.45;
+}
+
+label{
+  display:block;
+  margin:12px 0 6px;
+  color:#d0d0d0;
+  font-size:14px;
+}
+
+input,select{
+  width:100%;
+  padding:13px;
+  color:#ffffff;
+  background:#111111;
+  border:1px solid #4a4a4a;
+  border-radius:12px;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.mode{
+  min-height:140px;
+  padding:15px 8px;
+  background:var(--card2);
+  color:#ffffff;
+  border:2px solid #45454b;
+  border-radius:18px;
+  font-weight:700;
+}
+
+.mode .ico{
+  display:block;
+  margin-bottom:9px;
+  font-size:44px;
+}
+
+.mode small{
+  display:block;
+  margin-top:7px;
+  color:var(--muted);
+  font-weight:400;
+}
+
+.selected{
+  background:#332d19!important;
+  border-color:var(--yellow)!important;
+}
+
+.box{
+  margin-top:10px;
+  padding:14px;
+  background:var(--card2);
+  border:1px solid #45454a;
+  border-radius:14px;
+}
+
+.player{
+  margin:12px 0 16px;
+  color:var(--yellow);
+  font-size:32px;
+  font-weight:800;
+  text-align:center;
+}
+
+.secret{
+  width:100%;
+  min-height:145px;
+  margin-top:12px;
+  padding:18px;
+  color:#ffffff;
+  background:#35353a;
+  border:2px solid #53535a;
+  border-radius:18px;
+  font-size:19px;
+  font-weight:800;
+  line-height:1.4;
+  user-select:none;
+  touch-action:none;
+}
+
+.peace{
+  color:#06180d;
+  background:var(--green);
+  border-color:#b2ffd0;
+}
+
+.spy{
+  color:#211700;
+  background:var(--yellow);
+  border-color:#ffe39b;
+}
+
+.timer{
+  margin:18px 0;
+  color:var(--green);
+  font-size:56px;
+  font-weight:800;
+  text-align:center;
+}
+
+.timer.finished{
+  color:var(--red);
+}
+
+.result{
+  padding:16px;
+  text-align:center;
+  background:var(--card2);
+  border-radius:14px;
+}
+
+.role{
+  font-size:58px;
+  text-align:center;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;
+  margin-top:8px;
+}
+
 .gcard{
   position:relative;
   min-height:88px;
   overflow:hidden;
   padding:3px;
+  color:#ffffff;
   background:linear-gradient(145deg,#29292f,#101011);
-  color:#fff;
   border:1px solid #705b2d;
   border-radius:10px;
   box-shadow:0 2px 7px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);
-  font-family:Arial,sans-serif;
   font-size:9px;
   font-weight:800;
   line-height:1.05;
-  letter-spacing:.05px;
   text-align:center;
-  transition:transform .12s ease,border-color .12s ease,filter .12s ease;
 }
-.gcard:active{transform:scale(.94);border-color:#ffd166;filter:brightness(1.25)}
-.gcard:not(.crossed):hover{border-color:#d7ad48}
-.pic{display:block;width:100%;height:55px;margin:0 auto;object-fit:cover;background:#252525;border:1px solid rgba(255,209,102,.25);border-radius:7px}
+
+.gcard:active{
+  transform:scale(.95);
+  border-color:var(--yellow);
+}
+
+.pic{
+  display:block;
+  width:100%;
+  height:55px;
+  margin:auto;
+  object-fit:cover;
+  background:#252525;
+  border:1px solid rgba(255,209,102,.25);
+  border-radius:7px;
+}
+
 .gcard span{
   position:absolute;
   right:2px;
   bottom:2px;
   left:2px;
-  min-height:22px;
   display:flex;
+  min-height:22px;
   align-items:center;
   justify-content:center;
   padding:2px;
   overflow:hidden;
   background:linear-gradient(transparent,rgba(0,0,0,.95) 38%);
   border-radius:0 0 7px 7px;
-  text-shadow:0 1px 3px #000;
+  text-shadow:0 1px 3px #000000;
 }
-.item .pic{object-fit:contain;padding:4px;background:radial-gradient(circle,#34323a,#101010)}
-.gcard.crossed{opacity:.38;border-color:#c54c4c;filter:grayscale(.6)}
-.gcard.crossed:before,.gcard.crossed:after{
+
+.item .pic{
+  padding:4px;
+  object-fit:contain;
+  background:radial-gradient(circle,#34323a,#101010);
+}
+
+.gcard.crossed{
+  opacity:.38;
+  border-color:#c54c4c;
+  filter:grayscale(.6);
+}
+
+.gcard.crossed:before,
+.gcard.crossed:after{
   position:absolute;
   z-index:3;
   top:50%;
@@ -107,26 +333,130 @@ input,select{width:100%;padding:13px;color:#fff;background:#111;border:1px solid
   border-radius:99px;
   box-shadow:0 0 7px rgba(255,70,70,.9);
 }
-.gcard.crossed:before{transform:rotate(35deg)}
-.gcard.crossed:after{transform:rotate(-35deg)}
-.status{margin:12px 0;padding:12px;color:#d8ecff;background:#112635;border:1px solid #28516b;border-radius:13px;text-align:center}
+
+.gcard.crossed:before{
+  transform:rotate(35deg);
+}
+
+.gcard.crossed:after{
+  transform:rotate(-35deg);
+}
+
+.status{
+  margin:12px 0;
+  padding:12px;
+  color:#d8ecff;
+  background:#112635;
+  border:1px solid #28516b;
+  border-radius:13px;
+  text-align:center;
+}
+
 .preview{
   display:block;
   width:150px;
   height:100px;
   margin:12px auto;
   object-fit:cover;
-  background:#111;
+  background:#111111;
   border:1px solid #705b2d;
   border-radius:12px;
   box-shadow:0 3px 12px rgba(0,0,0,.55);
 }
-.preview.item{padding:12px;object-fit:contain;background:radial-gradient(circle,#34323a,#101010)}
-.err{margin:20px;padding:16px;background:#3b1717;border:1px solid #f07a7a;border-radius:15px}
-.tiny-note{margin-top:8px;color:#666;font-size:10px;line-height:1.2;text-align:center}
-.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.choice-btn{padding:14px;border:0;border-radius:13px;background:#2a2a2f;color:#fff;font-weight:800}
-.choice-btn.active{background:#403515;color:#ffd166}
+
+.preview.item{
+  padding:12px;
+  object-fit:contain;
+  background:radial-gradient(circle,#34323a,#101010);
+}
+
+.build-items{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:14px;
+}
+
+.build-item{
+  padding:7px 4px;
+  background:#111111;
+  border:1px solid #5a4720;
+  border-radius:11px;
+  font-size:10px;
+  font-weight:700;
+  text-align:center;
+}
+
+.build-item img{
+  display:block;
+  width:54px;
+  height:54px;
+  margin:0 auto 5px;
+  padding:3px;
+  object-fit:contain;
+  background:radial-gradient(circle,#34323a,#101010);
+  border-radius:7px;
+}
+
+.err{
+  margin:20px;
+  padding:16px;
+  background:#3b1717;
+  border:1px solid #f07a7a;
+  border-radius:15px;
+}
+
+.tiny-note{
+  margin-top:8px;
+  color:#666666;
+  font-size:10px;
+  line-height:1.2;
+  text-align:center;
+}
+
+.choice-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:10px;
+}
+
+.choice-btn{
+  padding:14px;
+  color:#ffffff;
+  background:#2a2a2f;
+  border:0;
+  border-radius:13px;
+  font-weight:800;
+}
+
+.choice-btn.active{
+  color:var(--yellow);
+  background:#403515;
+}
+
+.quiz-answer{
+  min-height:115px;
+  padding:14px 8px;
+  color:#ffffff;
+  background:var(--card2);
+  border:2px solid #45454b;
+  border-radius:18px;
+  font-weight:800;
+}
+
+.quiz-answer.good{
+  color:#06180d;
+  background:var(--green);
+  border-color:#b2ffd0;
+}
+
+.quiz-answer.bad{
+  color:#ffffff;
+  background:#8b2727;
+  border-color:#ff7b7b;
+}
+
 @media(max-width:360px){
   .cards{gap:4px}
   .gcard{min-height:78px;padding:2px;font-size:8px}
@@ -135,146 +465,140 @@ input,select{width:100%;padding:13px;color:#fff;background:#111;border:1px solid
 }
 </style>
 </head>
+
 <body>
 <div id="app"></div>
+
 <script>
 var app=document.getElementById('app');
 
-window.addEventListener('error',function(e){
-  app.innerHTML=
-    '<div class="err">' +
-    '<h2>Ошибка запуска</h2>' +
-    '<p>'+String(e.message||'Неизвестная ошибка')+'</p>' +
-    '<p>Строка: '+String(e.lineno||'?')+'</p>' +
-    '</div>';
-});
-
 var heroes=[
-{name:"Abaddon",slug:"abaddon",attr:"Strength"},
-{name:"Alchemist",slug:"alchemist",attr:"Strength"},
-{name:"Ancient Apparition",slug:"ancient_apparition",attr:"Intelligence"},
-{name:"Anti-Mage",slug:"antimage",attr:"Agility"},
-{name:"Arc Warden",slug:"arc_warden",attr:"Universal"},
-{name:"Axe",slug:"axe",attr:"Strength"},
-{name:"Bane",slug:"bane",attr:"Intelligence"},
-{name:"Batrider",slug:"batrider",attr:"Universal"},
-{name:"Beastmaster",slug:"beastmaster",attr:"Strength"},
-{name:"Bloodseeker",slug:"bloodseeker",attr:"Agility"},
-{name:"Bounty Hunter",slug:"bounty_hunter",attr:"Universal"},
-{name:"Brewmaster",slug:"brewmaster",attr:"Strength"},
-{name:"Bristleback",slug:"bristleback",attr:"Strength"},
-{name:"Broodmother",slug:"broodmother",attr:"Agility"},
-{name:"Centaur Warrunner",slug:"centaur",attr:"Strength"},
-{name:"Chaos Knight",slug:"chaos_knight",attr:"Strength"},
-{name:"Chen",slug:"chen",attr:"Universal"},
-{name:"Clinkz",slug:"clinkz",attr:"Agility"},
-{name:"Clockwerk",slug:"rattletrap",attr:"Strength"},
-{name:"Crystal Maiden",slug:"crystal_maiden",attr:"Intelligence"},
-{name:"Dark Seer",slug:"dark_seer",attr:"Universal"},
-{name:"Dark Willow",slug:"dark_willow",attr:"Intelligence"},
-{name:"Dawnbreaker",slug:"dawnbreaker",attr:"Strength"},
-{name:"Dazzle",slug:"dazzle",attr:"Universal"},
-{name:"Death Prophet",slug:"death_prophet",attr:"Intelligence"},
-{name:"Disruptor",slug:"disruptor",attr:"Intelligence"},
-{name:"Doom",slug:"doom_bringer",attr:"Strength"},
-{name:"Dragon Knight",slug:"dragon_knight",attr:"Strength"},
-{name:"Drow Ranger",slug:"drow_ranger",attr:"Agility"},
-{name:"Earth Spirit",slug:"earth_spirit",attr:"Universal"},
-{name:"Earthshaker",slug:"earthshaker",attr:"Strength"},
-{name:"Elder Titan",slug:"elder_titan",attr:"Strength"},
-{name:"Ember Spirit",slug:"ember_spirit",attr:"Agility"},
-{name:"Enchantress",slug:"enchantress",attr:"Universal"},
-{name:"Enigma",slug:"enigma",attr:"Universal"},
-{name:"Faceless Void",slug:"faceless_void",attr:"Agility"},
-{name:"Grimstroke",slug:"grimstroke",attr:"Intelligence"},
-{name:"Gyrocopter",slug:"gyrocopter",attr:"Universal"},
-{name:"Hoodwink",slug:"hoodwink",attr:"Universal"},
-{name:"Huskar",slug:"huskar",attr:"Strength"},
-{name:"Invoker",slug:"invoker",attr:"Universal"},
-{name:"Io",slug:"wisp",attr:"Universal"},
-{name:"Jakiro",slug:"jakiro",attr:"Intelligence"},
-{name:"Juggernaut",slug:"juggernaut",attr:"Agility"},
-{name:"Keeper of the Light",slug:"keeper_of_the_light",attr:"Intelligence"},
-{name:"Kunkka",slug:"kunkka",attr:"Strength"},
-{name:"Legion Commander",slug:"legion_commander",attr:"Strength"},
-{name:"Leshrac",slug:"leshrac",attr:"Intelligence"},
-{name:"Lich",slug:"lich",attr:"Intelligence"},
-{name:"Lifestealer",slug:"life_stealer",attr:"Strength"},
-{name:"Lina",slug:"lina",attr:"Intelligence"},
-{name:"Lion",slug:"lion",attr:"Intelligence"},
-{name:"Lone Druid",slug:"lone_druid",attr:"Universal"},
-{name:"Luna",slug:"luna",attr:"Agility"},
-{name:"Lycan",slug:"lycan",attr:"Universal"},
-{name:"Magnus",slug:"magnataur",attr:"Strength"},
-{name:"Marci",slug:"marci",attr:"Universal"},
-{name:"Mars",slug:"mars",attr:"Strength"},
-{name:"Medusa",slug:"medusa",attr:"Agility"},
-{name:"Meepo",slug:"meepo",attr:"Universal"},
-{name:"Mirana",slug:"mirana",attr:"Universal"},
-{name:"Monkey King",slug:"monkey_king",attr:"Universal"},
-{name:"Morphling",slug:"morphling",attr:"Agility"},
-{name:"Muerta",slug:"muerta",attr:"Agility"},
-{name:"Naga Siren",slug:"naga_siren",attr:"Agility"},
-{name:"Nature's Prophet",slug:"furion",attr:"Universal"},
-{name:"Necrophos",slug:"necrolyte",attr:"Intelligence"},
-{name:"Night Stalker",slug:"night_stalker",attr:"Strength"},
-{name:"Nyx Assassin",slug:"nyx_assassin",attr:"Universal"},
-{name:"Ogre Magi",slug:"ogre_magi",attr:"Universal"},
-{name:"Omniknight",slug:"omniknight",attr:"Strength"},
-{name:"Oracle",slug:"oracle",attr:"Universal"},
-{name:"Outworld Destroyer",slug:"obsidian_destroyer",attr:"Intelligence"},
-{name:"Pangolier",slug:"pangolier",attr:"Universal"},
-{name:"Phantom Assassin",slug:"phantom_assassin",attr:"Agility"},
-{name:"Phantom Lancer",slug:"phantom_lancer",attr:"Agility"},
-{name:"Phoenix",slug:"phoenix",attr:"Universal"},
-{name:"Primal Beast",slug:"primal_beast",attr:"Strength"},
-{name:"Puck",slug:"puck",attr:"Intelligence"},
-{name:"Pudge",slug:"pudge",attr:"Strength"},
-{name:"Pugna",slug:"pugna",attr:"Intelligence"},
-{name:"Queen of Pain",slug:"queenofpain",attr:"Intelligence"},
-{name:"Razor",slug:"razor",attr:"Universal"},
-{name:"Riki",slug:"riki",attr:"Agility"},
-{name:"Rubick",slug:"rubick",attr:"Universal"},
-{name:"Sand King",slug:"sand_king",attr:"Universal"},
-{name:"Shadow Demon",slug:"shadow_demon",attr:"Universal"},
-{name:"Shadow Fiend",slug:"nevermore",attr:"Agility"},
-{name:"Shadow Shaman",slug:"shadow_shaman",attr:"Intelligence"},
-{name:"Silencer",slug:"silencer",attr:"Universal"},
-{name:"Skywrath Mage",slug:"skywrath_mage",attr:"Intelligence"},
-{name:"Slardar",slug:"slardar",attr:"Strength"},
-{name:"Slark",slug:"slark",attr:"Agility"},
-{name:"Snapfire",slug:"snapfire",attr:"Universal"},
-{name:"Sniper",slug:"sniper",attr:"Agility"},
-{name:"Spectre",slug:"spectre",attr:"Agility"},
-{name:"Spirit Breaker",slug:"spirit_breaker",attr:"Strength"},
-{name:"Storm Spirit",slug:"storm_spirit",attr:"Intelligence"},
-{name:"Sven",slug:"sven",attr:"Strength"},
-{name:"Techies",slug:"techies",attr:"Universal"},
-{name:"Templar Assassin",slug:"templar_assassin",attr:"Agility"},
-{name:"Terrorblade",slug:"terrorblade",attr:"Agility"},
-{name:"Tidehunter",slug:"tidehunter",attr:"Strength"},
-{name:"Timbersaw",slug:"shredder",attr:"Universal"},
-{name:"Tinker",slug:"tinker",attr:"Intelligence"},
-{name:"Tiny",slug:"tiny",attr:"Strength"},
-{name:"Treant Protector",slug:"treant",attr:"Strength"},
-{name:"Troll Warlord",slug:"troll_warlord",attr:"Agility"},
-{name:"Tusk",slug:"tusk",attr:"Strength"},
-{name:"Underlord",slug:"abyssal_underlord",attr:"Strength"},
-{name:"Undying",slug:"undying",attr:"Strength"},
-{name:"Ursa",slug:"ursa",attr:"Agility"},
-{name:"Vengeful Spirit",slug:"vengefulspirit",attr:"Agility"},
-{name:"Venomancer",slug:"venomancer",attr:"Universal"},
-{name:"Viper",slug:"viper",attr:"Agility"},
-{name:"Visage",slug:"visage",attr:"Universal"},
-{name:"Void Spirit",slug:"void_spirit",attr:"Universal"},
-{name:"Warlock",slug:"warlock",attr:"Universal"},
-{name:"Weaver",slug:"weaver",attr:"Agility"},
-{name:"Windranger",slug:"windrunner",attr:"Universal"},
-{name:"Winter Wyvern",slug:"winter_wyvern",attr:"Universal"},
-{name:"Witch Doctor",slug:"witch_doctor",attr:"Intelligence"},
-{name:"Wraith King",slug:"skeleton_king",attr:"Strength"},
-{name:"Zeus",slug:"zuus",attr:"Intelligence"},
-{name:"Kez",slug:"kez",attr:"Universal"}
+{name:"Abaddon",slug:"abaddon",attr:"Сила"},
+{name:"Alchemist",slug:"alchemist",attr:"Сила"},
+{name:"Ancient Apparition",slug:"ancient_apparition",attr:"Интеллект"},
+{name:"Anti-Mage",slug:"antimage",attr:"Ловкость"},
+{name:"Arc Warden",slug:"arc_warden",attr:"Универсальный"},
+{name:"Axe",slug:"axe",attr:"Сила"},
+{name:"Bane",slug:"bane",attr:"Интеллект"},
+{name:"Batrider",slug:"batrider",attr:"Универсальный"},
+{name:"Beastmaster",slug:"beastmaster",attr:"Сила"},
+{name:"Bloodseeker",slug:"bloodseeker",attr:"Ловкость"},
+{name:"Bounty Hunter",slug:"bounty_hunter",attr:"Универсальный"},
+{name:"Brewmaster",slug:"brewmaster",attr:"Сила"},
+{name:"Bristleback",slug:"bristleback",attr:"Сила"},
+{name:"Broodmother",slug:"broodmother",attr:"Ловкость"},
+{name:"Centaur Warrunner",slug:"centaur",attr:"Сила"},
+{name:"Chaos Knight",slug:"chaos_knight",attr:"Сила"},
+{name:"Chen",slug:"chen",attr:"Универсальный"},
+{name:"Clinkz",slug:"clinkz",attr:"Ловкость"},
+{name:"Clockwerk",slug:"rattletrap",attr:"Сила"},
+{name:"Crystal Maiden",slug:"crystal_maiden",attr:"Интеллект"},
+{name:"Dark Seer",slug:"dark_seer",attr:"Универсальный"},
+{name:"Dark Willow",slug:"dark_willow",attr:"Интеллект"},
+{name:"Dawnbreaker",slug:"dawnbreaker",attr:"Сила"},
+{name:"Dazzle",slug:"dazzle",attr:"Универсальный"},
+{name:"Death Prophet",slug:"death_prophet",attr:"Интеллект"},
+{name:"Disruptor",slug:"disruptor",attr:"Интеллект"},
+{name:"Doom",slug:"doom_bringer",attr:"Сила"},
+{name:"Dragon Knight",slug:"dragon_knight",attr:"Сила"},
+{name:"Drow Ranger",slug:"drow_ranger",attr:"Ловкость"},
+{name:"Earth Spirit",slug:"earth_spirit",attr:"Универсальный"},
+{name:"Earthshaker",slug:"earthshaker",attr:"Сила"},
+{name:"Elder Titan",slug:"elder_titan",attr:"Сила"},
+{name:"Ember Spirit",slug:"ember_spirit",attr:"Ловкость"},
+{name:"Enchantress",slug:"enchantress",attr:"Универсальный"},
+{name:"Enigma",slug:"enigma",attr:"Универсальный"},
+{name:"Faceless Void",slug:"faceless_void",attr:"Ловкость"},
+{name:"Grimstroke",slug:"grimstroke",attr:"Интеллект"},
+{name:"Gyrocopter",slug:"gyrocopter",attr:"Универсальный"},
+{name:"Hoodwink",slug:"hoodwink",attr:"Универсальный"},
+{name:"Huskar",slug:"huskar",attr:"Сила"},
+{name:"Invoker",slug:"invoker",attr:"Универсальный"},
+{name:"Io",slug:"wisp",attr:"Универсальный"},
+{name:"Jakiro",slug:"jakiro",attr:"Интеллект"},
+{name:"Juggernaut",slug:"juggernaut",attr:"Ловкость"},
+{name:"Keeper of the Light",slug:"keeper_of_the_light",attr:"Интеллект"},
+{name:"Kez",slug:"kez",attr:"Универсальный"},
+{name:"Kunkka",slug:"kunkka",attr:"Сила"},
+{name:"Legion Commander",slug:"legion_commander",attr:"Сила"},
+{name:"Leshrac",slug:"leshrac",attr:"Интеллект"},
+{name:"Lich",slug:"lich",attr:"Интеллект"},
+{name:"Lifestealer",slug:"life_stealer",attr:"Сила"},
+{name:"Lina",slug:"lina",attr:"Интеллект"},
+{name:"Lion",slug:"lion",attr:"Интеллект"},
+{name:"Lone Druid",slug:"lone_druid",attr:"Универсальный"},
+{name:"Luna",slug:"luna",attr:"Ловкость"},
+{name:"Lycan",slug:"lycan",attr:"Универсальный"},
+{name:"Magnus",slug:"magnataur",attr:"Сила"},
+{name:"Marci",slug:"marci",attr:"Универсальный"},
+{name:"Mars",slug:"mars",attr:"Сила"},
+{name:"Medusa",slug:"medusa",attr:"Ловкость"},
+{name:"Meepo",slug:"meepo",attr:"Универсальный"},
+{name:"Mirana",slug:"mirana",attr:"Универсальный"},
+{name:"Monkey King",slug:"monkey_king",attr:"Универсальный"},
+{name:"Morphling",slug:"morphling",attr:"Ловкость"},
+{name:"Muerta",slug:"muerta",attr:"Ловкость"},
+{name:"Naga Siren",slug:"naga_siren",attr:"Ловкость"},
+{name:"Nature's Prophet",slug:"furion",attr:"Универсальный"},
+{name:"Necrophos",slug:"necrolyte",attr:"Интеллект"},
+{name:"Night Stalker",slug:"night_stalker",attr:"Сила"},
+{name:"Nyx Assassin",slug:"nyx_assassin",attr:"Универсальный"},
+{name:"Ogre Magi",slug:"ogre_magi",attr:"Универсальный"},
+{name:"Omniknight",slug:"omniknight",attr:"Сила"},
+{name:"Oracle",slug:"oracle",attr:"Универсальный"},
+{name:"Outworld Destroyer",slug:"obsidian_destroyer",attr:"Интеллект"},
+{name:"Pangolier",slug:"pangolier",attr:"Универсальный"},
+{name:"Phantom Assassin",slug:"phantom_assassin",attr:"Ловкость"},
+{name:"Phantom Lancer",slug:"phantom_lancer",attr:"Ловкость"},
+{name:"Phoenix",slug:"phoenix",attr:"Универсальный"},
+{name:"Primal Beast",slug:"primal_beast",attr:"Сила"},
+{name:"Puck",slug:"puck",attr:"Интеллект"},
+{name:"Pudge",slug:"pudge",attr:"Сила"},
+{name:"Pugna",slug:"pugna",attr:"Интеллект"},
+{name:"Queen of Pain",slug:"queenofpain",attr:"Интеллект"},
+{name:"Razor",slug:"razor",attr:"Универсальный"},
+{name:"Riki",slug:"riki",attr:"Ловкость"},
+{name:"Ringmaster",slug:"ringmaster",attr:"Интеллект"},
+{name:"Rubick",slug:"rubick",attr:"Универсальный"},
+{name:"Sand King",slug:"sand_king",attr:"Универсальный"},
+{name:"Shadow Demon",slug:"shadow_demon",attr:"Универсальный"},
+{name:"Shadow Fiend",slug:"nevermore",attr:"Ловкость"},
+{name:"Shadow Shaman",slug:"shadow_shaman",attr:"Интеллект"},
+{name:"Silencer",slug:"silencer",attr:"Универсальный"},
+{name:"Skywrath Mage",slug:"skywrath_mage",attr:"Интеллект"},
+{name:"Slardar",slug:"slardar",attr:"Сила"},
+{name:"Slark",slug:"slark",attr:"Ловкость"},
+{name:"Snapfire",slug:"snapfire",attr:"Универсальный"},
+{name:"Sniper",slug:"sniper",attr:"Ловкость"},
+{name:"Spectre",slug:"spectre",attr:"Ловкость"},
+{name:"Spirit Breaker",slug:"spirit_breaker",attr:"Сила"},
+{name:"Storm Spirit",slug:"storm_spirit",attr:"Интеллект"},
+{name:"Sven",slug:"sven",attr:"Сила"},
+{name:"Techies",slug:"techies",attr:"Универсальный"},
+{name:"Templar Assassin",slug:"templar_assassin",attr:"Ловкость"},
+{name:"Terrorblade",slug:"terrorblade",attr:"Ловкость"},
+{name:"Tidehunter",slug:"tidehunter",attr:"Сила"},
+{name:"Timbersaw",slug:"shredder",attr:"Универсальный"},
+{name:"Tinker",slug:"tinker",attr:"Интеллект"},
+{name:"Tiny",slug:"tiny",attr:"Сила"},
+{name:"Treant Protector",slug:"treant",attr:"Сила"},
+{name:"Troll Warlord",slug:"troll_warlord",attr:"Ловкость"},
+{name:"Tusk",slug:"tusk",attr:"Сила"},
+{name:"Underlord",slug:"abyssal_underlord",attr:"Сила"},
+{name:"Undying",slug:"undying",attr:"Сила"},
+{name:"Ursa",slug:"ursa",attr:"Ловкость"},
+{name:"Vengeful Spirit",slug:"vengefulspirit",attr:"Ловкость"},
+{name:"Venomancer",slug:"venomancer",attr:"Универсальный"},
+{name:"Viper",slug:"viper",attr:"Ловкость"},
+{name:"Visage",slug:"visage",attr:"Универсальный"},
+{name:"Void Spirit",slug:"void_spirit",attr:"Универсальный"},
+{name:"Warlock",slug:"warlock",attr:"Универсальный"},
+{name:"Weaver",slug:"weaver",attr:"Ловкость"},
+{name:"Windranger",slug:"windrunner",attr:"Универсальный"},
+{name:"Winter Wyvern",slug:"winter_wyvern",attr:"Универсальный"},
+{name:"Witch Doctor",slug:"witch_doctor",attr:"Интеллект"},
+{name:"Wraith King",slug:"skeleton_king",attr:"Сила"},
+{name:"Zeus",slug:"zuus",attr:"Интеллект"}
 ];
 
 var items=[
@@ -334,487 +658,876 @@ var items=[
 {name:"Witch Blade",slug:"witch_blade"}
 ];
 
-var heroHints = [
-["Сильный инициатор, ближний бой, любит врываться", "Strength"],
-["Быстрый керри, дальний бой, любит урон с руки", "Agility"],
-["Маг с контролем, дальний бой, сильные заклинания", "Intelligence"],
-["Гибкий герой, полезен в любой роли", "Universal"]
-];
-
 var spyGame=null;
 var guessGame=null;
 var timerId=null;
-var spyType='heroes';
-var spyMode='hidden';
-var timerMode='withTime';
+var spyType="heroes";
+var spyMode="classic";
+var timerMode="withTime";
 
-function esc(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
-function rnd(a){return a[Math.floor(Math.random()*a.length)];}
-function mix(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
-function img(o,t){return 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/'+(t==='heroes'?'heroes/':'items/')+o.slug+'.png';}
-function buzz(){try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.HapticFeedback.impactOccurred('medium');}}catch(e){}}
-function setTG(){try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}}catch(e){}}
-setTG();
+function esc(v){
+  return String(v)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function rnd(a){
+  return a[Math.floor(Math.random()*a.length)];
+}
+
+function mix(a){
+  var b=a.slice();
+  for(var i=b.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var t=b[i];
+    b[i]=b[j];
+    b[j]=t;
+  }
+  return b;
+}
+
+function img(o,t){
+  return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/"+
+    (t==="heroes"?"heroes/":"items/")+
+    o.slug+
+    ".png";
+}
+
+function fmt(s){
+  return String(Math.floor(s/60)).padStart(2,"0")+":"+
+    String(s%60).padStart(2,"0");
+}
+
+function buzz(){
+  try{
+    if(window.Telegram&&Telegram.WebApp){
+      Telegram.WebApp.HapticFeedback.impactOccurred("medium");
+    }
+  }catch(e){}
+}
+
+function setupTelegram(){
+  try{
+    if(window.Telegram&&Telegram.WebApp){
+      Telegram.WebApp.ready();
+      Telegram.WebApp.expand();
+    }
+  }catch(e){}
+}
+
+setupTelegram();
 
 function home(){
   clearInterval(timerId);
+
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>🕵️ Dota2SpyForSolin</h1>'+
-    '<div class="card">'+
-    '<h2>Выбери режим</h2>'+
-    '<div class="grid2">'+
-    '<button id="sp" class="mode"><span class="ico">🕵️</span>Шпион<small>Скрытая роль</small></button>'+
-    '<button id="gu" class="mode"><span class="ico">🔍</span>Угадай в карточках<small>20 карточек</small></button>'+
-    '<button id="rn" class="mode"><span class="ico">🎲</span>Случайный режим<small>Герой / предмет / оба</small></button>'+
-    '<button id="sr" class="mode"><span class="ico">⭐</span>Угадай по силе<small>Викторина</small></button>'+
-    '</div>'+
-    '</div>'+
-    '<div class="card">'+
-    '<h2>Как играть</h2>'+
-    '<p class="muted small">В шпионе роли скрыты до конца. В угадайке по карточкам каждый выбирает свою секретную карточку из общего пула. В режиме по силе надо угадать главный атрибут героя.</p>'+
-    '<div class="tiny-note">сделано Solin для вас</div>'+
-    '</div>'+
+      '<h1 class="home-title">Dota2SpyForSolin</h1>'+
+      '<div class="card">'+
+        '<h2>Выбери режим</h2>'+
+        '<div class="grid2">'+
+          '<button id="sp" class="mode"><span class="ico">🕵️</span>Шпион<small>Классика, ведущий, скрытый</small></button>'+
+          '<button id="gu" class="mode"><span class="ico">🔍</span>Угадай в карточках<small>20 карточек</small></button>'+
+          '<button id="rn" class="mode"><span class="ico">🎲</span>Случайный режим<small>Герой, предмет, сборка</small></button>'+
+          '<button id="sr" class="mode"><span class="ico">⭐</span>Угадай по силе<small>Викторина</small></button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<h2>Как играть</h2>'+
+        '<p class="muted small">В классике и с ведущим игроки видят свою роль. В скрытом шпионе все получают разные секретные карточки, но приложение не говорит, кто шпион и кто мирный.</p>'+
+        '<div class="tiny-note">сделано Solin для вас</div>'+
+      '</div>'+
     '</div>';
-  document.getElementById('sp').onclick=spySettings;
-  document.getElementById('gu').onclick=guessType;
-  document.getElementById('rn').onclick=randomMenu;
-  document.getElementById('sr').onclick=strengthQuiz;
+
+  document.getElementById("sp").onclick=spySettings;
+  document.getElementById("gu").onclick=guessType;
+  document.getElementById("rn").onclick=randomMenu;
+  document.getElementById("sr").onclick=strengthQuiz;
 }
 
 function spySettings(){
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>🕵️ Dota2SpyForSolin</h1>'+
-    '<div class="card">'+
-    '<h2>Настройки шпиона</h2>'+
-    '<div class="grid2">'+
-    '<button id="h" class="mode"><span class="ico">🦸</span>Герои<small>Все герои Dota 2</small></button>'+
-    '<button id="it" class="mode"><span class="ico">🗡️</span>Предметы<small>Секретный пул</small></button>'+
-    '</div>'+
-    '<label>Режим игры</label>'+
-    '<select id="m"><option value="hidden">🔒 Скрытый шпион</option><option value="host">🎙️ С ведущим</option></select>'+
-    '<label>Таймер</label>'+
-    '<select id="tm"><option value="withTime">⏱️ С временем</option><option value="withoutTime">♾️ Без времени</option></select>'+
-    '<label>Количество игроков</label>'+
-    '<input id="p" type="number" min="3" max="20" value="5">'+
-    '<label>Количество шпионов</label>'+
-    '<input id="s" type="number" min="1" max="5" value="1">'+
-    '<div id="mb"><label>Время в минутах</label><input id="min" type="number" min="1" max="60" value="8"></div>'+
-    '<div id="host"></div>'+
-    '<button id="start" class="btn">🎮 Начать раздачу ролей</button>'+
-    '<button id="back" class="btn alt">← В главное меню</button>'+
-    '</div></div>';
-  document.getElementById('h').onclick=function(){spyType='heroes';spySettings();};
-  document.getElementById('it').onclick=function(){spyType='items';spySettings();};
-  document.getElementById('m').value=spyMode;
-  document.getElementById('tm').value=timerMode;
-  document.getElementById('m').onchange=function(){spyMode=this.value;updateSpy();};
-  document.getElementById('tm').onchange=function(){timerMode=this.value;updateSpy();};
-  document.getElementById('start').onclick=startSpy;
-  document.getElementById('back').onclick=home;
+      '<h1>Шпион</h1>'+
+      '<div class="card">'+
+        '<h2>Настройки</h2>'+
+        '<div class="grid2">'+
+          '<button id="h" class="mode"><span class="ico">🦸</span>Герои<small>Полный пул</small></button>'+
+          '<button id="it" class="mode"><span class="ico">🗡️</span>Предметы<small>Секретный пул</small></button>'+
+        '</div>'+
+        '<label>Режим игры</label>'+
+        '<select id="m">'+
+          '<option value="classic">🕵️ Классика</option>'+
+          '<option value="host">🎙️ С ведущим</option>'+
+          '<option value="hidden">🔒 Скрытый шпион</option>'+
+        '</select>'+
+        '<label>Таймер</label>'+
+        '<select id="tm">'+
+          '<option value="withTime">⏱️ С временем</option>'+
+          '<option value="withoutTime">♾️ Без времени</option>'+
+        '</select>'+
+        '<label>Количество игроков</label>'+
+        '<input id="p" type="number" min="3" max="20" value="5">'+
+        '<label>Количество шпионов</label>'+
+        '<input id="s" type="number" min="1" max="5" value="1">'+
+        '<div id="mb">'+
+          '<label>Время в минутах</label>'+
+          '<input id="min" type="number" min="1" max="60" value="8">'+
+        '</div>'+
+        '<div id="host"></div>'+
+        '<button id="start" class="btn">🎮 Начать раздачу ролей</button>'+
+        '<button id="back" class="btn alt">← В главное меню</button>'+
+      '</div>'+
+    '</div>';
+
+  document.getElementById("h").onclick=function(){
+    spyType="heroes";
+    spySettings();
+  };
+
+  document.getElementById("it").onclick=function(){
+    spyType="items";
+    spySettings();
+  };
+
+  document.getElementById("m").value=spyMode;
+  document.getElementById("tm").value=timerMode;
+
+  document.getElementById("m").onchange=function(){
+    spyMode=this.value;
+    updateSpy();
+  };
+
+  document.getElementById("tm").onchange=function(){
+    timerMode=this.value;
+    updateSpy();
+  };
+
+  document.getElementById("start").onclick=startSpy;
+  document.getElementById("back").onclick=home;
+
   updateSpy();
 }
 
 function updateSpy(){
-  document.getElementById(spyType==='heroes'?'h':'it').classList.add('selected');
-  document.getElementById('mb').classList.toggle('hidden',timerMode==='withoutTime');
-  var d=document.getElementById('host');
-  if(spyMode!=='host'){d.innerHTML='';return;}
-  if(spyType==='heroes'){
-    var opts=heroes.map(function(x){return '<option>'+esc(x.name)+'</option>';}).join('');
-    d.innerHTML=
+  document.getElementById(spyType==="heroes"?"h":"it").classList.add("selected");
+
+  document.getElementById("mb").classList.toggle(
+    "hidden",
+    timerMode==="withoutTime"
+  );
+
+  var host=document.getElementById("host");
+
+  if(spyMode!=="host"){
+    host.innerHTML="";
+    return;
+  }
+
+  if(spyType==="heroes"){
+    var heroOptions=heroes.map(function(hero){
+      return '<option value="'+esc(hero.name)+'">'+esc(hero.name)+'</option>';
+    }).join("");
+
+    host.innerHTML=
       '<div class="box">'+
-      '<h3>Выбор ведущего</h3>'+
-      '<label>Герой мирных</label><select id="ph">'+opts+'</select>'+
-      '<label>Герой шпионов</label><select id="sh">'+opts+'</select>'+
-      '<label>Локация</label><select id="lo">'+['Таверна','Рошанова яма','Мид-лейн','Лес Radiant','Лес Dire','Фонтан Radiant','Фонтан Dire','Секретный магазин','Лагерь Древних'].map(function(x){return '<option>'+esc(x)+'</option>';}).join('')+'</select>'+
+        '<h3>Настройки ведущего</h3>'+
+        '<label>Карточка мирных</label>'+
+        '<select id="ph">'+heroOptions+'</select>'+
+        '<label>Карточка шпионов</label>'+
+        '<select id="sh">'+heroOptions+'</select>'+
+        '<label>Локация</label>'+
+        '<select id="lo">'+
+          '<option>Таверна</option>'+
+          '<option>Рошанова яма</option>'+
+          '<option>Мид-лейн</option>'+
+          '<option>Лес Radiant</option>'+
+          '<option>Лес Dire</option>'+
+          '<option>Фонтан Radiant</option>'+
+          '<option>Фонтан Dire</option>'+
+          '<option>Секретный магазин</option>'+
+          '<option>Лагерь древних крипов</option>'+
+        '</select>'+
       '</div>';
   }else{
-    var opts2=items.map(function(x){return '<option value="'+x.slug+'">'+esc(x.name)+'</option>';}).join('');
-    d.innerHTML=
+    var itemOptions=items.map(function(item){
+      return '<option value="'+esc(item.slug)+'">'+esc(item.name)+'</option>';
+    }).join("");
+
+    host.innerHTML=
       '<div class="box">'+
-      '<h3>Выбор ведущего</h3>'+
-      '<label>Предмет мирных</label><select id="pi">'+opts2+'</select>'+
-      '<label>Предмет шпионов</label><select id="si">'+opts2+'</select>'+
+        '<h3>Настройки ведущего</h3>'+
+        '<label>Карточка мирных</label>'+
+        '<select id="pi">'+itemOptions+'</select>'+
+        '<label>Карточка шпионов</label>'+
+        '<select id="si">'+itemOptions+'</select>'+
       '</div>';
   }
 }
 
 function startSpy(){
-  var p=Math.max(3,Math.min(20,Number(document.getElementById('p').value)||5));
-  var s=Math.max(1,Math.min(p-1,Number(document.getElementById('s').value)||1));
-  var mins=Math.max(1,Math.min(60,Number(document.getElementById('min').value)||8));
-  var a,b,l='';
-  if(spyType==='heroes'){
-    if(spyMode==='host'){
-      a=document.getElementById('ph').value;
-      b=document.getElementById('sh').value;
-      l=document.getElementById('lo').value;
-      if(a===b){alert('Выбери разных героев');return;}
+  var players=Math.max(3,Math.min(20,Number(document.getElementById("p").value)||5));
+  var spiesCount=Math.max(1,Math.min(players-1,Number(document.getElementById("s").value)||1));
+  var minutes=Math.max(1,Math.min(60,Number(document.getElementById("min").value)||8));
+
+  var peacefulCard;
+  var spyCard;
+  var location="";
+
+  if(spyType==="heroes"){
+    if(spyMode==="host"){
+      peacefulCard=document.getElementById("ph").value;
+      spyCard=document.getElementById("sh").value;
+      location=document.getElementById("lo").value;
+
+      if(peacefulCard===spyCard){
+        alert("Выбери разных героев для мирных и шпионов.");
+        return;
+      }
     }else{
-      a=rnd(heroes).name;
-      do{b=rnd(heroes).name;}while(a===b);
-      l=rnd(['Таверна','Рошанова яма','Мид-лейн','Лес Radiant','Лес Dire','Фонтан Radiant','Фонтан Dire','Секретный магазин','Лагерь Древних']);
+      peacefulCard=rnd(heroes).name;
+
+      do{
+        spyCard=rnd(heroes).name;
+      }while(spyCard===peacefulCard);
+
+      location=rnd([
+        "Таверна",
+        "Рошанова яма",
+        "Мид-лейн",
+        "Лес Radiant",
+        "Лес Dire",
+        "Фонтан Radiant",
+        "Фонтан Dire",
+        "Секретный магазин",
+        "Лагерь древних крипов"
+      ]);
     }
   }else{
-    if(spyMode==='host'){
-      a=items.filter(function(x){return x.slug===document.getElementById('pi').value;})[0];
-      b=items.filter(function(x){return x.slug===document.getElementById('si').value;})[0];
-      if(a.slug===b.slug){alert('Выбери разные предметы');return;}
+    if(spyMode==="host"){
+      peacefulCard=items.filter(function(item){
+        return item.slug===document.getElementById("pi").value;
+      })[0];
+
+      spyCard=items.filter(function(item){
+        return item.slug===document.getElementById("si").value;
+      })[0];
+
+      if(peacefulCard.slug===spyCard.slug){
+        alert("Выбери разные предметы для мирных и шпионов.");
+        return;
+      }
     }else{
-      a=rnd(items);
-      do{b=rnd(items);}while(a.slug===b.slug);
+      peacefulCard=rnd(items);
+
+      do{
+        spyCard=rnd(items);
+      }while(spyCard.slug===peacefulCard.slug);
     }
   }
-  spyGame={type:spyType,timer:timerMode,p:p,mins:mins,a:a,b:b,l:l,spies:mix(Array.from({length:p},function(_,i){return i;})).slice(0,s),cur:0};
+
+  spyGame={
+    type:spyType,
+    mode:spyMode,
+    timer:timerMode,
+    players:players,
+    minutes:minutes,
+    peacefulCard:peacefulCard,
+    spyCard:spyCard,
+    location:location,
+    spies:mix(
+      Array.from({length:players},function(_,index){
+        return index;
+      })
+    ).slice(0,spiesCount),
+    current:0
+  };
+
   spyRole();
 }
 
 function spyRole(){
-  var n=spyGame.cur+1;
-  var last=n===spyGame.p;
+  var number=spyGame.current+1;
+  var isSpy=spyGame.spies.indexOf(spyGame.current)!==-1;
+  var isLast=number===spyGame.players;
+
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>🕵️ Dota2SpyForSolin</h1>'+
-    '<div class="card">'+
-    '<div class="player">Игрок '+n+'</div>'+
-    '<p class="muted" style="text-align:center">Остальные не смотрят на экран.</p>'+
-    '<button id="role" class="secret">Нажми и удерживай,<br>чтобы увидеть карточку</button>'+
-    '<button id="next" class="btn alt" disabled>'+(last?'🚀 Начать игру':'Передать игроку '+(n+1))+'</button>'+
-    '</div>'+
-    '<button id="can" class="btn danger">Отменить игру</button>'+
+      '<h1>Шпион</h1>'+
+      '<div class="card">'+
+        '<div class="player">Игрок '+number+'</div>'+
+        '<p class="muted" style="text-align:center">Другие игроки не должны смотреть на экран.</p>'+
+        '<button id="role" class="secret">Нажми и удерживай,<br>чтобы увидеть карточку</button>'+
+        '<button id="next" class="btn alt" disabled>'+
+          (isLast?"🚀 Начать игру":"Передать игроку "+(number+1))+
+        '</button>'+
+      '</div>'+
+      '<button id="cancel" class="btn danger">Отменить игру</button>'+
     '</div>';
-  var r=document.getElementById('role');
-  var nx=document.getElementById('next');
-  var vis=false;
+
+  var roleButton=document.getElementById("role");
+  var nextButton=document.getElementById("next");
   var shown=false;
-  function show(){
-    if(vis)return;
-    vis=true;shown=true;
-    var q=spyGame.type==='heroes'?spyGame.a:spyGame.a.name;
-    r.classList.add('spy');
-    r.innerHTML='🔒<br>Секретная карточка<br><span style="font-size:16px">'+esc(String(q))+'</span>';
+  var opened=false;
+
+  function getSecretName(){
+    var secret=isSpy?spyGame.spyCard:spyGame.peacefulCard;
+    return spyGame.type==="heroes"?secret:secret.name;
+  }
+
+  function showSecret(){
+    if(opened)return;
+
+    opened=true;
+    shown=true;
+
+    var secretName=getSecretName();
+
+    if(spyGame.mode==="hidden"){
+      roleButton.classList.add("spy");
+
+      roleButton.innerHTML=
+        '🔒<br>Секретная карточка<br>'+
+        '<span style="font-size:18px">'+esc(secretName)+'</span>'+
+        (spyGame.type==="heroes"
+          ?'<br><span style="font-size:14px">Локация: '+esc(spyGame.location)+'</span>'
+          :"");
+    }else{
+      roleButton.classList.add(isSpy?"spy":"peace");
+
+      roleButton.innerHTML=
+        (isSpy?"🕵️<br>ТЫ ШПИОН":"🛡️<br>ТЫ МИРНЫЙ")+
+        '<br><span style="font-size:18px">'+esc(secretName)+'</span>'+
+        (spyGame.type==="heroes"
+          ?'<br><span style="font-size:14px">Локация: '+esc(spyGame.location)+'</span>'
+          :"");
+    }
+
     buzz();
   }
-  function hide(){
-    if(!vis)return;
-    vis=false;
-    r.classList.remove('spy');
-    r.innerHTML='Нажми и удерживай,<br>чтобы увидеть карточку';
-    nx.disabled=false;
+
+  function hideSecret(){
+    if(!opened)return;
+
+    opened=false;
+    roleButton.classList.remove("spy","peace");
+    roleButton.innerHTML="Нажми и удерживай,<br>чтобы увидеть карточку";
+    nextButton.disabled=false;
   }
-  r.onpointerdown=function(e){e.preventDefault();show();};
-  r.onpointerup=function(e){e.preventDefault();hide();};
-  r.onpointerleave=hide;
-  r.onpointercancel=hide;
-  nx.onclick=function(){
-    if(!shown)return;
-    if(spyGame.cur<spyGame.p-1){spyGame.cur++;spyRole();}
-    else spyPlay();
+
+  roleButton.onpointerdown=function(event){
+    event.preventDefault();
+    showSecret();
   };
-  document.getElementById('can').onclick=home;
+
+  roleButton.onpointerup=function(event){
+    event.preventDefault();
+    hideSecret();
+  };
+
+  roleButton.onpointerleave=hideSecret;
+  roleButton.onpointercancel=hideSecret;
+
+  nextButton.onclick=function(){
+    if(!shown)return;
+
+    if(spyGame.current<spyGame.players-1){
+      spyGame.current++;
+      spyRole();
+    }else{
+      spyPlay();
+    }
+  };
+
+  document.getElementById("cancel").onclick=home;
 }
 
 function spyPlay(){
-  var timed=spyGame.timer==='withTime';
-  var sec=spyGame.mins*60;
+  var timed=spyGame.timer==="withTime";
+  var seconds=spyGame.minutes*60;
+
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>🕵️ Dota2SpyForSolin</h1>'+
-    '<div class="card">'+
-    '<h2>Игра началась</h2>'+
-    '<p class="muted">Роли скрыты. Играйте и не выдавайте себя.</p>'+
-    '<div id="time" class="timer">'+(timed?fmt(sec):'∞')+'</div>'+
-    (timed?'<button id="tb" class="btn">▶️ Запустить таймер</button>':'<div class="status">♾️ Игра без времени</div>')+
-    '<button id="fin" class="btn yellow">🏁 Закончить раунд</button>'+
-    '</div>'+
-    '<button id="can" class="btn danger">Отменить игру</button>'+
+      '<h1>Шпион</h1>'+
+      '<div class="card">'+
+        '<h2>Игра началась</h2>'+
+        '<p class="muted">'+
+          (spyGame.mode==="hidden"
+            ?"Роли скрыты: никто не знает, кто шпион, а кто мирный."
+            :"Обсуждайте карточки, задавайте вопросы и ищите шпионов.")+
+        '</p>'+
+        '<div id="time" class="timer">'+(timed?fmt(seconds):"∞")+'</div>'+
+        (timed?'<button id="timerButton" class="btn">▶️ Запустить таймер</button>':'<div class="status">♾️ Игра без времени</div>')+
+        '<button id="finish" class="btn yellow">🏁 Закончить раунд</button>'+
+      '</div>'+
+      '<button id="cancel" class="btn danger">Отменить игру</button>'+
     '</div>';
+
   if(timed){
-    var run=false;
-    var t=document.getElementById('time');
-    var bt=document.getElementById('tb');
-    bt.onclick=function(){
-      if(run){clearInterval(timerId);run=false;bt.textContent='▶️ Продолжить таймер';return;}
-      if(sec<=0)return;
-      run=true;bt.textContent='⏸️ Пауза';
+    var running=false;
+    var time=document.getElementById("time");
+    var button=document.getElementById("timerButton");
+
+    button.onclick=function(){
+      if(running){
+        clearInterval(timerId);
+        running=false;
+        button.textContent="▶️ Продолжить таймер";
+        return;
+      }
+
+      if(seconds<=0)return;
+
+      running=true;
+      button.textContent="⏸️ Пауза";
+
       timerId=setInterval(function(){
-        sec--;t.textContent=fmt(sec);
-        if(sec<=0){clearInterval(timerId);t.classList.add('finished');bt.disabled=true;}
+        seconds--;
+        time.textContent=fmt(seconds);
+
+        if(seconds<=0){
+          clearInterval(timerId);
+          time.classList.add("finished");
+          button.disabled=true;
+        }
       },1000);
     };
   }
-  document.getElementById('fin').onclick=spyResult;
-  document.getElementById('can').onclick=home;
+
+  document.getElementById("finish").onclick=spyResult;
+  document.getElementById("cancel").onclick=home;
 }
 
 function spyResult(){
   clearInterval(timerId);
-  var a=spyGame.type==='heroes'?spyGame.a.name:spyGame.a.name;
-  var b=spyGame.type==='heroes'?spyGame.b.name:spyGame.b.name;
-  var sp=spyGame.spies.map(function(i){return 'Игрок '+(i+1);}).join(', ');
+
+  var peacefulName=spyGame.type==="heroes"
+    ?spyGame.peacefulCard
+    :spyGame.peacefulCard.name;
+
+  var spyName=spyGame.type==="heroes"
+    ?spyGame.spyCard
+    :spyGame.spyCard.name;
+
+  var spiesText=spyGame.spies.map(function(index){
+    return "Игрок "+(index+1);
+  }).join(", ");
+
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>🕵️ Итоги раунда</h1>'+
-    '<div class="card"><div class="result"><div class="role">🛡️</div><h2>Мирные</h2><p><b>'+esc(a)+'</b></p>'+(spyGame.type==='heroes'?'<p>Локация: <b>'+esc(spyGame.l)+'</b></p>':'')+'</div></div>'+
-    '<div class="card"><div class="result"><div class="role">🕵️</div><h2>Шпионы</h2><p><b>'+esc(b)+'</b></p><p>'+esc(sp)+'</p></div></div>'+
-    '<button id="ho" class="btn">🏠 В главное меню</button>'+
+      '<h1>Итоги раунда</h1>'+
+      '<div class="card">'+
+        '<div class="result">'+
+          '<div class="role">🛡️</div>'+
+          '<h2>Мирные</h2>'+
+          '<p><b>'+esc(peacefulName)+'</b></p>'+
+          (spyGame.type==="heroes"
+            ?'<p>Локация: <b>'+esc(spyGame.location)+'</b></p>'
+            :"")+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="result">'+
+          '<div class="role">🕵️</div>'+
+          '<h2>Шпионы</h2>'+
+          '<p><b>'+esc(spyName)+'</b></p>'+
+          '<p>'+esc(spiesText)+'</p>'+
+        '</div>'+
+      '</div>'+
+      '<button id="homeButton" class="btn">🏠 В главное меню</button>'+
     '</div>';
-  document.getElementById('ho').onclick=home;
+
+  document.getElementById("homeButton").onclick=home;
 }
 
 function guessType(){
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>🔍 Угадай героя / предмет</h1>'+
-    '<div class="card">'+
-    '<h2>Игра на двоих</h2>'+
-    '<p class="muted">Каждый загадывает карточку из общего пула героев или предметов.</p>'+
-    '<div class="grid2">'+
-    '<button id="gh" class="mode"><span class="ico">🦸</span>Герои<small>Все герои Dota 2</small></button>'+
-    '<button id="gi" class="mode"><span class="ico">🗡️</span>Предметы<small>Секретный пул</small></button>'+
-    '</div>'+
-    '<button id="ba" class="btn alt">← В главное меню</button>'+
-    '</div>'+
+      '<h1>Угадай в карточках</h1>'+
+      '<div class="card">'+
+        '<h2>Игра на двоих</h2>'+
+        '<p class="muted">Каждый игрок выбирает свою секретную карточку. В партии случайно будет выбрано только 20 карточек из полного пула.</p>'+
+        '<div class="grid2">'+
+          '<button id="heroesGame" class="mode"><span class="ico">🦸</span>Герои<small>20 из полного пула</small></button>'+
+          '<button id="itemsGame" class="mode"><span class="ico">🗡️</span>Предметы<small>20 карточек</small></button>'+
+        '</div>'+
+        '<button id="back" class="btn alt">← В главное меню</button>'+
+      '</div>'+
     '</div>';
-  document.getElementById('gh').onclick=function(){newGuess('heroes');};
-  document.getElementById('gi').onclick=function(){newGuess('items');};
-  document.getElementById('ba').onclick=home;
+
+  document.getElementById("heroesGame").onclick=function(){
+    newGuess("heroes");
+  };
+
+  document.getElementById("itemsGame").onclick=function(){
+    newGuess("items");
+  };
+
+  document.getElementById("back").onclick=home;
 }
 
-function newGuess(t){
-  guessGame={type:t,cards:mix(t==='heroes'?heroes:items).slice(0,20),one:null,two:null,active:1,cross:[[],[]]};
-  choose(1);
+function newGuess(type){
+  guessGame={
+    type:type,
+    cards:mix(type==="heroes"?heroes:items).slice(0,20),
+    one:null,
+    two:null,
+    active:1,
+    crossed:[[],[]]
+  };
+
+  chooseSecret(1);
 }
 
-function cards(play){
-  return guessGame.cards.map(function(c,i){
-    var cr=play&&guessGame.cross[guessGame.active-1].indexOf(i)!==-1;
-    return '<button class="gcard '+(guessGame.type==='items'?'item ':'')+(cr?'crossed':'')+'" data-c="'+i+'"><img class="pic" src="'+img(c,guessGame.type)+'" alt="" loading="lazy"><span>'+esc(c.name)+'</span></button>';
-  }).join('');
+function renderGuessCards(playMode){
+  return guessGame.cards.map(function(card,index){
+    var crossed=playMode&&guessGame.crossed[guessGame.active-1].indexOf(index)!==-1;
+
+    return (
+      '<button class="gcard '+
+      (guessGame.type==="items"?"item ":"")+
+      (crossed?"crossed":"")+
+      '" data-card="'+index+'">'+
+      '<img class="pic" src="'+img(card,guessGame.type)+'" alt="" loading="lazy">'+
+      '<span>'+esc(card.name)+'</span>'+
+      '</button>'
+    );
+  }).join("");
 }
 
-function choose(p){
+function chooseSecret(player){
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>🔍 Угадай</h1>'+
-    '<div class="card">'+
-    '<div class="player">Игрок '+p+'</div>'+
-    '<p class="muted" style="text-align:center">Выбери свою секретную карточку.</p>'+
-    '<div class="cards">'+cards(false)+'</div>'+
-    '<div class="choice-row">'+
-    '<button id="guessbtn" class="choice-btn active">Выбираю секрет</button>'+
-    '<button id="skipbtn" class="choice-btn">Пока нет</button>'+
-    '</div>'+
-    '<button id="ca" class="btn danger">Отменить игру</button>'+
-    '</div>'+
+      '<h1>Угадай в карточках</h1>'+
+      '<div class="card">'+
+        '<div class="player">Игрок '+player+'</div>'+
+        '<p class="muted" style="text-align:center">Выбери секретную карточку.</p>'+
+        '<div class="cards">'+renderGuessCards(false)+'</div>'+
+        '<button id="cancel" class="btn danger">Отменить игру</button>'+
+      '</div>'+
     '</div>';
-  var mode='guess';
-  document.getElementById('guessbtn').onclick=function(){
-    mode='guess';
-    document.getElementById('guessbtn').classList.add('active');
-    document.getElementById('skipbtn').classList.remove('active');
-  };
-  document.getElementById('skipbtn').onclick=function(){
-    mode='skip';
-    document.getElementById('skipbtn').classList.add('active');
-    document.getElementById('guessbtn').classList.remove('active');
-  };
-  document.querySelectorAll('[data-c]').forEach(function(b){
-    b.onclick=function(){
-      var idx=Number(this.dataset.c);
-      var card=guessGame.cards[idx];
-      if(p===1) guessGame.one=card; else guessGame.two=card;
-      if(mode==='guess') confirmSecret(p);
-      else {
-        guessGame.cross[p-1].push(idx);
-        if(p===1) guessGame.active=2; else guessGame.active=1;
-        board();
+
+  document.querySelectorAll("[data-card]").forEach(function(button){
+    button.onclick=function(){
+      var index=Number(button.dataset.card);
+      var card=guessGame.cards[index];
+
+      if(player===1){
+        guessGame.one=card;
+      }else{
+        guessGame.two=card;
       }
+
+      confirmSecret(player);
     };
   });
-  document.getElementById('ca').onclick=home;
+
+  document.getElementById("cancel").onclick=home;
 }
 
-function confirmSecret(p){
-  var q=p===1?guessGame.one:guessGame.two;
+function confirmSecret(player){
+  var card=player===1?guessGame.one:guessGame.two;
+
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>🔍 Угадай</h1>'+
-    '<div class="card">'+
-    '<div class="player">Игрок '+p+'</div>'+
-    '<p class="muted" style="text-align:center">Ты загадал:</p>'+
-    '<div class="result"><img class="preview '+(guessGame.type==='items'?'item':'')+'" src="'+img(q,guessGame.type)+'" alt=""><h2>'+esc(q.name)+'</h2></div>'+
-    '<button id="ok" class="btn">'+(p===1?'Передать телефон игроку 2':'🚀 Начать игру')+'</button>'+
-    '<button id="ch" class="btn alt">← Выбрать другую</button>'+
-    '</div>'+
+      '<h1>Угадай в карточках</h1>'+
+      '<div class="card">'+
+        '<div class="player">Игрок '+player+'</div>'+
+        '<p class="muted" style="text-align:center">Ты загадал:</p>'+
+        '<div class="result">'+
+          '<img class="preview '+(guessGame.type==="items"?"item":"")+'" src="'+img(card,guessGame.type)+'" alt="">'+
+          '<h2>'+esc(card.name)+'</h2>'+
+        '</div>'+
+        '<button id="continue" class="btn">'+
+          (player===1?"Передать телефон игроку 2":"🚀 Начать игру")+
+        '</button>'+
+        '<button id="change" class="btn alt">← Выбрать другую</button>'+
+      '</div>'+
     '</div>';
-  document.getElementById('ok').onclick=function(){
-    if(p===1){
+
+  document.getElementById("continue").onclick=function(){
+    if(player===1){
       app.innerHTML=
         '<div class="wrap">'+
-        '<h1>🔍 Угадай</h1>'+
-        '<div class="card"><div class="player">Передай телефон</div><button id="go" class="btn">Игрок 2: выбрать карточку</button></div>'+
+          '<h1>Угадай в карточках</h1>'+
+          '<div class="card">'+
+            '<div class="player">Передай телефон</div>'+
+            '<button id="go" class="btn">Игрок 2: выбрать карточку</button>'+
+          '</div>'+
         '</div>';
-      document.getElementById('go').onclick=function(){choose(2);};
+
+      document.getElementById("go").onclick=function(){
+        chooseSecret(2);
+      };
     }else{
       guessGame.active=1;
-      board();
+      guessBoard();
     }
   };
-  document.getElementById('ch').onclick=function(){choose(p);};
-}
 
-function board(){
-  var p=guessGame.active;
-  app.innerHTML=
-    '<div class="wrap">'+
-    '<h1>🔍 Угадай</h1>'+
-    '<div class="status">Сейчас ходит <b>Игрок '+p+'</b>.<br>Нажми карточку, чтобы зачеркнуть её.</div>'+
-    '<div class="card">'+
-    '<div class="cards">'+cards(true)+'</div>'+
-    '<button id="pick" class="btn green">✅ Я угадал карточку соперника</button>'+
-    '<button id="sw" class="btn blue">🔄 Передать ход игроку '+(p===1?'2':'1')+'</button>'+
-    '<button id="fi" class="btn yellow">🏁 Закончить без победителя</button>'+
-    '<button id="ca" class="btn danger">Отменить игру</button>'+
-    '</div>'+
-    '</div>';
-  document.querySelectorAll('[data-c]').forEach(function(b){
-    b.onclick=function(){toggle(Number(this.dataset.c));};
-  });
-  document.getElementById('pick').onclick=function(){
-    var idx=prompt('Введи номер карточки от 1 до 20');
-    if(!idx)return;
-    idx=Number(idx)-1;
-    if(idx<0||idx>=guessGame.cards.length)return;
-    guessGame.cross[guessGame.active-1].push(idx);
-    var enemy=guessGame.active===1?guessGame.two:guessGame.one;
-    if(guessGame.cards[idx].slug===enemy.slug) guessResult(guessGame.active);
-    else board();
+  document.getElementById("change").onclick=function(){
+    chooseSecret(player);
   };
-  document.getElementById('sw').onclick=function(){guessGame.active=p===1?2:1;board();};
-  document.getElementById('fi').onclick=function(){guessResult(0);};
-  document.getElementById('ca').onclick=home;
 }
 
-function toggle(i){
-  var a=guessGame.cross[guessGame.active-1];
-  var z=a.indexOf(i);
-  if(z!==-1){a.splice(z,1);board();return;}
-  a.push(i);
-  var enemy=guessGame.active===1?guessGame.two:guessGame.one;
-  if(guessGame.cards[i].slug===enemy.slug){
-    guessResult(guessGame.active);
-  }else{
-    board();
-  }
-}
+function guessBoard(){
+  var player=guessGame.active;
 
-function guessResult(w){
-  var txt=w===0?'🏁 Игра закончена':'🏆 Победил игрок '+w+'!';
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>🔍 Итоги игры</h1>'+
-    '<div class="card">'+
-    '<div class="result"><div class="role">'+(w?'🏆':'🤝')+'</div><h2>'+txt+'</h2><p class="muted">'+(w?'Игрок зачеркнул секретную карточку соперника.':'Никто не зачеркнул секретную карточку.')+'</p></div>'+
-    '</div>'+
-    '<div class="card"><h2>Игрок 1 загадал</h2><div class="result"><img class="preview '+(guessGame.type==='items'?'item':'')+'" src="'+img(guessGame.one,guessGame.type)+'" alt=""><h2>'+esc(guessGame.one.name)+'</h2></div></div>'+
-    '<div class="card"><h2>Игрок 2 загадал</h2><div class="result"><img class="preview '+(guessGame.type==='items'?'item':'')+'" src="'+img(guessGame.two,guessGame.type)+'" alt=""><h2>'+esc(guessGame.two.name)+'</h2></div></div>'+
-    '<button id="ng" class="btn">🔄 Новая партия</button>'+
-    '<button id="ho" class="btn alt">🏠 В главное меню</button>'+
+      '<h1>Угадай в карточках</h1>'+
+      '<div class="status">Сейчас ходит <b>Игрок '+player+'</b>. Нажимай карточки, чтобы зачеркнуть неподходящие варианты.</div>'+
+      '<div class="card">'+
+        '<div class="cards">'+renderGuessCards(true)+'</div>'+
+        '<button id="guess" class="btn green">✅ Я угадал карточку соперника</button>'+
+        '<button id="switch" class="btn blue">🔄 Передать ход игроку '+(player===1?"2":"1")+'</button>'+
+        '<button id="finish" class="btn yellow">🏁 Закончить без победителя</button>'+
+        '<button id="cancel" class="btn danger">Отменить игру</button>'+
+      '</div>'+
     '</div>';
-  document.getElementById('ng').onclick=function(){newGuess(guessGame.type);};
-  document.getElementById('ho').onclick=home;
+
+  document.querySelectorAll("[data-card]").forEach(function(button){
+    button.onclick=function(){
+      toggleGuessCard(Number(button.dataset.card));
+    };
+  });
+
+  document.getElementById("guess").onclick=function(){
+    var answer=prompt("Введи номер карточки от 1 до 20.");
+
+    if(!answer)return;
+
+    var index=Number(answer)-1;
+
+    if(index<0||index>=guessGame.cards.length){
+      alert("Нужно ввести число от 1 до 20.");
+      return;
+    }
+
+    var enemy=guessGame.active===1?guessGame.two:guessGame.one;
+
+    if(guessGame.cards[index].slug===enemy.slug){
+      guessResult(guessGame.active);
+    }else{
+      alert("Неверно. Продолжайте игру.");
+    }
+  };
+
+  document.getElementById("switch").onclick=function(){
+    guessGame.active=player===1?2:1;
+    guessBoard();
+  };
+
+  document.getElementById("finish").onclick=function(){
+    guessResult(0);
+  };
+
+  document.getElementById("cancel").onclick=home;
+}
+
+function toggleGuessCard(index){
+  var list=guessGame.crossed[guessGame.active-1];
+  var exists=list.indexOf(index);
+
+  if(exists!==-1){
+    list.splice(exists,1);
+  }else{
+    list.push(index);
+  }
+
+  guessBoard();
+}
+
+function guessResult(winner){
+  var title=winner===0
+    ?"🏁 Игра закончена"
+    :"🏆 Победил игрок "+winner+"!";
+
+  app.innerHTML=
+    '<div class="wrap">'+
+      '<h1>Итоги игры</h1>'+
+      '<div class="card">'+
+        '<div class="result">'+
+          '<div class="role">'+(winner===0?"🤝":"🏆")+'</div>'+
+          '<h2>'+title+'</h2>'+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<h2>Игрок 1 загадал</h2>'+
+        '<div class="result">'+
+          '<img class="preview '+(guessGame.type==="items"?"item":"")+'" src="'+img(guessGame.one,guessGame.type)+'" alt="">'+
+          '<h2>'+esc(guessGame.one.name)+'</h2>'+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<h2>Игрок 2 загадал</h2>'+
+        '<div class="result">'+
+          '<img class="preview '+(guessGame.type==="items"?"item":"")+'" src="'+img(guessGame.two,guessGame.type)+'" alt="">'+
+          '<h2>'+esc(guessGame.two.name)+'</h2>'+
+        '</div>'+
+      '</div>'+
+      '<button id="newGame" class="btn">🔄 Новая партия</button>'+
+      '<button id="homeButton" class="btn alt">🏠 В главное меню</button>'+
+    '</div>';
+
+  document.getElementById("newGame").onclick=function(){
+    newGuess(guessGame.type);
+  };
+
+  document.getElementById("homeButton").onclick=home;
 }
 
 function randomMenu(){
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>🎲 Случайный режим</h1>'+
-    '<div class="card">'+
-    '<h2>Выбери вариант</h2>'+
-    '<div class="grid2">'+
-    '<button id="r1" class="mode"><span class="ico">🦸</span>Случайный герой<small>Один герой</small></button>'+
-    '<button id="r2" class="mode"><span class="ico">🗡️</span>Случайный предмет<small>Один предмет</small></button>'+
-    '<button id="r3" class="mode"><span class="ico">✨</span>Герой + сборка<small>3–5 предметов</small></button>'+
-    '<button id="rb" class="mode"><span class="ico">⬅️</span>Назад<small>В главное меню</small></button>'+
-    '</div>'+
-    '</div>'+
+      '<h1>Случайный режим</h1>'+
+      '<div class="card">'+
+        '<h2>Выбери вариант</h2>'+
+        '<div class="grid2">'+
+          '<button id="hero" class="mode"><span class="ico">🦸</span>Случайный герой<small>Один герой</small></button>'+
+          '<button id="item" class="mode"><span class="ico">🗡️</span>Случайный предмет<small>Один предмет</small></button>'+
+          '<button id="build" class="mode"><span class="ico">✨</span>Герой + сборка<small>От 3 до 5 предметов</small></button>'+
+          '<button id="back" class="mode"><span class="ico">⬅️</span>Назад<small>В главное меню</small></button>'+
+        '</div>'+
+      '</div>'+
     '</div>';
-  document.getElementById('r1').onclick=function(){randomShow('hero');};
-  document.getElementById('r2').onclick=function(){randomShow('item');};
-  document.getElementById('r3').onclick=function(){randomShow('build');};
-  document.getElementById('rb').onclick=home;
+
+  document.getElementById("hero").onclick=function(){
+    randomShow("hero");
+  };
+
+  document.getElementById("item").onclick=function(){
+    randomShow("item");
+  };
+
+  document.getElementById("build").onclick=function(){
+    randomShow("build");
+  };
+
+  document.getElementById("back").onclick=home;
 }
 
 function randomShow(mode){
-  var h=rnd(heroes);
-  var it=rnd(items);
-  var body='';
-  if(mode==='hero'){
-    body='<div class="result"><img class="preview" src="'+img(h,'heroes')+'" alt=""><h2>'+esc(h.name)+'</h2><div class="status">'+esc(h.attr)+'</div></div>';
-  }else if(mode==='item'){
-    body='<div class="result"><img class="preview item" src="'+img(it,'items')+'" alt=""><h2>'+esc(it.name)+'</h2></div>';
-  }else{
-    var pool=mix(items).slice(0,5);
-    var cnt=3+Math.floor(Math.random()*3);
-    var build=pool.slice(0,cnt);
-    body='<div class="result"><img class="preview" src="'+img(h,'heroes')+'" alt=""><h2>'+esc(h.name)+'</h2><div class="status">'+esc(h.attr)+' • Сборка</div>'+
-      build.map(function(x){return '<img class="preview item" style="width:100%;height:74px;margin:10px auto 0" src="'+img(x,'items')+'" alt=""><h3 style="margin:6px 0 0">'+esc(x.name)+'</h3>';}).join('')+
-    '</div>';
+  var hero=rnd(heroes);
+  var item=rnd(items);
+  var content="";
+
+  if(mode==="hero"){
+    content=
+      '<div class="result">'+
+        '<img class="preview" src="'+img(hero,"heroes")+'" alt="">'+
+        '<h2>'+esc(hero.name)+'</h2>'+
+        '<div class="status">Главный атрибут: <b>'+esc(hero.attr)+'</b></div>'+
+      '</div>';
   }
+
+  if(mode==="item"){
+    content=
+      '<div class="result">'+
+        '<img class="preview item" src="'+img(item,"items")+'" alt="">'+
+        '<h2>'+esc(item.name)+'</h2>'+
+      '</div>';
+  }
+
+  if(mode==="build"){
+    var count=3+Math.floor(Math.random()*3);
+    var build=mix(items).slice(0,count);
+
+    content=
+      '<div class="result">'+
+        '<img class="preview" src="'+img(hero,"heroes")+'" alt="">'+
+        '<h2>'+esc(hero.name)+'</h2>'+
+        '<div class="status">Главный атрибут: <b>'+esc(hero.attr)+'</b></div>'+
+        '<h3 style="margin-top:16px">Случайная сборка</h3>'+
+        '<div class="build-items">'+
+          build.map(function(buildItem){
+            return (
+              '<div class="build-item">'+
+                '<img src="'+img(buildItem,"items")+'" alt="">'+
+                esc(buildItem.name)+
+              '</div>'
+            );
+          }).join("")+
+        '</div>'+
+      '</div>';
+  }
+
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>🎲 Случайный режим</h1>'+
-    '<div class="card">'+
-    body+
-    '<button id="again" class="btn green">🔄 Ещё раз</button>'+
-    '<button id="back" class="btn alt">← Назад</button>'+
-    '</div>'+
+      '<h1>Случайный режим</h1>'+
+      '<div class="card">'+
+        content+
+        '<button id="again" class="btn green">🔄 Ещё раз</button>'+
+        '<button id="back" class="btn alt">← Назад</button>'+
+      '</div>'+
     '</div>';
-  document.getElementById('again').onclick=function(){randomShow(mode);};
-  document.getElementById('back').onclick=randomMenu;
+
+  document.getElementById("again").onclick=function(){
+    randomShow(mode);
+  };
+
+  document.getElementById("back").onclick=randomMenu;
 }
 
 function strengthQuiz(){
-  var list=mix(heroes).slice(0,4);
-  var correct=rnd(list);
-  if(!correct) correct=rnd(heroes);
-  var q='Какой главный атрибут у '+correct.name+'?';
-  var options=mix(['Strength','Agility','Intelligence','Universal']);
+  var hero=rnd(heroes);
+  var options=mix(["Сила","Ловкость","Интеллект","Универсальный"]);
+  var locked=false;
+
   app.innerHTML=
     '<div class="wrap">'+
-    '<h1>⭐ Угадай по силе</h1>'+
-    '<div class="card">'+
-    '<div class="status">'+esc(q)+'</div>'+
-    '<div class="grid2">'+
-    options.map(function(o){
-      return '<button class="mode" data-opt="'+esc(o)+'"><span class="ico">⭐</span>'+esc(o)+'</button>';
-    }).join('')+
-    '<button id="next" class="btn green" style="grid-column:1/-1">Следующий вопрос</button>'+
-    '<button id="back" class="btn alt" style="grid-column:1/-1">В меню</button>'+
-    '</div>'+
-    '</div>'+
+      '<h1>Угадай по силе</h1>'+
+      '<div class="card">'+
+        '<div class="result">'+
+          '<img class="preview" src="'+img(hero,"heroes")+'" alt="">'+
+          '<h2>'+esc(hero.name)+'</h2>'+
+          '<p class="muted">Какой у этого героя главный атрибут?</p>'+
+        '</div>'+
+        '<div class="grid2">'+
+          options.map(function(option){
+            return '<button class="quiz-answer" data-answer="'+esc(option)+'">'+esc(option)+'</button>';
+          }).join("")+
+        '</div>'+
+        '<button id="next" class="btn green">Следующий вопрос</button>'+
+        '<button id="back" class="btn alt">← В главное меню</button>'+
+      '</div>'+
     '</div>';
-  document.querySelectorAll('[data-opt]').forEach(function(b){
-    b.onclick=function(){
-      var o=this.dataset.opt;
-      var ok=o===correct.attr;
-      this.classList.add(ok?'selected':'danger');
-      this.textContent=ok?'✅ Верно':'❌ Неверно';
+
+  document.querySelectorAll("[data-answer]").forEach(function(button){
+    button.onclick=function(){
+      if(locked)return;
+
+      locked=true;
+
+      var answer=button.dataset.answer;
+
+      document.querySelectorAll("[data-answer]").forEach(function(otherButton){
+        if(otherButton.dataset.answer===hero.attr){
+          otherButton.classList.add("good");
+          otherButton.textContent="✅ "+hero.attr;
+        }
+      });
+
+      if(answer!==hero.attr){
+        button.classList.add("bad");
+        button.textContent="❌ "+answer;
+      }
+
+      buzz();
     };
   });
-  document.getElementById('next').onclick=strengthQuiz;
-  document.getElementById('back').onclick=home;
+
+  document.getElementById("next").onclick=strengthQuiz;
+  document.getElementById("back").onclick=home;
 }
 
-function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
 home();
 </script>
 </body>
 </html>
-
 
 
 
