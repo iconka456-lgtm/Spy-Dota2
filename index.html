@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#101114">
 <title>Dota2SpyForSolin</title>
-
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
 <style>
 :root{
   --bg:#0b0d12;
@@ -23,632 +21,165 @@
   --red:#ff7b7b;
   --blue:#7ec8ff;
 }
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html,body{
-  min-height:100%;
-}
-
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
 body{
-  margin:0;
-  min-height:100vh;
-  color:var(--text);
+  margin:0;min-height:100vh;color:var(--text);
   background:
     radial-gradient(circle at 15% 5%,rgba(111,82,34,.26),transparent 34%),
     radial-gradient(circle at 85% 15%,rgba(53,75,135,.22),transparent 32%),
     linear-gradient(180deg,var(--bg2),var(--bg));
   font-family:Arial,Helvetica,sans-serif;
 }
-
-button,input,select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-button:active{
-  transform:scale(.98);
-}
-
-.wrap{
-  width:min(650px,100%);
-  margin:auto;
-  padding:18px 14px calc(34px + env(safe-area-inset-bottom));
-}
-
-h1{
-  margin:8px 0 18px;
-  color:#fff7df;
-  font-size:28px;
-  letter-spacing:.2px;
-}
-
-h2{
-  margin:0 0 10px;
-  font-size:21px;
-}
-
-h3{
-  margin:0 0 8px;
-  font-size:17px;
-}
-
-p{
-  line-height:1.45;
-}
-
-.hidden{
-  display:none!important;
-}
-
-.muted{
-  color:var(--muted);
-}
-
-.small{
-  font-size:13px;
-}
-
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:active{transform:scale(.98)}
+.wrap{width:min(650px,100%);margin:auto;padding:18px 14px calc(34px + env(safe-area-inset-bottom))}
+h1{margin:8px 0 18px;color:#fff7df;font-size:28px;letter-spacing:.2px}
+h2{margin:0 0 10px;font-size:21px}
+h3{margin:0 0 8px;font-size:17px}
+p{line-height:1.45}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.small{font-size:13px}
 .home-title{
-  margin:17px 0 5px;
-  color:#fff4d2;
-  font-size:31px;
-  font-weight:900;
-  letter-spacing:.5px;
-  text-align:center;
-  text-shadow:0 2px 18px rgba(255,209,102,.25);
+  margin:17px 0 5px;color:#fff4d2;font-size:31px;font-weight:900;letter-spacing:.5px;text-align:center;
+  text-shadow:0 2px 18px rgba(255,209,102,.25)
 }
-
-.home-subtitle{
-  margin:0 0 22px;
-  color:#aeb4c0;
-  font-size:13px;
-  text-align:center;
-}
-
+.home-subtitle{margin:0 0 22px;color:#aeb4c0;font-size:13px;text-align:center}
 .card{
-  position:relative;
-  margin:12px 0;
-  padding:17px;
-  overflow:hidden;
+  position:relative;margin:12px 0;padding:17px;overflow:hidden;
   background:linear-gradient(145deg,rgba(35,40,53,.97),rgba(19,23,32,.97));
-  border:1px solid var(--line);
-  border-radius:20px;
-  box-shadow:0 12px 30px rgba(0,0,0,.22);
+  border:1px solid var(--line);border-radius:20px;box-shadow:0 12px 30px rgba(0,0,0,.22)
 }
-
 .card:before{
-  position:absolute;
-  top:0;
-  right:12%;
-  left:12%;
-  height:1px;
-  content:"";
-  background:linear-gradient(90deg,transparent,rgba(255,209,102,.5),transparent);
+  position:absolute;top:0;right:12%;left:12%;height:1px;content:"";
+  background:linear-gradient(90deg,transparent,rgba(255,209,102,.5),transparent)
 }
-
 .btn{
-  width:100%;
-  min-height:50px;
-  margin-top:10px;
-  padding:14px 15px;
-  color:#17120a;
-  background:linear-gradient(135deg,#ffe29a,#f2b94f);
-  border:0;
-  border-radius:14px;
-  box-shadow:0 6px 16px rgba(232,173,57,.16);
-  font-weight:800;
+  width:100%;min-height:50px;margin-top:10px;padding:14px 15px;color:#17120a;
+  background:linear-gradient(135deg,#ffe29a,#f2b94f);border:0;border-radius:14px;
+  box-shadow:0 6px 16px rgba(232,173,57,.16);font-weight:800
 }
-
-.btn.alt{
-  color:#edf0f7;
-  background:#313846;
-  box-shadow:none;
-}
-
-.btn.danger{
-  color:#fff;
-  background:linear-gradient(135deg,#b23d3d,#7a2222);
-  box-shadow:none;
-}
-
-.btn.green{
-  color:#061b0e;
-  background:linear-gradient(135deg,#a2f7bd,#54cf88);
-}
-
-.btn.blue{
-  color:#071925;
-  background:linear-gradient(135deg,#b8e7ff,#65baf4);
-}
-
-.btn.yellow{
-  color:#251a00;
-  background:linear-gradient(135deg,#ffe29a,#ffc13e);
-}
-
-.btn:disabled{
-  opacity:.45;
-  cursor:default;
-}
-
-label{
-  display:block;
-  margin:12px 0 6px;
-  color:#d7dce6;
-  font-size:14px;
-  font-weight:700;
-}
-
+.btn.alt{color:#edf0f7;background:#313846;box-shadow:none}
+.btn.danger{color:#fff;background:linear-gradient(135deg,#b23d3d,#7a2222);box-shadow:none}
+.btn.green{color:#061b0e;background:linear-gradient(135deg,#a2f7bd,#54cf88)}
+.btn.blue{color:#071925;background:linear-gradient(135deg,#b8e7ff,#65baf4)}
+.btn.yellow{color:#251a00;background:linear-gradient(135deg,#ffe29a,#ffc13e)}
+.btn:disabled{opacity:.45;cursor:default}
+label{display:block;margin:12px 0 6px;color:#d7dce6;font-size:14px;font-weight:700}
 input,select{
-  width:100%;
-  padding:13px;
-  color:#f5f7fb;
-  background:#10141d;
-  border:1px solid #49515f;
-  border-radius:12px;
-  outline:none;
+  width:100%;padding:13px;color:#f5f7fb;background:#10141d;border:1px solid #49515f;border-radius:12px;outline:none
 }
-
-input:focus,select:focus{
-  border-color:var(--gold);
-  box-shadow:0 0 0 3px rgba(255,209,102,.11);
-}
-
-.grid2{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
+input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,209,102,.11)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .mode{
-  position:relative;
-  min-height:145px;
-  padding:15px 8px;
-  overflow:hidden;
-  color:#fff;
-  background:linear-gradient(145deg,#242b39,#151a24);
-  border:1px solid rgba(255,209,102,.2);
-  border-radius:18px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
-  font-weight:800;
+  position:relative;min-height:145px;padding:15px 8px;overflow:hidden;color:#fff;
+  background:linear-gradient(145deg,#242b39,#151a24);border:1px solid rgba(255,209,102,.2);
+  border-radius:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);font-weight:800
 }
-
 .mode:after{
-  position:absolute;
-  right:-20px;
-  bottom:-25px;
-  width:70px;
-  height:70px;
-  content:"";
-  background:radial-gradient(circle,rgba(255,209,102,.12),transparent 70%);
+  position:absolute;right:-20px;bottom:-25px;width:70px;height:70px;content:"";
+  background:radial-gradient(circle,rgba(255,209,102,.12),transparent 70%)
 }
-
-.mode:hover{
-  border-color:var(--line-strong);
-}
-
-.mode .ico{
-  display:block;
-  margin-bottom:9px;
-  font-size:42px;
-}
-
-.mode small{
-  display:block;
-  margin-top:7px;
-  color:#adb6c5;
-  font-size:12px;
-  font-weight:400;
-  line-height:1.3;
-}
-
+.mode:hover{border-color:var(--line-strong)}
+.mode .ico{display:block;margin-bottom:9px;font-size:42px}
+.mode small{display:block;margin-top:7px;color:#adb6c5;font-size:12px;font-weight:400;line-height:1.3}
 .selected{
-  background:linear-gradient(145deg,#4a3b1a,#241f15)!important;
-  border-color:var(--gold)!important;
-  box-shadow:0 0 0 2px rgba(255,209,102,.1),inset 0 1px 0 rgba(255,255,255,.1)!important;
+  background:linear-gradient(145deg,#4a3b1a,#241f15)!important;border-color:var(--gold)!important;
+  box-shadow:0 0 0 2px rgba(255,209,102,.1),inset 0 1px 0 rgba(255,255,255,.1)!important
 }
-
 .box{
-  margin-top:14px;
-  padding:14px;
-  background:rgba(12,15,22,.6);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:15px;
+  margin-top:14px;padding:14px;background:rgba(12,15,22,.6);border:1px solid rgba(255,255,255,.08);border-radius:15px
 }
-
-.player{
-  margin:10px 0 14px;
-  color:var(--gold);
-  font-size:31px;
-  font-weight:900;
-  text-align:center;
-  text-shadow:0 2px 12px rgba(255,209,102,.22);
-}
-
+.player{margin:10px 0 14px;color:var(--gold);font-size:31px;font-weight:900;text-align:center;text-shadow:0 2px 12px rgba(255,209,102,.22)}
 .secret{
-  width:100%;
-  min-height:155px;
-  margin-top:12px;
-  padding:18px;
-  color:#fff;
-  background:linear-gradient(145deg,#353b48,#202530);
-  border:2px solid #5a6372;
-  border-radius:19px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
-  font-size:19px;
-  font-weight:800;
-  line-height:1.4;
-  touch-action:none;
-  user-select:none;
+  width:100%;min-height:155px;margin-top:12px;padding:18px;color:#fff;background:linear-gradient(145deg,#353b48,#202530);
+  border:2px solid #5a6372;border-radius:19px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);font-size:19px;font-weight:800;line-height:1.4;
+  touch-action:none;user-select:none
 }
-
-.peace{
-  color:#082513;
-  background:linear-gradient(145deg,#b3f9cb,#63d990);
-  border-color:#d0ffdf;
-}
-
-.spy{
-  color:#2b1e00;
-  background:linear-gradient(145deg,#ffe8a8,#f3ba43);
-  border-color:#fff0bd;
-}
-
-.timer{
-  margin:18px 0;
-  color:var(--green);
-  font-size:56px;
-  font-weight:900;
-  letter-spacing:2px;
-  text-align:center;
-  text-shadow:0 0 20px rgba(118,229,162,.18);
-}
-
-.timer.finished{
-  color:var(--red);
-  text-shadow:0 0 20px rgba(255,123,123,.24);
-}
-
+.peace{color:#082513;background:linear-gradient(145deg,#b3f9cb,#63d990);border-color:#d0ffdf}
+.spy{color:#2b1e00;background:linear-gradient(145deg,#ffe8a8,#f3ba43);border-color:#fff0bd}
+.timer{margin:18px 0;color:var(--green);font-size:56px;font-weight:900;letter-spacing:2px;text-align:center;text-shadow:0 0 20px rgba(118,229,162,.18)}
+.timer.finished{color:var(--red);text-shadow:0 0 20px rgba(255,123,123,.24)}
 .status{
-  margin:12px 0;
-  padding:12px;
-  color:#d8ecff;
-  background:linear-gradient(145deg,#112a3d,#10202e);
-  border:1px solid #28516b;
-  border-radius:13px;
-  line-height:1.4;
-  text-align:center;
+  margin:12px 0;padding:12px;color:#d8ecff;background:linear-gradient(145deg,#112a3d,#10202e);
+  border:1px solid #28516b;border-radius:13px;line-height:1.4;text-align:center
 }
-
-.result{
-  padding:16px;
-  text-align:center;
-  background:rgba(11,14,20,.68);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:15px;
-}
-
-.role{
-  margin-bottom:7px;
-  font-size:56px;
-  text-align:center;
-}
-
+.result{padding:16px;text-align:center;background:rgba(11,14,20,.68);border:1px solid rgba(255,255,255,.07);border-radius:15px}
+.role{margin-bottom:7px;font-size:56px;text-align:center}
 .preview{
-  display:block;
-  width:154px;
-  height:105px;
-  margin:10px auto 12px;
-  object-fit:cover;
-  background:#111;
-  border:1px solid rgba(255,209,102,.52);
-  border-radius:13px;
-  box-shadow:0 6px 18px rgba(0,0,0,.45);
+  display:block;width:154px;height:105px;margin:10px auto 12px;object-fit:cover;background:#111;border:1px solid rgba(255,209,102,.52);
+  border-radius:13px;box-shadow:0 6px 18px rgba(0,0,0,.45)
 }
-
-.preview.item{
-  padding:11px;
-  object-fit:contain;
-  background:radial-gradient(circle,#373542,#101218);
-}
-
-.cards{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:6px;
-  margin-top:8px;
-}
-
+.preview.item{padding:11px;object-fit:contain;background:radial-gradient(circle,#373542,#101218)}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}
 .gcard{
-  position:relative;
-  min-height:91px;
-  padding:3px;
-  overflow:hidden;
-  color:#fff;
-  background:linear-gradient(145deg,#303745,#11151d);
-  border:1px solid rgba(255,209,102,.42);
-  border-radius:10px;
-  box-shadow:0 2px 7px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);
-  font-size:9px;
-  font-weight:800;
-  line-height:1.05;
-  text-align:center;
+  position:relative;min-height:91px;padding:3px;overflow:hidden;color:#fff;background:linear-gradient(145deg,#303745,#11151d);
+  border:1px solid rgba(255,209,102,.42);border-radius:10px;box-shadow:0 2px 7px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);
+  font-size:9px;font-weight:800;line-height:1.05;text-align:center
 }
-
-.gcard:active{
-  border-color:#fff0a3;
-  filter:brightness(1.18);
-  transform:scale(.94);
-}
-
-.pic{
-  display:block;
-  width:100%;
-  height:56px;
-  margin:auto;
-  object-fit:cover;
-  background:#252525;
-  border:1px solid rgba(255,209,102,.24);
-  border-radius:7px;
-}
-
-.item .pic{
-  padding:4px;
-  object-fit:contain;
-  background:radial-gradient(circle,#34323a,#101010);
-}
-
+.gcard:active{border-color:#fff0a3;filter:brightness(1.18);transform:scale(.94)}
+.pic{display:block;width:100%;height:56px;margin:auto;object-fit:cover;background:#252525;border:1px solid rgba(255,209,102,.24);border-radius:7px}
+.item .pic{padding:4px;object-fit:contain;background:radial-gradient(circle,#34323a,#101010)}
 .gcard span{
-  position:absolute;
-  right:2px;
-  bottom:2px;
-  left:2px;
-  display:flex;
-  min-height:23px;
-  align-items:center;
-  justify-content:center;
-  padding:2px;
-  overflow:hidden;
-  background:linear-gradient(transparent,rgba(0,0,0,.95) 40%);
-  border-radius:0 0 7px 7px;
-  text-shadow:0 1px 3px #000;
+  position:absolute;right:2px;bottom:2px;left:2px;display:flex;min-height:23px;align-items:center;justify-content:center;padding:2px;overflow:hidden;
+  background:linear-gradient(transparent,rgba(0,0,0,.95) 40%);border-radius:0 0 7px 7px;text-shadow:0 1px 3px #000
 }
-
-.gcard.crossed{
-  opacity:.35;
-  border-color:#c54c4c;
-  filter:grayscale(.8);
+.gcard.crossed{opacity:.35;border-color:#c54c4c;filter:grayscale(.8)}
+.gcard.crossed:before,.gcard.crossed:after{
+  position:absolute;z-index:3;top:50%;left:-15%;width:130%;height:4px;content:"";background:#ff6262;border:1px solid rgba(255,255,255,.45);
+  border-radius:99px;box-shadow:0 0 7px rgba(255,70,70,.9)
 }
-
-.gcard.crossed:before,
-.gcard.crossed:after{
-  position:absolute;
-  z-index:3;
-  top:50%;
-  left:-15%;
-  width:130%;
-  height:4px;
-  content:"";
-  background:#ff6262;
-  border:1px solid rgba(255,255,255,.45);
-  border-radius:99px;
-  box-shadow:0 0 7px rgba(255,70,70,.9);
-}
-
-.gcard.crossed:before{
-  transform:rotate(35deg);
-}
-
-.gcard.crossed:after{
-  transform:rotate(-35deg);
-}
-
-.build-items{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-top:14px;
-}
-
+.gcard.crossed:before{transform:rotate(35deg)}
+.gcard.crossed:after{transform:rotate(-35deg)}
+.build-items{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
 .build-item{
-  min-width:0;
-  padding:7px 4px;
-  color:#eef0f6;
-  background:#10141c;
-  border:1px solid rgba(255,209,102,.24);
-  border-radius:11px;
-  font-size:10px;
-  font-weight:700;
-  line-height:1.15;
-  text-align:center;
+  min-width:0;padding:7px 4px;color:#eef0f6;background:#10141c;border:1px solid rgba(255,209,102,.24);border-radius:11px;
+  font-size:10px;font-weight:700;line-height:1.15;text-align:center
 }
-
-.build-item img{
-  display:block;
-  width:52px;
-  height:52px;
-  margin:0 auto 5px;
-  padding:3px;
-  object-fit:contain;
-  background:radial-gradient(circle,#34323a,#101010);
-  border-radius:7px;
-}
-
-.quiz-top{
-  padding:12px;
-  text-align:center;
-  background:rgba(10,13,19,.55);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:14px;
-}
-
-.quiz-progress{
-  margin:12px 0 7px;
-  color:var(--gold);
-  font-size:14px;
-  font-weight:800;
-  text-align:center;
-}
-
-.quiz-score{
-  margin-bottom:10px;
-  color:#c9d2e1;
-  font-size:13px;
-  text-align:center;
-}
-
+.build-item img{display:block;width:52px;height:52px;margin:0 auto 5px;padding:3px;object-fit:contain;background:radial-gradient(circle,#34323a,#101010);border-radius:7px}
+.quiz-top{padding:12px;text-align:center;background:rgba(10,13,19,.55);border:1px solid rgba(255,255,255,.07);border-radius:14px}
+.quiz-progress{margin:12px 0 7px;color:var(--gold);font-size:14px;font-weight:800;text-align:center}
+.quiz-score{margin-bottom:10px;color:#c9d2e1;font-size:13px;text-align:center}
 .quiz-answer{
-  min-height:104px;
-  padding:13px 8px;
-  color:#fff;
-  background:linear-gradient(145deg,#242b39,#151a24);
-  border:2px solid #454f60;
-  border-radius:16px;
-  font-weight:800;
+  min-height:104px;padding:13px 8px;color:#fff;background:linear-gradient(145deg,#242b39,#151a24);border:2px solid #454f60;border-radius:16px;font-weight:800
 }
-
-.quiz-answer.good{
-  color:#082513;
-  background:linear-gradient(145deg,#b3f9cb,#63d990);
-  border-color:#d0ffdf;
-}
-
-.quiz-answer.bad{
-  color:#fff;
-  background:linear-gradient(145deg,#aa3d3d,#6d2222);
-  border-color:#ff9b9b;
-}
-
-.quiz-info{
-  margin:10px 0;
-  color:#c4cbd7;
-  font-size:13px;
-  line-height:1.4;
-  text-align:center;
-}
-
+.quiz-answer.good{color:#082513;background:linear-gradient(145deg,#b3f9cb,#63d990);border-color:#d0ffdf}
+.quiz-answer.bad{color:#fff;background:linear-gradient(145deg,#aa3d3d,#6d2222);border-color:#ff9b9b}
+.quiz-info{margin:10px 0;color:#c4cbd7;font-size:13px;line-height:1.4;text-align:center}
 .rules-block{
-  margin:12px 0;
-  padding:13px;
-  background:rgba(10,13,19,.55);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
+  margin:12px 0;padding:13px;background:rgba(10,13,19,.55);border:1px solid rgba(255,255,255,.08);border-radius:14px
 }
-
-.rules-block h3{
-  color:var(--gold);
+.rules-block h3{color:var(--gold)}
+.easter-egg-btn{
+  display:inline-block;margin-top:10px;padding:2px 4px;color:rgba(255,255,255,.18);background:transparent;border:0;font-size:10px;line-height:1;
 }
-
-.easter-egg{
-  margin:24px 4px 3px;
-  color:rgba(255,209,102,.5);
-  font-size:11px;
-  font-style:italic;
-  line-height:1.4;
-  text-align:center;
+.easter-box{
+  margin-top:10px;padding:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px
 }
-
-.loading{
-  display:flex;
-  min-height:100vh;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  background:
-    radial-gradient(circle at 50% 35%,rgba(255,209,102,.18),transparent 32%),
-    linear-gradient(180deg,#151b29,#090b10);
-}
-
+.easter-line{margin:5px 0;color:#b8beca;font-size:12px;line-height:1.35}
+.easter-egg{margin:24px 4px 3px;color:rgba(255,209,102,.5);font-size:11px;font-style:italic;line-height:1.4;text-align:center}
+.loading{display:flex;min-height:100vh;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 50% 35%,rgba(255,209,102,.18),transparent 32%),linear-gradient(180deg,#151b29,#090b10)}
 .loading-box{
-  width:min(330px,100%);
-  padding:30px 22px;
-  text-align:center;
-  background:rgba(24,29,40,.94);
-  border:1px solid rgba(255,209,102,.25);
-  border-radius:22px;
-  box-shadow:0 18px 45px rgba(0,0,0,.35);
+  width:min(330px,100%);padding:30px 22px;text-align:center;background:rgba(24,29,40,.94);border:1px solid rgba(255,209,102,.25);
+  border-radius:22px;box-shadow:0 18px 45px rgba(0,0,0,.35)
 }
-
-.loading-logo{
-  margin-bottom:12px;
-  color:#fff3d2;
-  font-size:28px;
-  font-weight:900;
-  text-shadow:0 0 18px rgba(255,209,102,.25);
-}
-
-.loading-text{
-  margin-bottom:20px;
-  color:#aeb4c0;
-  font-size:14px;
-}
-
-.spinner{
-  width:36px;
-  height:36px;
-  margin:auto;
-  border:4px solid rgba(255,209,102,.2);
-  border-top-color:var(--gold);
-  border-radius:50%;
-  animation:spin .8s linear infinite;
-}
-
-.err{
-  margin:20px;
-  padding:16px;
-  color:#ffe4e4;
-  background:#3b1717;
-  border:1px solid #f07a7a;
-  border-radius:15px;
-}
-
-.tiny-note{
-  margin-top:8px;
-  color:#788190;
-  font-size:10px;
-  text-align:center;
-}
-
-@keyframes spin{
-  to{
-    transform:rotate(360deg);
-  }
-}
-
+.loading-logo{margin-bottom:12px;color:#fff3d2;font-size:28px;font-weight:900;text-shadow:0 0 18px rgba(255,209,102,.25)}
+.loading-text{margin-bottom:20px;color:#aeb4c0;font-size:14px}
+.spinner{width:36px;height:36px;margin:auto;border:4px solid rgba(255,209,102,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+.err{margin:20px;padding:16px;color:#ffe4e4;background:#3b1717;border:1px solid #f07a7a;border-radius:15px}
+.tiny-note{margin-top:8px;color:#788190;font-size:10px;text-align:center}
+@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:360px){
-  .cards{
-    gap:4px;
-  }
-
-  .gcard{
-    min-height:78px;
-    padding:2px;
-    font-size:8px;
-  }
-
-  .pic{
-    height:48px;
-  }
-
-  .gcard span{
-    min-height:19px;
-    padding:1px;
-  }
-
-  .mode{
-    min-height:130px;
-  }
+  .cards{gap:4px}
+  .gcard{min-height:78px;padding:2px;font-size:8px}
+  .pic{height:48px}
+  .gcard span{min-height:19px;padding:1px}
+  .mode{min-height:130px}
 }
 </style>
 </head>
-
 <body>
 <div id="app">
   <div class="loading">
@@ -659,23 +190,12 @@ input:focus,select:focus{
     </div>
   </div>
 </div>
-
 <script>
 "use strict";
-
 var app=document.getElementById("app");
-
 window.addEventListener("error",function(event){
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<div class="err">'+
-        '<h2>Ошибка запуска</h2>'+
-        '<p>'+esc(event.message||"Неизвестная ошибка")+'</p>'+
-        '<p class="small">Строка: '+esc(event.lineno||"?")+'</p>'+
-      '</div>'+
-    '</div>';
+  app.innerHTML='<div class="wrap"><div class="err"><h2>Ошибка запуска</h2><p>'+esc(event.message||"Неизвестная ошибка")+'</p><p class="small">Строка: '+esc(event.lineno||"?")+'</p></div></div>';
 });
-
 var heroes=[
 {name:"Abaddon",slug:"abaddon",attr:"Универсальный",style:"Выносливый ближний боец, способен долго жить в драке."},
 {name:"Alchemist",slug:"alchemist",attr:"Сила",style:"Фармит золото быстрее многих и становится опаснее с предметами."},
@@ -805,1329 +325,365 @@ var heroes=[
 {name:"Wraith King",slug:"skeleton_king",attr:"Сила",style:"Король скелетов, может воскреснуть после смерти."},
 {name:"Zeus",slug:"zuus",attr:"Интеллект",style:"Маг молний, наносит урон по всей карте."}
 ];
-
 var items=[
-{name:"Aghanim Scepter",slug:"ultimate_scepter"},
-{name:"Arcane Boots",slug:"arcane_boots"},
-{name:"Armlet",slug:"armlet"},
-{name:"Assault Cuirass",slug:"assault"},
-{name:"Battle Fury",slug:"bfury"},
-{name:"Black King Bar",slug:"black_king_bar"},
-{name:"Blink Dagger",slug:"blink"},
-{name:"Bloodstone",slug:"bloodstone"},
-{name:"Bloodthorn",slug:"bloodthorn"},
-{name:"Boots of Travel",slug:"travel_boots"},
-{name:"Bottle",slug:"bottle"},
-{name:"Butterfly",slug:"butterfly"},
-{name:"Crimson Guard",slug:"crimson_guard"},
-{name:"Daedalus",slug:"greater_crit"},
-{name:"Dagon",slug:"dagon"},
-{name:"Desolator",slug:"desolator"},
-{name:"Diffusal Blade",slug:"diffusal_blade"},
-{name:"Dragon Lance",slug:"dragon_lance"},
-{name:"Ethereal Blade",slug:"ethereal_blade"},
-{name:"Eye of Skadi",slug:"skadi"},
-{name:"Force Staff",slug:"force_staff"},
-{name:"Gleipnir",slug:"gungir"},
-{name:"Guardian Greaves",slug:"guardian_greaves"},
-{name:"Hand of Midas",slug:"hand_of_midas"},
-{name:"Heart of Tarrasque",slug:"heart"},
-{name:"Heaven's Halberd",slug:"heavens_halberd"},
-{name:"Hurricane Pike",slug:"hurricane_pike"},
-{name:"Kaya",slug:"kaya"},
-{name:"Linken's Sphere",slug:"sphere"},
-{name:"Lotus Orb",slug:"lotus_orb"},
-{name:"Manta Style",slug:"manta"},
-{name:"Mask of Madness",slug:"mask_of_madness"},
-{name:"Mjollnir",slug:"mjollnir"},
-{name:"Monkey King Bar",slug:"monkey_king_bar"},
-{name:"Moon Shard",slug:"moon_shard"},
-{name:"Nullifier",slug:"nullifier"},
-{name:"Octarine Core",slug:"octarine_core"},
-{name:"Orchid Malevolence",slug:"orchid"},
-{name:"Pipe of Insight",slug:"pipe"},
-{name:"Power Treads",slug:"power_treads"},
-{name:"Radiance",slug:"radiance"},
-{name:"Refresher Orb",slug:"refresher"},
-{name:"Rod of Atos",slug:"rod_of_atos"},
-{name:"Satanic",slug:"satanic"},
-{name:"Scythe of Vyse",slug:"sheepstick"},
-{name:"Shadow Blade",slug:"invis_sword"},
-{name:"Shiva's Guard",slug:"shivas_guard"},
-{name:"Silver Edge",slug:"silver_edge"},
-{name:"Solar Crest",slug:"solar_crest"},
-{name:"Spirit Vessel",slug:"spirit_vessel"},
-{name:"Vanguard",slug:"vanguard"},
-{name:"Veil of Discord",slug:"veil_of_discord"},
-{name:"Wind Waker",slug:"wind_waker"},
-{name:"Witch Blade",slug:"witch_blade"}
+{name:"Aghanim Scepter",slug:"ultimate_scepter"},{name:"Arcane Boots",slug:"arcane_boots"},{name:"Armlet",slug:"armlet"},
+{name:"Assault Cuirass",slug:"assault"},{name:"Battle Fury",slug:"bfury"},{name:"Black King Bar",slug:"black_king_bar"},
+{name:"Blink Dagger",slug:"blink"},{name:"Bloodstone",slug:"bloodstone"},{name:"Bloodthorn",slug:"bloodthorn"},
+{name:"Boots of Travel",slug:"travel_boots"},{name:"Bottle",slug:"bottle"},{name:"Butterfly",slug:"butterfly"},
+{name:"Crimson Guard",slug:"crimson_guard"},{name:"Daedalus",slug:"greater_crit"},{name:"Dagon",slug:"dagon"},
+{name:"Desolator",slug:"desolator"},{name:"Diffusal Blade",slug:"diffusal_blade"},{name:"Dragon Lance",slug:"dragon_lance"},
+{name:"Ethereal Blade",slug:"ethereal_blade"},{name:"Eye of Skadi",slug:"skadi"},{name:"Force Staff",slug:"force_staff"},
+{name:"Gleipnir",slug:"gungir"},{name:"Guardian Greaves",slug:"guardian_greaves"},{name:"Hand of Midas",slug:"hand_of_midas"},
+{name:"Heart of Tarrasque",slug:"heart"},{name:"Heaven's Halberd",slug:"heavens_halberd"},{name:"Hurricane Pike",slug:"hurricane_pike"},
+{name:"Kaya",slug:"kaya"},{name:"Linken's Sphere",slug:"sphere"},{name:"Lotus Orb",slug:"lotus_orb"},
+{name:"Manta Style",slug:"manta"},{name:"Mask of Madness",slug:"mask_of_madness"},{name:"Mjollnir",slug:"mjollnir"},
+{name:"Monkey King Bar",slug:"monkey_king_bar"},{name:"Moon Shard",slug:"moon_shard"},{name:"Nullifier",slug:"nullifier"},
+{name:"Octarine Core",slug:"octarine_core"},{name:"Orchid Malevolence",slug:"orchid"},{name:"Pipe of Insight",slug:"pipe"},
+{name:"Power Treads",slug:"power_treads"},{name:"Radiance",slug:"radiance"},{name:"Refresher Orb",slug:"refresher"},
+{name:"Rod of Atos",slug:"rod_of_atos"},{name:"Satanic",slug:"satanic"},{name:"Scythe of Vyse",slug:"sheepstick"},
+{name:"Shadow Blade",slug:"invis_sword"},{name:"Shiva's Guard",slug:"shivas_guard"},{name:"Silver Edge",slug:"silver_edge"},
+{name:"Solar Crest",slug:"solar_crest"},{name:"Spirit Vessel",slug:"spirit_vessel"},{name:"Vanguard",slug:"vanguard"},
+{name:"Veil of Discord",slug:"veil_of_discord"},{name:"Wind Waker",slug:"wind_waker"},{name:"Witch Blade",slug:"witch_blade"}
 ];
-
-var spyGame=null;
-var guessGame=null;
-var quizGame=null;
-var timerId=null;
-var quizTimerId=null;
-var spyType="heroes";
-var spyMode="classic";
-var timerMode="withTime";
-
-function esc(value){
-  return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-function rnd(array){
-  return array[Math.floor(Math.random()*array.length)];
-}
-
-function mix(array){
-  var result=array.slice();
-
-  for(var i=result.length-1;i>0;i--){
-    var j=Math.floor(Math.random()*(i+1));
-    var temp=result[i];
-    result[i]=result[j];
-    result[j]=temp;
-  }
-
-  return result;
-}
-
-function img(object,type){
-  return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/"+
-    (type==="heroes"?"heroes/":"items/")+
-    object.slug+
-    ".png";
-}
-
-function formatTime(seconds){
-  return String(Math.floor(seconds/60)).padStart(2,"0")+":"+
-    String(seconds%60).padStart(2,"0");
-}
-
+var spyGame=null,guessGame=null,quizGame=null,timerId=null,quizTimerId=null,spyType="heroes",spyMode="classic",timerMode="withTime";
+function esc(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+function mix(a){var r=a.slice();for(var i=r.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=r[i];r[i]=r[j];r[j]=t}return r}
+function img(o,t){return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/"+(t==="heroes"?"heroes/":"items/")+o.slug+".png"}
+function formatTime(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
 function haptic(type){
   try{
-    if(!window.Telegram||!Telegram.WebApp||!Telegram.WebApp.HapticFeedback){
-      return;
-    }
-
-    if(type==="light"){
-      Telegram.WebApp.HapticFeedback.impactOccurred("light");
-    }else if(type==="medium"){
-      Telegram.WebApp.HapticFeedback.impactOccurred("medium");
-    }else if(type==="heavy"){
-      Telegram.WebApp.HapticFeedback.impactOccurred("heavy");
-    }else if(type==="success"){
-      Telegram.WebApp.HapticFeedback.notificationOccurred("success");
-    }else if(type==="error"){
-      Telegram.WebApp.HapticFeedback.notificationOccurred("error");
-    }else if(type==="warning"){
-      Telegram.WebApp.HapticFeedback.notificationOccurred("warning");
-    }
-  }catch(error){}
+    if(!window.Telegram||!Telegram.WebApp||!Telegram.WebApp.HapticFeedback)return;
+    if(type==="light")Telegram.WebApp.HapticFeedback.impactOccurred("light");
+    else if(type==="medium")Telegram.WebApp.HapticFeedback.impactOccurred("medium");
+    else if(type==="heavy")Telegram.WebApp.HapticFeedback.impactOccurred("heavy");
+    else if(type==="success")Telegram.WebApp.HapticFeedback.notificationOccurred("success");
+    else if(type==="error")Telegram.WebApp.HapticFeedback.notificationOccurred("error");
+    else if(type==="warning")Telegram.WebApp.HapticFeedback.notificationOccurred("warning");
+  }catch(e){}
 }
-
-function setupTelegram(){
-  try{
-    if(window.Telegram&&Telegram.WebApp){
-      Telegram.WebApp.ready();
-      Telegram.WebApp.expand();
-    }
-  }catch(error){}
-}
-
-function clearAllTimers(){
-  clearInterval(timerId);
-  clearInterval(quizTimerId);
-  timerId=null;
-  quizTimerId=null;
-}
-
+function setupTelegram(){try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand()}}catch(e){}}
+function clearAllTimers(){clearInterval(timerId);clearInterval(quizTimerId);timerId=null;quizTimerId=null}
 function home(){
   clearAllTimers();
-
   app.innerHTML=
-    '<div class="wrap">'+
-      '<h1 class="home-title">Dota2SpyForSolin</h1>'+
-      '<p class="home-subtitle">Мини-игры по Dota 2 для компании</p>'+
-      '<div class="card">'+
-        '<h2>Игровые режимы</h2>'+
-        '<div class="grid2">'+
-          '<button id="spyButton" class="mode"><span class="ico">🕵️</span>Шпион<small>Классика, ведущий, скрытый</small></button>'+
-          '<button id="guessButton" class="mode"><span class="ico">🔍</span>Угадай в карточках<small>Два игрока, 20 карточек</small></button>'+
-          '<button id="randomButton" class="mode"><span class="ico">🎲</span>Случайный режим<small>Герой, предмет или сборка</small></button>'+
-          '<button id="quizButton" class="mode"><span class="ico">⭐</span>Угадай по атрибуту<small>10 вопросов и 3 сложности</small></button>'+
-        '</div>'+
-        '<button id="rulesButton" class="btn alt">📖 Как играть?</button>'+
+  '<div class="wrap">'+
+    '<h1 class="home-title">Dota2SpyForSolin</h1>'+
+    '<p class="home-subtitle">Мини-игры по Dota 2 для компании</p>'+
+    '<div class="card">'+
+      '<h2>Игровые режимы</h2>'+
+      '<div class="grid2">'+
+        '<button id="spyButton" class="mode"><span class="ico">🕵️</span>Шпион<small>Классика, ведущий, скрытый</small></button>'+
+        '<button id="guessButton" class="mode"><span class="ico">🔍</span>Угадай в карточках<small>Два игрока, 20 карточек</small></button>'+
+        '<button id="randomButton" class="mode"><span class="ico">🎲</span>Случайный режим<small>Герой, предмет или сборка</small></button>'+
+        '<button id="quizButton" class="mode"><span class="ico">⭐</span>Угадай по атрибуту<small>10 вопросов и 3 сложности</small></button>'+
       '</div>'+
-      '<div class="tiny-note">сделано Solin для вас</div>'+
-    '</div>';
-
-  document.getElementById("spyButton").onclick=function(){
-    haptic("light");
-    spySettings();
-  };
-
-  document.getElementById("guessButton").onclick=function(){
-    haptic("light");
-    guessType();
-  };
-
-  document.getElementById("randomButton").onclick=function(){
-    haptic("light");
-    randomMenu();
-  };
-
-  document.getElementById("quizButton").onclick=function(){
-    haptic("light");
-    quizDifficulty();
-  };
-
-  document.getElementById("rulesButton").onclick=function(){
-    haptic("light");
-    rulesScreen();
-  };
+      '<button id="rulesButton" class="btn alt">📖 Как играть?</button>'+
+    '</div>'+
+    '<div class="tiny-note">сделано Solin для вас</div>'+
+  '</div>';
+  document.getElementById("spyButton").onclick=function(){haptic("light");spySettings()};
+  document.getElementById("guessButton").onclick=function(){haptic("light");guessType()};
+  document.getElementById("randomButton").onclick=function(){haptic("light");randomMenu()};
+  document.getElementById("quizButton").onclick=function(){haptic("light");quizDifficulty()};
+  document.getElementById("rulesButton").onclick=function(){haptic("light");rulesScreen()};
 }
-
 function rulesScreen(){
   app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Как играть</h1>'+
-      '<div class="card">'+
-        '<div class="rules-block">'+
-          '<h3>🕵️ Шпион</h3>'+
-          '<p class="muted small"><b>Классика:</b> мирные и шпионы получают разные карточки, роль написана на экране.</p>'+
-          '<p class="muted small"><b>С ведущим:</b> ведущий сам выбирает карточки мирных и шпионов.</p>'+
-          '<p class="muted small"><b>Скрытый шпион:</b> карточки у мирных и шпионов разные, но приложение не сообщает роль игрока.</p>'+
-        '</div>'+
-        '<div class="rules-block">'+
-          '<h3>🔍 Угадай в карточках</h3>'+
-          '<p class="muted small">Два игрока выбирают по одной секретной карточке из 20. Нажимайте на карточки, чтобы зачёркивать неподходящие варианты. Если зачеркнёте секретную карточку соперника — вы сразу победили.</p>'+
-        '</div>'+
-        '<div class="rules-block">'+
-          '<h3>🎲 Случайный режим</h3>'+
-          '<p class="muted small">Можно получить случайного героя, случайный предмет или героя со случайной сборкой из 3–5 предметов.</p>'+
-        '</div>'+
-        '<div class="rules-block">'+
-          '<h3>⭐ Угадай по атрибуту</h3>'+
-          '<p class="muted small"><b>Лёгкая:</b> имя и портрет героя, нужно назвать атрибут. <b>Средняя:</b> только портрет. <b>Сложная:</b> описание героя и четыре варианта имён — нужно выбрать героя.</p>'+
-        '</div>'+
-        '<div class="easter-egg">У него был тяжёлый посох, но с двумя стиками он справился.</div>'+
-        '<button id="backHome" class="btn">← В главное меню</button>'+
+  '<div class="wrap">'+
+    '<h1>Как играть</h1>'+
+    '<div class="card">'+
+      '<div class="rules-block"><h3>🕵️ Шпион</h3><p class="muted small"><b>Классика:</b> мирные и шпионы получают разные карточки, роль написана на экране.</p><p class="muted small"><b>С ведущим:</b> ведущий сам выбирает карточки мирных и шпионов.</p><p class="muted small"><b>Скрытый шпион:</b> карточки у мирных и шпионов разные, но приложение не сообщает роль игрока.</p></div>'+
+      '<div class="rules-block"><h3>🔍 Угадай в карточках</h3><p class="muted small">Два игрока выбирают по одной секретной карточке из 20. Нажимайте на карточки, чтобы зачёркивать неподходящие варианты. Если зачеркнёте секретную карточку соперника — вы сразу проиграли. Кнопка <b>Я знаю героя</b> позволяет выбрать героя и победить при правильном выборе; при ошибке выбранный герой просто зачёркивается.</p></div>'+
+      '<div class="rules-block"><h3>🎲 Случайный режим</h3><p class="muted small">Можно получить случайного героя, случайный предмет или героя со случайной сборкой из 3–5 предметов.</p></div>'+
+      '<div class="rules-block"><h3>⭐ Угадай по атрибуту</h3><p class="muted small"><b>Лёгкая:</b> имя и портрет героя, нужно назвать атрибут. <b>Средняя:</b> только портрет. <b>Сложная:</b> описание героя и четыре варианта имён — нужно выбрать героя.</p></div>'+
+      '<button id="easterBtn" class="easter-egg-btn">·</button>'+
+      '<div id="easterBox" class="easter-box hidden">'+
+        '<div class="easter-line">его висп и фурион сияли так ярко, что сгорели.</div>'+
+        '<div class="easter-line">он пикал Найт Сталкера в пик с Фениксом, и ему было плевать.</div>'+
+        '<div class="easter-line">фейзы — это имба.</div>'+
+        '<div class="easter-line">этот пудж хукал всегда идеально, но не тех.</div>'+
+        '<div class="easter-line">его Трент играет только через Радик.</div>'+
+        '<div class="easter-line">этот большой жёлтый арбуз не проиграл ни разу.</div>'+
+        '<div class="easter-line">самая тяжёлая его игра была это Дизраптор 1.21.</div>'+
+        '<div class="easter-line">его тинкера боялись все, даже союзники.</div>'+
       '</div>'+
-    '</div>';
-
-  document.getElementById("backHome").onclick=function(){
+      '<button id="backHome" class="btn">← В главное меню</button>'+
+    '</div>'+
+  '</div>';
+  document.getElementById("backHome").onclick=function(){haptic("light");home()};
+  document.getElementById("easterBtn").onclick=function(){
     haptic("light");
-    home();
+    document.getElementById("easterBox").classList.toggle("hidden");
   };
 }
-
 function spySettings(){
   app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Шпион</h1>'+
-      '<div class="card">'+
-        '<h2>Настройки</h2>'+
-        '<div class="grid2">'+
-          '<button id="heroType" class="mode"><span class="ico">🦸</span>Герои<small>Случайный герой из пула</small></button>'+
-          '<button id="itemType" class="mode"><span class="ico">🗡️</span>Предметы<small>Случайный предмет из пула</small></button>'+
-        '</div>'+
-        '<label>Режим игры</label>'+
-        '<select id="spyModeSelect">'+
-          '<option value="classic">🕵️ Классика</option>'+
-          '<option value="host">🎙️ С ведущим</option>'+
-          '<option value="hidden">🔒 Скрытый шпион</option>'+
-        '</select>'+
-        '<label>Таймер</label>'+
-        '<select id="timerModeSelect">'+
-          '<option value="withTime">⏱️ С временем</option>'+
-          '<option value="withoutTime">♾️ Без времени</option>'+
-        '</select>'+
-        '<label>Количество игроков</label>'+
-        '<input id="playersCount" type="number" min="3" max="20" value="5">'+
-        '<label>Количество шпионов</label>'+
-        '<input id="spiesCount" type="number" min="1" max="5" value="1">'+
-        '<div id="minutesBox">'+
-          '<label>Время в минутах</label>'+
-          '<input id="minutesCount" type="number" min="1" max="60" value="8">'+
-        '</div>'+
-        '<div id="hostSettings"></div>'+
-        '<button id="startSpy" class="btn">🎮 Начать раздачу ролей</button>'+
-        '<button id="backHome" class="btn alt">← В главное меню</button>'+
+  '<div class="wrap">'+
+    '<h1>Шпион</h1>'+
+    '<div class="card">'+
+      '<h2>Настройки</h2>'+
+      '<div class="grid2">'+
+        '<button id="heroType" class="mode"><span class="ico">🦸</span>Герои<small>Случайный герой из пула</small></button>'+
+        '<button id="itemType" class="mode"><span class="ico">🗡️</span>Предметы<small>Случайный предмет из пула</small></button>'+
       '</div>'+
-    '</div>';
-
-  document.getElementById("heroType").onclick=function(){
-    haptic("light");
-    spyType="heroes";
-    spySettings();
-  };
-
-  document.getElementById("itemType").onclick=function(){
-    haptic("light");
-    spyType="items";
-    spySettings();
-  };
-
+      '<label>Режим игры</label><select id="spyModeSelect"><option value="classic">🕵️ Классика</option><option value="host">🎙️ С ведущим</option><option value="hidden">🔒 Скрытый шпион</option></select>'+
+      '<label>Таймер</label><select id="timerModeSelect"><option value="withTime">⏱️ С временем</option><option value="withoutTime">♾️ Без времени</option></select>'+
+      '<label>Количество игроков</label><input id="playersCount" type="number" min="3" max="20" value="5">'+
+      '<label>Количество шпионов</label><input id="spiesCount" type="number" min="1" max="5" value="1">'+
+      '<div id="minutesBox"><label>Время в минутах</label><input id="minutesCount" type="number" min="1" max="60" value="8"></div>'+
+      '<div id="hostSettings"></div>'+
+      '<button id="startSpy" class="btn">🎮 Начать раздачу ролей</button>'+
+      '<button id="backHome" class="btn alt">← В главное меню</button>'+
+    '</div>'+
+  '</div>';
+  document.getElementById("heroType").onclick=function(){haptic("light");spyType="heroes";spySettings()};
+  document.getElementById("itemType").onclick=function(){haptic("light");spyType="items";spySettings()};
   document.getElementById("spyModeSelect").value=spyMode;
   document.getElementById("timerModeSelect").value=timerMode;
-
-  document.getElementById("spyModeSelect").onchange=function(){
-    haptic("light");
-    spyMode=this.value;
-    updateSpySettings();
-  };
-
-  document.getElementById("timerModeSelect").onchange=function(){
-    haptic("light");
-    timerMode=this.value;
-    updateSpySettings();
-  };
-
-  document.getElementById("startSpy").onclick=function(){
-    haptic("medium");
-    startSpyGame();
-  };
-
-  document.getElementById("backHome").onclick=function(){
-    haptic("light");
-    home();
-  };
-
+  document.getElementById("spyModeSelect").onchange=function(){haptic("light");spyMode=this.value;updateSpySettings()};
+  document.getElementById("timerModeSelect").onchange=function(){haptic("light");timerMode=this.value;updateSpySettings()};
+  document.getElementById("startSpy").onclick=function(){haptic("medium");startSpyGame()};
+  document.getElementById("backHome").onclick=function(){haptic("light");home()};
   updateSpySettings();
 }
-
 function updateSpySettings(){
   document.getElementById(spyType==="heroes"?"heroType":"itemType").classList.add("selected");
-
-  document.getElementById("minutesBox").classList.toggle(
-    "hidden",
-    timerMode==="withoutTime"
-  );
-
+  document.getElementById("minutesBox").classList.toggle("hidden",timerMode==="withoutTime");
   var hostSettings=document.getElementById("hostSettings");
-
-  if(spyMode!=="host"){
-    hostSettings.innerHTML="";
-    return;
-  }
-
+  if(spyMode!=="host"){hostSettings.innerHTML="";return}
   if(spyType==="heroes"){
-    var heroOptions=heroes.map(function(hero){
-      return '<option value="'+esc(hero.name)+'">'+esc(hero.name)+'</option>';
-    }).join("");
-
-    hostSettings.innerHTML=
-      '<div class="box">'+
-        '<h3>Настройки ведущего</h3>'+
-        '<label>Карточка мирных</label>'+
-        '<select id="peacefulHero">'+heroOptions+'</select>'+
-        '<label>Карточка шпионов</label>'+
-        '<select id="spyHero">'+heroOptions+'</select>'+
-        '<label>Локация</label>'+
-        '<select id="location">'+
-          '<option>Таверна</option>'+
-          '<option>Рошанова яма</option>'+
-          '<option>Мид-лейн</option>'+
-          '<option>Лес Radiant</option>'+
-          '<option>Лес Dire</option>'+
-          '<option>Фонтан Radiant</option>'+
-          '<option>Фонтан Dire</option>'+
-          '<option>Секретный магазин</option>'+
-          '<option>Лагерь древних крипов</option>'+
-        '</select>'+
-      '</div>';
+    var heroOptions=heroes.map(function(hero){return '<option value="'+esc(hero.name)+'">'+esc(hero.name)+'</option>'}).join("");
+    hostSettings.innerHTML='<div class="box"><h3>Настройки ведущего</h3><label>Карточка мирных</label><select id="peacefulHero">'+heroOptions+'</select><label>Карточка шпионов</label><select id="spyHero">'+heroOptions+'</select><label>Локация</label><select id="location"><option>Таверна</option><option>Рошанова яма</option><option>Мид-лейн</option><option>Лес Radiant</option><option>Лес Dire</option><option>Фонтан Radiant</option><option>Фонтан Dire</option><option>Секретный магазин</option><option>Лагерь древних крипов</option></select></div>';
   }else{
-    var itemOptions=items.map(function(item){
-      return '<option value="'+esc(item.slug)+'">'+esc(item.name)+'</option>';
-    }).join("");
-
-    hostSettings.innerHTML=
-      '<div class="box">'+
-        '<h3>Настройки ведущего</h3>'+
-        '<label>Карточка мирных</label>'+
-        '<select id="peacefulItem">'+itemOptions+'</select>'+
-        '<label>Карточка шпионов</label>'+
-        '<select id="spyItem">'+itemOptions+'</select>'+
-      '</div>';
+    var itemOptions=items.map(function(item){return '<option value="'+esc(item.slug)+'">'+esc(item.name)+'</option>'}).join("");
+    hostSettings.innerHTML='<div class="box"><h3>Настройки ведущего</h3><label>Карточка мирных</label><select id="peacefulItem">'+itemOptions+'</select><label>Карточка шпионов</label><select id="spyItem">'+itemOptions+'</select></div>';
   }
 }
-
 function startSpyGame(){
   var players=Math.max(3,Math.min(20,Number(document.getElementById("playersCount").value)||5));
   var spies=Math.max(1,Math.min(players-1,Number(document.getElementById("spiesCount").value)||1));
   var minutes=Math.max(1,Math.min(60,Number(document.getElementById("minutesCount").value)||8));
-  var peacefulCard;
-  var spyCard;
-  var location="";
-
+  var peacefulCard,spyCard,location="";
   if(spyType==="heroes"){
     if(spyMode==="host"){
-      peacefulCard=document.getElementById("peacefulHero").value;
-      spyCard=document.getElementById("spyHero").value;
-      location=document.getElementById("location").value;
-
-      if(peacefulCard===spyCard){
-        alert("Выбери разных героев для мирных и шпионов.");
-        return;
-      }
+      peacefulCard=document.getElementById("peacefulHero").value;spyCard=document.getElementById("spyHero").value;location=document.getElementById("location").value;
+      if(peacefulCard===spyCard){alert("Выбери разных героев для мирных и шпионов.");return}
     }else{
-      peacefulCard=rnd(heroes).name;
-
-      do{
-        spyCard=rnd(heroes).name;
-      }while(spyCard===peacefulCard);
-
-      location=rnd([
-        "Таверна",
-        "Рошанова яма",
-        "Мид-лейн",
-        "Лес Radiant",
-        "Лес Dire",
-        "Фонтан Radiant",
-        "Фонтан Dire",
-        "Секретный магазин",
-        "Лагерь древних крипов"
-      ]);
+      peacefulCard=rnd(heroes).name;do{spyCard=rnd(heroes).name}while(spyCard===peacefulCard);
+      location=rnd(["Таверна","Рошанова яма","Мид-лейн","Лес Radiant","Лес Dire","Фонтан Radiant","Фонтан Dire","Секретный магазин","Лагерь древних крипов"]);
     }
   }else{
     if(spyMode==="host"){
-      peacefulCard=items.filter(function(item){
-        return item.slug===document.getElementById("peacefulItem").value;
-      })[0];
-
-      spyCard=items.filter(function(item){
-        return item.slug===document.getElementById("spyItem").value;
-      })[0];
-
-      if(peacefulCard.slug===spyCard.slug){
-        alert("Выбери разные предметы для мирных и шпионов.");
-        return;
-      }
+      peacefulCard=items.filter(function(item){return item.slug===document.getElementById("peacefulItem").value})[0];
+      spyCard=items.filter(function(item){return item.slug===document.getElementById("spyItem").value})[0];
+      if(peacefulCard.slug===spyCard.slug){alert("Выбери разные предметы для мирных и шпионов.");return}
     }else{
-      peacefulCard=rnd(items);
-
-      do{
-        spyCard=rnd(items);
-      }while(spyCard.slug===peacefulCard.slug);
+      peacefulCard=rnd(items);do{spyCard=rnd(items)}while(spyCard.slug===peacefulCard.slug);
     }
   }
-
-  spyGame={
-    type:spyType,
-    mode:spyMode,
-    timer:timerMode,
-    players:players,
-    minutes:minutes,
-    peacefulCard:peacefulCard,
-    spyCard:spyCard,
-    location:location,
-    spies:mix(Array.from({length:players},function(_,index){
-      return index;
-    })).slice(0,spies),
-    current:0
-  };
-
+  spyGame={type:spyType,mode:spyMode,timer:timerMode,players:players,minutes:minutes,peacefulCard:peacefulCard,spyCard:spyCard,location:location,spies:mix(Array.from({length:players},function(_,index){return index})).slice(0,spies),current:0};
   spyRoleScreen();
 }
-
 function spyRoleScreen(){
-  var playerNumber=spyGame.current+1;
-  var isSpy=spyGame.spies.indexOf(spyGame.current)!==-1;
-  var isLast=playerNumber===spyGame.players;
-
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Шпион</h1>'+
-      '<div class="card">'+
-        '<div class="player">Игрок '+playerNumber+'</div>'+
-        '<p class="muted small" style="text-align:center">Остальные игроки не должны смотреть на экран.</p>'+
-        '<button id="secretCard" class="secret">Нажми и удерживай,<br>чтобы увидеть карточку</button>'+
-        '<button id="nextPlayer" class="btn alt" disabled>'+
-          (isLast?"🚀 Начать игру":"Передать игроку "+(playerNumber+1))+
-        '</button>'+
-      '</div>'+
-      '<button id="cancelSpy" class="btn danger">Отменить игру</button>'+
-    '</div>';
-
-  var secretButton=document.getElementById("secretCard");
-  var nextButton=document.getElementById("nextPlayer");
-  var opened=false;
-  var hasSeen=false;
-
-  function secretName(){
-    var secret=isSpy?spyGame.spyCard:spyGame.peacefulCard;
-    return spyGame.type==="heroes"?secret:secret.name;
-  }
-
+  var playerNumber=spyGame.current+1;var isSpy=spyGame.spies.indexOf(spyGame.current)!==-1;var isLast=playerNumber===spyGame.players;
+  app.innerHTML='<div class="wrap"><h1>Шпион</h1><div class="card"><div class="player">Игрок '+playerNumber+'</div><p class="muted small" style="text-align:center">Остальные игроки не должны смотреть на экран.</p><button id="secretCard" class="secret">Нажми и удерживай,<br>чтобы увидеть карточку</button><button id="nextPlayer" class="btn alt" disabled>'+(isLast?"🚀 Начать игру":"Передать игроку "+(playerNumber+1))+'</button></div><button id="cancelSpy" class="btn danger">Отменить игру</button></div>';
+  var secretButton=document.getElementById("secretCard"),nextButton=document.getElementById("nextPlayer"),opened=false,hasSeen=false;
+  function secretName(){var secret=isSpy?spyGame.spyCard:spyGame.peacefulCard;return spyGame.type==="heroes"?secret:secret.name}
   function showCard(){
-    if(opened){
-      return;
-    }
-
-    opened=true;
-    hasSeen=true;
-
-    var name=secretName();
-
-    if(spyGame.mode==="hidden"){
-      secretButton.classList.add("spy");
-      secretButton.innerHTML=
-        '🔒<br>Секретная карточка<br>'+
-        '<span style="font-size:18px">'+esc(name)+'</span>'+
-        (spyGame.type==="heroes"
-          ?'<br><span style="font-size:14px">Локация: '+esc(spyGame.location)+'</span>'
-          :"");
-    }else{
-      secretButton.classList.add(isSpy?"spy":"peace");
-      secretButton.innerHTML=
-        (isSpy?"🕵️<br>ТЫ ШПИОН":"🛡️<br>ТЫ МИРНЫЙ")+
-        '<br><span style="font-size:18px">'+esc(name)+'</span>'+
-        (spyGame.type==="heroes"
-          ?'<br><span style="font-size:14px">Локация: '+esc(spyGame.location)+'</span>'
-          :"");
-    }
-
+    if(opened)return;opened=true;hasSeen=true;var name=secretName();
+    if(spyGame.mode==="hidden"){secretButton.classList.add("spy");secretButton.innerHTML='🔒<br>Секретная карточка<br><span style="font-size:18px">'+esc(name)+'</span>'+(spyGame.type==="heroes"?'<br><span style="font-size:14px">Локация: '+esc(spyGame.location)+'</span>':"");}
+    else{secretButton.classList.add(isSpy?"spy":"peace");secretButton.innerHTML=(isSpy?"🕵️<br>ТЫ ШПИОН":"🛡️<br>ТЫ МИРНЫЙ")+'<br><span style="font-size:18px">'+esc(name)+'</span>'+(spyGame.type==="heroes"?'<br><span style="font-size:14px">Локация: '+esc(spyGame.location)+'</span>':"");}
     haptic("medium");
   }
-
-  function hideCard(){
-    if(!opened){
-      return;
-    }
-
-    opened=false;
-    secretButton.classList.remove("spy","peace");
-    secretButton.innerHTML="Нажми и удерживай,<br>чтобы увидеть карточку";
-    nextButton.disabled=false;
-  }
-
-  secretButton.onpointerdown=function(event){
-    event.preventDefault();
-    showCard();
-  };
-
-  secretButton.onpointerup=function(event){
-    event.preventDefault();
-    hideCard();
-  };
-
-  secretButton.onpointerleave=hideCard;
-  secretButton.onpointercancel=hideCard;
-
-  nextButton.onclick=function(){
-    if(!hasSeen){
-      return;
-    }
-
-    haptic("light");
-
-    if(spyGame.current<spyGame.players-1){
-      spyGame.current++;
-      spyRoleScreen();
-    }else{
-      spyPlayScreen();
-    }
-  };
-
-  document.getElementById("cancelSpy").onclick=function(){
-    haptic("warning");
-    home();
-  };
+  function hideCard(){if(!opened)return;opened=false;secretButton.classList.remove("spy","peace");secretButton.innerHTML="Нажми и удерживай,<br>чтобы увидеть карточку";nextButton.disabled=false}
+  secretButton.onpointerdown=function(e){e.preventDefault();showCard()};
+  secretButton.onpointerup=function(e){e.preventDefault();hideCard()};
+  secretButton.onpointerleave=hideCard;secretButton.onpointercancel=hideCard;
+  nextButton.onclick=function(){if(!hasSeen)return;haptic("light");if(spyGame.current<spyGame.players-1){spyGame.current++;spyRoleScreen()}else{spyPlayScreen()}};
+  document.getElementById("cancelSpy").onclick=function(){haptic("warning");home()};
 }
-
 function spyPlayScreen(){
-  var timed=spyGame.timer==="withTime";
-  var seconds=spyGame.minutes*60;
-
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Шпион</h1>'+
-      '<div class="card">'+
-        '<h2>Игра началась</h2>'+
-        '<p class="muted">'+
-          (spyGame.mode==="hidden"
-            ?"Карточки разные, но роли скрыты. Никто не знает, кто шпион."
-            :"Задавайте вопросы, обсуждайте карточки и ищите шпионов.")+
-        '</p>'+
-        '<div id="spyTimer" class="timer">'+(timed?formatTime(seconds):"∞")+'</div>'+
-        (timed?'<button id="timerButton" class="btn">▶️ Запустить таймер</button>':'<div class="status">♾️ Игра без времени</div>')+
-        '<button id="finishSpy" class="btn yellow">🏁 Закончить раунд</button>'+
-      '</div>'+
-      '<button id="cancelSpy" class="btn danger">Отменить игру</button>'+
-    '</div>';
-
+  var timed=spyGame.timer==="withTime",seconds=spyGame.minutes*60;
+  app.innerHTML='<div class="wrap"><h1>Шпион</h1><div class="card"><h2>Игра началась</h2><p class="muted">'+(spyGame.mode==="hidden"?"Карточки разные, но роли скрыты. Никто не знает, кто шпион.":"Задавайте вопросы, обсуждайте карточки и ищите шпионов.")+'</p><div id="spyTimer" class="timer">'+(timed?formatTime(seconds):"∞")+'</div>'+(timed?'<button id="timerButton" class="btn">▶️ Запустить таймер</button>':'<div class="status">♾️ Игра без времени</div>')+'<button id="finishSpy" class="btn yellow">🏁 Закончить раунд</button></div><button id="cancelSpy" class="btn danger">Отменить игру</button></div>';
   if(timed){
-    var running=false;
-    var timer=document.getElementById("spyTimer");
-    var timerButton=document.getElementById("timerButton");
-
+    var running=false,timer=document.getElementById("spyTimer"),timerButton=document.getElementById("timerButton");
     timerButton.onclick=function(){
       haptic("light");
-
-      if(running){
-        clearInterval(timerId);
-        running=false;
-        timerButton.textContent="▶️ Продолжить таймер";
-        return;
-      }
-
-      if(seconds<=0){
-        return;
-      }
-
-      running=true;
-      timerButton.textContent="⏸️ Пауза";
-
+      if(running){clearInterval(timerId);running=false;timerButton.textContent="▶️ Продолжить таймер";return}
+      if(seconds<=0)return;
+      running=true;timerButton.textContent="⏸️ Пауза";
       timerId=setInterval(function(){
-        seconds--;
-        timer.textContent=formatTime(seconds);
-
-        if(seconds<=0){
-          clearInterval(timerId);
-          timer.classList.add("finished");
-          timerButton.disabled=true;
-          haptic("heavy");
-        }
+        seconds--;timer.textContent=formatTime(seconds);
+        if(seconds<=0){clearInterval(timerId);timer.classList.add("finished");timerButton.disabled=true;haptic("heavy")}
       },1000);
     };
   }
-
-  document.getElementById("finishSpy").onclick=function(){
-    haptic("medium");
-    spyResultScreen();
-  };
-
-  document.getElementById("cancelSpy").onclick=function(){
-    haptic("warning");
-    home();
-  };
+  document.getElementById("finishSpy").onclick=function(){haptic("medium");spyResultScreen()};
+  document.getElementById("cancelSpy").onclick=function(){haptic("warning");home()};
 }
-
 function spyResultScreen(){
   clearAllTimers();
-
-  var peacefulName=spyGame.type==="heroes"
-    ?spyGame.peacefulCard
-    :spyGame.peacefulCard.name;
-
-  var spyName=spyGame.type==="heroes"
-    ?spyGame.spyCard
-    :spyGame.spyCard.name;
-
-  var spiesText=spyGame.spies.map(function(index){
-    return "Игрок "+(index+1);
-  }).join(", ");
-
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Итоги раунда</h1>'+
-      '<div class="card">'+
-        '<div class="result">'+
-          '<div class="role">🛡️</div>'+
-          '<h2>Мирные</h2>'+
-          '<p><b>'+esc(peacefulName)+'</b></p>'+
-          (spyGame.type==="heroes"
-            ?'<p class="muted">Локация: <b>'+esc(spyGame.location)+'</b></p>'
-            :"")+
-        '</div>'+
-      '</div>'+
-      '<div class="card">'+
-        '<div class="result">'+
-          '<div class="role">🕵️</div>'+
-          '<h2>Шпионы</h2>'+
-          '<p><b>'+esc(spyName)+'</b></p>'+
-          '<p class="muted">'+esc(spiesText)+'</p>'+
-        '</div>'+
-      '</div>'+
-      '<button id="homeAfterSpy" class="btn">🏠 В главное меню</button>'+
-    '</div>';
-
-  document.getElementById("homeAfterSpy").onclick=function(){
-    haptic("success");
-    home();
-  };
+  var peacefulName=spyGame.type==="heroes"?spyGame.peacefulCard:spyGame.peacefulCard.name;
+  var spyName=spyGame.type==="heroes"?spyGame.spyCard:spyGame.spyCard.name;
+  var spiesText=spyGame.spies.map(function(index){return "Игрок "+(index+1)}).join(", ");
+  app.innerHTML='<div class="wrap"><h1>Итоги раунда</h1><div class="card"><div class="result"><div class="role">🛡️</div><h2>Мирные</h2><p><b>'+esc(peacefulName)+'</b></p>'+(spyGame.type==="heroes"?'<p class="muted">Локация: <b>'+esc(spyGame.location)+'</b></p>':"")+'</div></div><div class="card"><div class="result"><div class="role">🕵️</div><h2>Шпионы</h2><p><b>'+esc(spyName)+'</b></p><p class="muted">'+esc(spiesText)+'</p></div></div><button id="homeAfterSpy" class="btn">🏠 В главное меню</button></div>';
+  document.getElementById("homeAfterSpy").onclick=function(){haptic("success");home()};
 }
-
 function guessType(){
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Угадай в карточках</h1>'+
-      '<div class="card">'+
-        '<h2>Игра на двоих</h2>'+
-        '<p class="muted small">В каждой партии выбираются 20 случайных карточек. Каждый игрок загадывает одну карточку. Если ты зачеркнёшь секретную карточку соперника, игра сразу закончится твоей победой.</p>'+
-        '<div class="grid2">'+
-          '<button id="guessHeroes" class="mode"><span class="ico">🦸</span>Герои<small>20 из полного пула</small></button>'+
-          '<button id="guessItems" class="mode"><span class="ico">🗡️</span>Предметы<small>20 случайных предметов</small></button>'+
-        '</div>'+
-        '<button id="backHome" class="btn alt">← В главное меню</button>'+
-      '</div>'+
-    '</div>';
-
-  document.getElementById("guessHeroes").onclick=function(){
-    haptic("light");
-    newGuessGame("heroes");
-  };
-
-  document.getElementById("guessItems").onclick=function(){
-    haptic("light");
-    newGuessGame("items");
-  };
-
-  document.getElementById("backHome").onclick=function(){
-    haptic("light");
-    home();
-  };
+  app.innerHTML='<div class="wrap"><h1>Угадай в карточках</h1><div class="card"><h2>Игра на двоих</h2><p class="muted small">В каждой партии выбираются 20 случайных карточек. Каждый игрок загадывает одну карточку. Если ты зачеркнёшь секретную карточку соперника, игра сразу закончится твоим поражением.</p><div class="grid2"><button id="guessHeroes" class="mode"><span class="ico">🦸</span>Герои<small>20 из полного пула</small></button><button id="guessItems" class="mode"><span class="ico">🗡️</span>Предметы<small>20 случайных предметов</small></button></div><button id="backHome" class="btn alt">← В главное меню</button></div></div>';
+  document.getElementById("guessHeroes").onclick=function(){haptic("light");newGuessGame("heroes")};
+  document.getElementById("guessItems").onclick=function(){haptic("light");newGuessGame("items")};
+  document.getElementById("backHome").onclick=function(){haptic("light");home()};
 }
-
-function newGuessGame(type){
-  guessGame={
-    type:type,
-    cards:mix(type==="heroes"?heroes:items).slice(0,20),
-    firstSecret:null,
-    secondSecret:null,
-    active:1,
-    crossed:[[],[]]
-  };
-
-  chooseSecretScreen(1);
-}
-
+function newGuessGame(type){guessGame={type:type,cards:mix(type==="heroes"?heroes:items).slice(0,20),firstSecret:null,secondSecret:null,active:1,crossed:[[],[]]};chooseSecretScreen(1)}
 function renderGuessCards(playMode){
   return guessGame.cards.map(function(card,index){
     var crossed=playMode&&guessGame.crossed[guessGame.active-1].indexOf(index)!==-1;
-
-    return '<button class="gcard '+
-      (guessGame.type==="items"?"item ":"")+
-      (crossed?"crossed":"")+
-      '" data-card="'+index+'">'+
-      '<img class="pic" src="'+img(card,guessGame.type)+'" alt="" loading="lazy">'+
-      '<span>'+esc(card.name)+'</span>'+
-    '</button>';
+    return '<button class="gcard '+(guessGame.type==="items"?"item ":"")+(crossed?"crossed":"")+'" data-card="'+index+'"><img class="pic" src="'+img(card,guessGame.type)+'" alt="" loading="lazy"><span>'+esc(card.name)+'</span></button>';
   }).join("");
 }
-
 function chooseSecretScreen(player){
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Угадай в карточках</h1>'+
-      '<div class="card">'+
-        '<div class="player">Игрок '+player+'</div>'+
-        '<p class="muted small" style="text-align:center">Выбери свою секретную карточку.</p>'+
-        '<div class="cards">'+renderGuessCards(false)+'</div>'+
-        '<button id="cancelGuess" class="btn danger">Отменить игру</button>'+
-      '</div>'+
-    '</div>';
-
-  document.querySelectorAll("[data-card]").forEach(function(button){
-    button.onclick=function(){
-      haptic("light");
-
-      var card=guessGame.cards[Number(button.dataset.card)];
-
-      if(player===1){
-        guessGame.firstSecret=card;
-      }else{
-        guessGame.secondSecret=card;
-      }
-
-      confirmSecretScreen(player);
-    };
-  });
-
-  document.getElementById("cancelGuess").onclick=function(){
-    haptic("warning");
-    home();
-  };
+  app.innerHTML='<div class="wrap"><h1>Угадай в карточках</h1><div class="card"><div class="player">Игрок '+player+'</div><p class="muted small" style="text-align:center">Выбери свою секретную карточку.</p><div class="cards">'+renderGuessCards(false)+'</div><button id="cancelGuess" class="btn danger">Отменить игру</button></div></div>';
+  document.querySelectorAll("[data-card]").forEach(function(button){button.onclick=function(){haptic("light");var card=guessGame.cards[Number(button.dataset.card)];if(player===1)guessGame.firstSecret=card;else guessGame.secondSecret=card;confirmSecretScreen(player)}});
+  document.getElementById("cancelGuess").onclick=function(){haptic("warning");home()};
 }
-
 function confirmSecretScreen(player){
   var card=player===1?guessGame.firstSecret:guessGame.secondSecret;
-
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Угадай в карточках</h1>'+
-      '<div class="card">'+
-        '<div class="player">Игрок '+player+'</div>'+
-        '<p class="muted" style="text-align:center">Ты загадал:</p>'+
-        '<div class="result">'+
-          '<img class="preview '+(guessGame.type==="items"?"item":"")+'" src="'+img(card,guessGame.type)+'" alt="">'+
-          '<h2>'+esc(card.name)+'</h2>'+
-        '</div>'+
-        '<button id="continueGuess" class="btn">'+
-          (player===1?"Передать телефон игроку 2":"🚀 Начать игру")+
-        '</button>'+
-        '<button id="changeSecret" class="btn alt">← Выбрать другую</button>'+
-      '</div>'+
-    '</div>';
-
+  app.innerHTML='<div class="wrap"><h1>Угадай в карточках</h1><div class="card"><div class="player">Игрок '+player+'</div><p class="muted" style="text-align:center">Ты загадал:</p><div class="result"><img class="preview '+(guessGame.type==="items"?"item":"")+'" src="'+img(card,guessGame.type)+'" alt=""><h2>'+esc(card.name)+'</h2></div><button id="continueGuess" class="btn">'+(player===1?"Передать телефон игроку 2":"🚀 Начать игру")+'</button><button id="changeSecret" class="btn alt">← Выбрать другую</button></div></div>';
   document.getElementById("continueGuess").onclick=function(){
     haptic("medium");
-
     if(player===1){
-      app.innerHTML=
-        '<div class="wrap">'+
-          '<h1>Угадай в карточках</h1>'+
-          '<div class="card">'+
-            '<div class="player">Передай телефон</div>'+
-            '<button id="startSecondPlayer" class="btn">Игрок 2: выбрать карточку</button>'+
-          '</div>'+
-        '</div>';
-
-      document.getElementById("startSecondPlayer").onclick=function(){
-        haptic("light");
-        chooseSecretScreen(2);
-      };
-    }else{
-      guessGame.active=1;
-      guessBoardScreen();
-    }
+      app.innerHTML='<div class="wrap"><h1>Угадай в карточках</h1><div class="card"><div class="player">Передай телефон</div><button id="startSecondPlayer" class="btn">Игрок 2: выбрать карточку</button></div></div>';
+      document.getElementById("startSecondPlayer").onclick=function(){haptic("light");chooseSecretScreen(2)};
+    }else{guessGame.active=1;guessBoardScreen()}
   };
-
-  document.getElementById("changeSecret").onclick=function(){
-    haptic("light");
-    chooseSecretScreen(player);
-  };
+  document.getElementById("changeSecret").onclick=function(){haptic("light");chooseSecretScreen(player)};
 }
-
 function guessBoardScreen(){
-  var player=guessGame.active;
-  var crossedCount=guessGame.crossed[player-1].length;
-
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Угадай в карточках</h1>'+
-      '<div class="status">Ходит <b>игрок '+player+'</b>. Исключено карточек: '+crossedCount+'/20.</div>'+
-      '<div class="card">'+
-        '<div class="cards">'+renderGuessCards(true)+'</div>'+
-        '<button id="switchPlayer" class="btn blue">🔄 Передать ход игроку '+(player===1?"2":"1")+'</button>'+
-        '<button id="finishGuess" class="btn yellow">🏁 Закончить без победителя</button>'+
-        '<button id="cancelGuess" class="btn danger">Отменить игру</button>'+
-      '</div>'+
-    '</div>';
-
-  document.querySelectorAll("[data-card]").forEach(function(button){
-    button.onclick=function(){
-      toggleGuessCard(Number(button.dataset.card));
-    };
-  });
-
-  document.getElementById("switchPlayer").onclick=function(){
-    haptic("light");
-    guessGame.active=player===1?2:1;
-    guessBoardScreen();
-  };
-
-  document.getElementById("finishGuess").onclick=function(){
-    haptic("warning");
-    guessResultScreen(0);
-  };
-
-  document.getElementById("cancelGuess").onclick=function(){
-    haptic("warning");
-    home();
-  };
+  var player=guessGame.active,crossedCount=guessGame.crossed[player-1].length;
+  app.innerHTML='<div class="wrap"><h1>Угадай в карточках</h1><div class="status">Ходит <b>игрок '+player+'</b>. Исключено карточек: '+crossedCount+'/20.</div><div class="card"><div class="grid2"><button id="knowHeroBtn" class="btn blue">Я знаю героя</button><button id="switchPlayer" class="btn alt">Передать ход игроку '+(player===1?"2":"1")+'</button></div><div class="cards" style="margin-top:12px">'+renderGuessCards(true)+'</div><button id="cancelGuess" class="btn danger">Отменить игру</button></div></div>';
+  document.getElementById("knowHeroBtn").onclick=function(){haptic("light");chooseHeroScreen()};
+  document.querySelectorAll("[data-card]").forEach(function(button){button.onclick=function(){toggleGuessCard(Number(button.dataset.card))}});
+  document.getElementById("switchPlayer").onclick=function(){haptic("light");guessGame.active=player===1?2:1;guessBoardScreen()};
+  document.getElementById("cancelGuess").onclick=function(){haptic("warning");home()};
 }
-
-function toggleGuessCard(index){
-  var list=guessGame.crossed[guessGame.active-1];
-  var exists=list.indexOf(index);
-
-  if(exists===-1){
-    list.push(index);
-    haptic("light");
-
-    var selectedCard=guessGame.cards[index];
-    var enemySecret=guessGame.active===1
-      ?guessGame.secondSecret
-      :guessGame.firstSecret;
-
-    if(selectedCard.slug===enemySecret.slug){
-      haptic("success");
-      guessResultScreen(guessGame.active);
-      return;
-    }
-  }else{
-    list.splice(exists,1);
-    haptic("light");
-  }
-
+function chooseHeroScreen(){
+  var options=mix(guessGame.cards.slice());
+  app.innerHTML='<div class="wrap"><h1>Я знаю героя</h1><div class="card"><p class="muted small" style="text-align:center">Выбери героя, которого, как ты думаешь, загадал соперник.</p><div class="cards">'+options.map(function(card){return '<button class="gcard '+(guessGame.type==="items"?"item ":"")+'" data-hero="'+esc(card.slug)+'"><img class="pic" src="'+img(card,guessGame.type)+'" alt="" loading="lazy"><span>'+esc(card.name)+'</span></button>'}).join("")+'</div><button id="backToBoard" class="btn alt">← Назад</button></div></div>';
+  document.querySelectorAll("[data-hero]").forEach(function(button){button.onclick=function(){checkKnowHero(button.dataset.hero)}});
+  document.getElementById("backToBoard").onclick=function(){haptic("light");guessBoardScreen()};
+}
+function checkKnowHero(slug){
+  var enemySecret=guessGame.active===1?guessGame.secondSecret:guessGame.firstSecret;
+  if(slug===enemySecret.slug){haptic("success");guessResultScreen(guessGame.active);return}
+  haptic("error");
+  var crossed=guessGame.crossed[guessGame.active-1], already=crossed.indexOf(slug);
+  if(already===-1)crossed.push(slug);
+  guessGame.active=guessGame.active===1?2:1;
   guessBoardScreen();
 }
-
+function toggleGuessCard(index){
+  var list=guessGame.crossed[guessGame.active-1], exists=list.indexOf(index);
+  if(exists===-1){
+    list.push(index);haptic("light");
+    var selectedCard=guessGame.cards[index], enemySecret=guessGame.active===1?guessGame.secondSecret:guessGame.firstSecret;
+    if(selectedCard.slug===enemySecret.slug){haptic("success");guessResultScreen(guessGame.active);return}
+  }else{list.splice(exists,1);haptic("light")}
+  guessBoardScreen();
+}
 function guessResultScreen(winner){
   var title=winner===0?"🏁 Игра закончена":"🏆 Победил игрок "+winner+"!";
-
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Итоги игры</h1>'+
-      '<div class="card">'+
-        '<div class="result">'+
-          '<div class="role">'+(winner===0?"🤝":"🏆")+'</div>'+
-          '<h2>'+title+'</h2>'+
-          (winner!==0?'<p class="muted">Секретная карточка соперника была зачёркнута.</p>':"")+
-        '</div>'+
-      '</div>'+
-      '<div class="card">'+
-        '<h2>Игрок 1 загадал</h2>'+
-        '<div class="result">'+
-          '<img class="preview '+(guessGame.type==="items"?"item":"")+'" src="'+img(guessGame.firstSecret,guessGame.type)+'" alt="">'+
-          '<h2>'+esc(guessGame.firstSecret.name)+'</h2>'+
-        '</div>'+
-      '</div>'+
-      '<div class="card">'+
-        '<h2>Игрок 2 загадал</h2>'+
-        '<div class="result">'+
-          '<img class="preview '+(guessGame.type==="items"?"item":"")+'" src="'+img(guessGame.secondSecret,guessGame.type)+'" alt="">'+
-          '<h2>'+esc(guessGame.secondSecret.name)+'</h2>'+
-        '</div>'+
-      '</div>'+
-      '<button id="newGuessGame" class="btn">🔄 Новая партия</button>'+
-      '<button id="homeAfterGuess" class="btn alt">🏠 В главное меню</button>'+
-    '</div>';
-
-  document.getElementById("newGuessGame").onclick=function(){
-    haptic("light");
-    newGuessGame(guessGame.type);
-  };
-
-  document.getElementById("homeAfterGuess").onclick=function(){
-    haptic("success");
-    home();
-  };
+  app.innerHTML='<div class="wrap"><h1>Итоги игры</h1><div class="card"><div class="result"><div class="role">'+(winner===0?"🤝":"🏆")+'</div><h2>'+title+'</h2>'+(winner!==0?'<p class="muted">Секретная карточка соперника была зачёркнута.</p>':"")+'</div></div><div class="card"><h2>Игрок 1 загадал</h2><div class="result"><img class="preview '+(guessGame.type==="items"?"item":"")+'" src="'+img(guessGame.firstSecret,guessGame.type)+'" alt=""><h2>'+esc(guessGame.firstSecret.name)+'</h2></div></div><div class="card"><h2>Игрок 2 загадал</h2><div class="result"><img class="preview '+(guessGame.type==="items"?"item":"")+'" src="'+img(guessGame.secondSecret,guessGame.type)+'" alt=""><h2>'+esc(guessGame.secondSecret.name)+'</h2></div></div><button id="newGuessGame" class="btn">🔄 Новая партия</button><button id="homeAfterGuess" class="btn alt">🏠 В главное меню</button></div>';
+  document.getElementById("newGuessGame").onclick=function(){haptic("light");newGuessGame(guessGame.type)};
+  document.getElementById("homeAfterGuess").onclick=function(){haptic("success");home()};
 }
-
 function randomMenu(){
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Случайный режим</h1>'+
-      '<div class="card">'+
-        '<h2>Выбери вариант</h2>'+
-        '<div class="grid2">'+
-          '<button id="randomHero" class="mode"><span class="ico">🦸</span>Случайный герой<small>Герой и его атрибут</small></button>'+
-          '<button id="randomItem" class="mode"><span class="ico">🗡️</span>Случайный предмет<small>Один предмет</small></button>'+
-          '<button id="randomBuild" class="mode"><span class="ico">✨</span>Герой + сборка<small>От 3 до 5 предметов</small></button>'+
-          '<button id="backHome" class="mode"><span class="ico">⬅️</span>Назад<small>В главное меню</small></button>'+
-        '</div>'+
-      '</div>'+
-    '</div>';
-
-  document.getElementById("randomHero").onclick=function(){
-    haptic("light");
-    randomShow("hero");
-  };
-
-  document.getElementById("randomItem").onclick=function(){
-    haptic("light");
-    randomShow("item");
-  };
-
-  document.getElementById("randomBuild").onclick=function(){
-    haptic("light");
-    randomShow("build");
-  };
-
-  document.getElementById("backHome").onclick=function(){
-    haptic("light");
-    home();
-  };
+  app.innerHTML='<div class="wrap"><h1>Случайный режим</h1><div class="card"><h2>Выбери вариант</h2><div class="grid2"><button id="randomHero" class="mode"><span class="ico">🦸</span>Случайный герой<small>Герой и его атрибут</small></button><button id="randomItem" class="mode"><span class="ico">🗡️</span>Случайный предмет<small>Один предмет</small></button><button id="randomBuild" class="mode"><span class="ico">✨</span>Герой + сборка<small>От 3 до 5 предметов</small></button><button id="backHome" class="mode"><span class="ico">⬅️</span>Назад<small>В главное меню</small></button></div></div></div>';
+  document.getElementById("randomHero").onclick=function(){haptic("light");randomShow("hero")};
+  document.getElementById("randomItem").onclick=function(){haptic("light");randomShow("item")};
+  document.getElementById("randomBuild").onclick=function(){haptic("light");randomShow("build")};
+  document.getElementById("backHome").onclick=function(){haptic("light");home()};
 }
-
 function randomShow(mode){
-  var hero=rnd(heroes);
-  var item=rnd(items);
-  var content="";
-
-  if(mode==="hero"){
-    content=
-      '<div class="result">'+
-        '<img class="preview" src="'+img(hero,"heroes")+'" alt="">'+
-        '<h2>'+esc(hero.name)+'</h2>'+
-        '<div class="status">Главный атрибут: <b>'+esc(hero.attr)+'</b></div>'+
-      '</div>';
-  }
-
-  if(mode==="item"){
-    content=
-      '<div class="result">'+
-        '<img class="preview item" src="'+img(item,"items")+'" alt="">'+
-        '<h2>'+esc(item.name)+'</h2>'+
-      '</div>';
-  }
-
+  var hero=rnd(heroes),item=rnd(items),content="";
+  if(mode==="hero")content='<div class="result"><img class="preview" src="'+img(hero,"heroes")+'" alt=""><h2>'+esc(hero.name)+'</h2><div class="status">Главный атрибут: <b>'+esc(hero.attr)+'</b></div></div>';
+  if(mode==="item")content='<div class="result"><img class="preview item" src="'+img(item,"items")+'" alt=""><h2>'+esc(item.name)+'</h2></div>';
   if(mode==="build"){
-    var count=3+Math.floor(Math.random()*3);
-    var build=mix(items).slice(0,count);
-
-    content=
-      '<div class="result">'+
-        '<img class="preview" src="'+img(hero,"heroes")+'" alt="">'+
-        '<h2>'+esc(hero.name)+'</h2>'+
-        '<div class="status">Главный атрибут: <b>'+esc(hero.attr)+'</b></div>'+
-        '<h3 style="margin-top:16px">Случайная сборка</h3>'+
-        '<div class="build-items">'+
-          build.map(function(buildItem){
-            return '<div class="build-item">'+
-              '<img src="'+img(buildItem,"items")+'" alt="">'+
-              esc(buildItem.name)+
-            '</div>';
-          }).join("")+
-        '</div>'+
-      '</div>';
+    var count=3+Math.floor(Math.random()*3),build=mix(items).slice(0,count);
+    content='<div class="result"><img class="preview" src="'+img(hero,"heroes")+'" alt=""><h2>'+esc(hero.name)+'</h2><div class="status">Главный атрибут: <b>'+esc(hero.attr)+'</b></div><h3 style="margin-top:16px">Случайная сборка</h3><div class="build-items">'+build.map(function(buildItem){return '<div class="build-item"><img src="'+img(buildItem,"items")+'" alt="">'+esc(buildItem.name)+'</div>'}).join("")+'</div></div>';
   }
-
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Случайный режим</h1>'+
-      '<div class="card">'+
-        content+
-        '<button id="againRandom" class="btn green">🔄 Ещё раз</button>'+
-        '<button id="backRandom" class="btn alt">← Назад</button>'+
-      '</div>'+
-    '</div>';
-
-  document.getElementById("againRandom").onclick=function(){
-    haptic("medium");
-    randomShow(mode);
-  };
-
-  document.getElementById("backRandom").onclick=function(){
-    haptic("light");
-    randomMenu();
-  };
+  app.innerHTML='<div class="wrap"><h1>Случайный режим</h1><div class="card">'+content+'<button id="againRandom" class="btn green">🔄 Ещё раз</button><button id="backRandom" class="btn alt">← Назад</button></div></div>';
+  document.getElementById("againRandom").onclick=function(){haptic("medium");randomShow(mode)};
+  document.getElementById("backRandom").onclick=function(){haptic("light");randomMenu()};
 }
-
 function quizDifficulty(){
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Угадай по атрибуту</h1>'+
-      '<div class="card">'+
-        '<h2>Выбери сложность</h2>'+
-        '<div class="grid2">'+
-          '<button id="easyQuiz" class="mode"><span class="ico">🟢</span>Лёгкая<small>Имя и портрет, без таймера</small></button>'+
-          '<button id="mediumQuiz" class="mode"><span class="ico">🟡</span>Средняя<small>Только портрет, 15 секунд</small></button>'+
-          '<button id="hardQuiz" class="mode"><span class="ico">🔴</span>Сложная<small>Описание и выбор героя, 10 секунд</small></button>'+
-          '<button id="backHome" class="mode"><span class="ico">⬅️</span>Назад<small>В главное меню</small></button>'+
-        '</div>'+
-      '</div>'+
-    '</div>';
-
-  document.getElementById("easyQuiz").onclick=function(){
-    haptic("light");
-    startQuiz("easy");
-  };
-
-  document.getElementById("mediumQuiz").onclick=function(){
-    haptic("light");
-    startQuiz("medium");
-  };
-
-  document.getElementById("hardQuiz").onclick=function(){
-    haptic("light");
-    startQuiz("hard");
-  };
-
-  document.getElementById("backHome").onclick=function(){
-    haptic("light");
-    home();
-  };
+  app.innerHTML='<div class="wrap"><h1>Угадай по атрибуту</h1><div class="card"><h2>Выбери сложность</h2><div class="grid2"><button id="easyQuiz" class="mode"><span class="ico">🟢</span>Лёгкая<small>Имя и портрет, без таймера</small></button><button id="mediumQuiz" class="mode"><span class="ico">🟡</span>Средняя<small>Только портрет, 15 секунд</small></button><button id="hardQuiz" class="mode"><span class="ico">🔴</span>Сложная<small>Описание и выбор героя, 10 секунд</small></button><button id="backHome" class="mode"><span class="ico">⬅️</span>Назад<small>В главное меню</small></button></div></div></div>';
+  document.getElementById("easyQuiz").onclick=function(){haptic("light");startQuiz("easy")};
+  document.getElementById("mediumQuiz").onclick=function(){haptic("light");startQuiz("medium")};
+  document.getElementById("hardQuiz").onclick=function(){haptic("light");startQuiz("hard")};
+  document.getElementById("backHome").onclick=function(){haptic("light");home()};
 }
-
-function startQuiz(difficulty){
-  quizGame={
-    difficulty:difficulty,
-    questions:mix(heroes).slice(0,10),
-    index:0,
-    score:0,
-    locked:false,
-    timeLeft:difficulty==="medium"?15:(difficulty==="hard"?10:0)
-  };
-
-  quizQuestionScreen();
-}
-
-function quizDifficultyName(){
-  if(quizGame.difficulty==="easy"){
-    return "Лёгкая";
-  }
-
-  if(quizGame.difficulty==="medium"){
-    return "Средняя";
-  }
-
-  return "Сложная";
-}
-
-function pointsForQuiz(){
-  if(quizGame.difficulty==="easy"){
-    return 1;
-  }
-
-  if(quizGame.difficulty==="medium"){
-    return 2;
-  }
-
-  return 3;
-}
-
+function startQuiz(difficulty){quizGame={difficulty:difficulty,questions:mix(heroes).slice(0,10),index:0,score:0,locked:false,timeLeft:difficulty==="medium"?15:(difficulty==="hard"?10:0)};quizQuestionScreen()}
+function quizDifficultyName(){return quizGame.difficulty==="easy"?"Лёгкая":quizGame.difficulty==="medium"?"Средняя":"Сложная"}
+function pointsForQuiz(){return quizGame.difficulty==="easy"?1:quizGame.difficulty==="medium"?2:3}
 function quizQuestionScreen(){
   clearInterval(quizTimerId);
-
-  var hero=quizGame.questions[quizGame.index];
-  var options;
-
-  quizGame.locked=false;
-  quizGame.timeLeft=quizGame.difficulty==="medium"?15:(quizGame.difficulty==="hard"?10:0);
-
-  if(quizGame.difficulty==="hard"){
-    var wrongHeroes=mix(
-      heroes.filter(function(otherHero){
-        return otherHero.slug!==hero.slug;
-      })
-    ).slice(0,3);
-
-    options=mix([hero].concat(wrongHeroes));
-  }else{
-    options=mix(["Сила","Ловкость","Интеллект","Универсальный"]);
-  }
-
+  var hero=quizGame.questions[quizGame.index],options;
+  quizGame.locked=false;quizGame.timeLeft=quizGame.difficulty==="medium"?15:(quizGame.difficulty==="hard"?10:0);
+  if(quizGame.difficulty==="hard"){var wrongHeroes=mix(heroes.filter(function(otherHero){return otherHero.slug!==hero.slug})).slice(0,3);options=mix([hero].concat(wrongHeroes))}
+  else{options=mix(["Сила","Ловкость","Интеллект","Универсальный"])}
   var content="";
-
-  if(quizGame.difficulty==="easy"){
-    content=
-      '<div class="quiz-top">'+
-        '<img class="preview" src="'+img(hero,"heroes")+'" alt="">'+
-        '<h2>'+esc(hero.name)+'</h2>'+
-        '<p class="quiz-info">Какой у этого героя главный атрибут?</p>'+
-      '</div>';
-  }
-
-  if(quizGame.difficulty==="medium"){
-    content=
-      '<div class="quiz-top">'+
-        '<img class="preview" src="'+img(hero,"heroes")+'" alt="">'+
-        '<p class="quiz-info">Определи главный атрибут героя по портрету.</p>'+
-        '<div id="quizTimer" class="timer" style="font-size:38px;margin:7px 0">'+quizGame.timeLeft+'с</div>'+
-      '</div>';
-  }
-
-  if(quizGame.difficulty==="hard"){
-    content=
-      '<div class="quiz-top">'+
-        '<div class="role">❔</div>'+
-        '<h2>Кто это?</h2>'+
-        '<p class="quiz-info">'+esc(hero.style)+'</p>'+
-        '<div id="quizTimer" class="timer" style="font-size:38px;margin:7px 0">'+quizGame.timeLeft+'с</div>'+
-      '</div>';
-  }
-
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Угадай по атрибуту</h1>'+
-      '<div class="quiz-progress">Вопрос '+(quizGame.index+1)+' из 10 · '+quizDifficultyName()+'</div>'+
-      '<div class="quiz-score">Очки: '+quizGame.score+'</div>'+
-      '<div class="card">'+
-        content+
-        '<div class="grid2" style="margin-top:12px">'+
-          options.map(function(option){
-            var answerValue=quizGame.difficulty==="hard"?option.slug:option;
-            var answerText=quizGame.difficulty==="hard"?option.name:option;
-
-            return '<button class="quiz-answer" data-answer="'+
-              esc(answerValue)+'">'+
-              esc(answerText)+
-              '</button>';
-          }).join("")+
-        '</div>'+
-        '<button id="nextQuiz" class="btn green hidden">Следующий вопрос</button>'+
-        '<button id="cancelQuiz" class="btn alt">← Выйти из викторины</button>'+
-      '</div>'+
-    '</div>';
-
-  document.querySelectorAll("[data-answer]").forEach(function(button){
-    button.onclick=function(){
-      checkQuizAnswer(button.dataset.answer,hero);
-    };
-  });
-
-  document.getElementById("nextQuiz").onclick=function(){
-    haptic("light");
-    quizGame.index++;
-
-    if(quizGame.index>=10){
-      quizResultScreen();
-    }else{
-      quizQuestionScreen();
-    }
-  };
-
-  document.getElementById("cancelQuiz").onclick=function(){
-    haptic("warning");
-    clearInterval(quizTimerId);
-    quizDifficulty();
-  };
-
+  if(quizGame.difficulty==="easy")content='<div class="quiz-top"><img class="preview" src="'+img(hero,"heroes")+'" alt=""><h2>'+esc(hero.name)+'</h2><p class="quiz-info">Какой у этого героя главный атрибут?</p></div>';
+  if(quizGame.difficulty==="medium")content='<div class="quiz-top"><img class="preview" src="'+img(hero,"heroes")+'" alt=""><p class="quiz-info">Определи главный атрибут героя по портрету.</p><div id="quizTimer" class="timer" style="font-size:38px;margin:7px 0">'+quizGame.timeLeft+'с</div></div>';
+  if(quizGame.difficulty==="hard")content='<div class="quiz-top"><div class="role">❔</div><h2>Кто это?</h2><p class="quiz-info">'+esc(hero.style)+'</p><div id="quizTimer" class="timer" style="font-size:38px;margin:7px 0">'+quizGame.timeLeft+'с</div></div>';
+  app.innerHTML='<div class="wrap"><h1>Угадай по атрибуту</h1><div class="quiz-progress">Вопрос '+(quizGame.index+1)+' из 10 · '+quizDifficultyName()+'</div><div class="quiz-score">Очки: '+quizGame.score+'</div><div class="card">'+content+'<div class="grid2" style="margin-top:12px">'+options.map(function(option){var answerValue=quizGame.difficulty==="hard"?option.slug:option,answerText=quizGame.difficulty==="hard"?option.name:option;return '<button class="quiz-answer" data-answer="'+esc(answerValue)+'">'+esc(answerText)+'</button>'}).join("")+'</div><button id="nextQuiz" class="btn green hidden">Следующий вопрос</button><button id="cancelQuiz" class="btn alt">← Выйти из викторины</button></div></div>';
+  document.querySelectorAll("[data-answer]").forEach(function(button){button.onclick=function(){checkQuizAnswer(button.dataset.answer,hero)}});
+  document.getElementById("nextQuiz").onclick=function(){haptic("light");quizGame.index++;if(quizGame.index>=10)quizResultScreen();else quizQuestionScreen()};
+  document.getElementById("cancelQuiz").onclick=function(){haptic("warning");clearInterval(quizTimerId);quizDifficulty()};
   if(quizGame.difficulty!=="easy"){
     quizTimerId=setInterval(function(){
-      if(quizGame.locked){
-        return;
-      }
-
+      if(quizGame.locked)return;
       quizGame.timeLeft--;
-
-      var timer=document.getElementById("quizTimer");
-
-      if(timer){
-        timer.textContent=quizGame.timeLeft+"с";
-      }
-
+      var timer=document.getElementById("quizTimer");if(timer)timer.textContent=quizGame.timeLeft+"с";
       if(quizGame.timeLeft<=0){
-        clearInterval(quizTimerId);
-        quizGame.locked=true;
-        haptic("heavy");
-
-        var correctValue=quizGame.difficulty==="hard"
-          ?hero.slug
-          :hero.attr;
-
-        var correctText=quizGame.difficulty==="hard"
-          ?hero.name
-          :hero.attr;
-
-        document.querySelectorAll("[data-answer]").forEach(function(button){
-          button.disabled=true;
-
-          if(button.dataset.answer===correctValue){
-            button.classList.add("good");
-            button.textContent="✅ "+correctText;
-          }
-        });
-
+        clearInterval(quizTimerId);quizGame.locked=true;haptic("heavy");
+        var correctValue=quizGame.difficulty==="hard"?hero.slug:hero.attr,correctText=quizGame.difficulty==="hard"?hero.name:hero.attr;
+        document.querySelectorAll("[data-answer]").forEach(function(button){button.disabled=true;if(button.dataset.answer===correctValue){button.classList.add("good");button.textContent="✅ "+correctText}})
         document.getElementById("nextQuiz").classList.remove("hidden");
       }
     },1000);
   }
 }
-
 function checkQuizAnswer(answer,hero){
-  if(quizGame.locked){
-    return;
-  }
-
-  quizGame.locked=true;
-  clearInterval(quizTimerId);
-
-  var correct=quizGame.difficulty==="hard"
-    ?answer===hero.slug
-    :answer===hero.attr;
-
-  var correctValue=quizGame.difficulty==="hard"
-    ?hero.slug
-    :hero.attr;
-
-  var correctText=quizGame.difficulty==="hard"
-    ?hero.name
-    :hero.attr;
-
+  if(quizGame.locked)return;
+  quizGame.locked=true;clearInterval(quizTimerId);
+  var correct=quizGame.difficulty==="hard"?answer===hero.slug:answer===hero.attr;
+  var correctValue=quizGame.difficulty==="hard"?hero.slug:hero.attr;
+  var correctText=quizGame.difficulty==="hard"?hero.name:hero.attr;
   document.querySelectorAll("[data-answer]").forEach(function(button){
     button.disabled=true;
-
-    if(button.dataset.answer===correctValue){
-      button.classList.add("good");
-      button.textContent="✅ "+correctText;
-    }
-
-    if(button.dataset.answer===answer&&!correct){
-      button.classList.add("bad");
-      button.textContent="❌ "+button.textContent;
-    }
+    if(button.dataset.answer===correctValue){button.classList.add("good");button.textContent="✅ "+correctText}
+    if(button.dataset.answer===answer&&!correct){button.classList.add("bad");button.textContent="❌ "+button.textContent}
   });
-
-  if(correct){
-    quizGame.score+=pointsForQuiz();
-    haptic("success");
-  }else{
-    haptic("error");
-  }
-
+  if(correct){quizGame.score+=pointsForQuiz();haptic("success")}else haptic("error");
   document.getElementById("nextQuiz").classList.remove("hidden");
 }
-
 function quizResultScreen(){
   clearInterval(quizTimerId);
-
-  var maxScore=10*pointsForQuiz();
-  var percent=Math.round((quizGame.score/maxScore)*100);
-  var rank="Начинающий игрок";
-
-  if(percent>=90){
-    rank="Легенда Dota2SpyForSolin";
-  }else if(percent>=70){
-    rank="Знаток героев";
-  }else if(percent>=40){
-    rank="Хорошее знание Dota";
-  }
-
-  app.innerHTML=
-    '<div class="wrap">'+
-      '<h1>Результат викторины</h1>'+
-      '<div class="card">'+
-        '<div class="result">'+
-          '<div class="role">'+(percent>=70?"🏆":"⭐")+'</div>'+
-          '<h2>'+esc(rank)+'</h2>'+
-          '<p class="muted">Сложность: '+esc(quizDifficultyName())+'</p>'+
-          '<div class="timer" style="font-size:44px;margin:12px 0">'+quizGame.score+' / '+maxScore+'</div>'+
-          '<p class="muted">Правильность: '+percent+'%</p>'+
-        '</div>'+
-        '<button id="againQuiz" class="btn green">🔄 Играть ещё раз</button>'+
-        '<button id="quizMenu" class="btn alt">← К выбору сложности</button>'+
-        '<button id="homeAfterQuiz" class="btn alt">🏠 В главное меню</button>'+
-      '</div>'+
-    '</div>';
-
-  if(percent>=70){
-    haptic("success");
-  }else{
-    haptic("medium");
-  }
-
-  document.getElementById("againQuiz").onclick=function(){
-    haptic("light");
-    startQuiz(quizGame.difficulty);
-  };
-
-  document.getElementById("quizMenu").onclick=function(){
-    haptic("light");
-    quizDifficulty();
-  };
-
-  document.getElementById("homeAfterQuiz").onclick=function(){
-    haptic("light");
-    home();
-  };
+  var maxScore=10*pointsForQuiz(),percent=Math.round((quizGame.score/maxScore)*100),rank="Начинающий игрок";
+  if(percent>=90)rank="Легенда Dota2SpyForSolin";else if(percent>=70)rank="Знаток героев";else if(percent>=40)rank="Хорошее знание Dota";
+  app.innerHTML='<div class="wrap"><h1>Результат викторины</h1><div class="card"><div class="result"><div class="role">'+(percent>=70?"🏆":"⭐")+'</div><h2>'+esc(rank)+'</h2><p class="muted">Сложность: '+esc(quizDifficultyName())+'</p><div class="timer" style="font-size:44px;margin:12px 0">'+quizGame.score+' / '+maxScore+'</div><p class="muted">Правильность: '+percent+'%</p></div><button id="againQuiz" class="btn green">🔄 Играть ещё раз</button><button id="quizMenu" class="btn alt">← К выбору сложности</button><button id="homeAfterQuiz" class="btn alt">🏠 В главное меню</button></div></div>';
+  if(percent>=70)haptic("success");else haptic("medium");
+  document.getElementById("againQuiz").onclick=function(){haptic("light");startQuiz(quizGame.difficulty)};
+  document.getElementById("quizMenu").onclick=function(){haptic("light");quizDifficulty()};
+  document.getElementById("homeAfterQuiz").onclick=function(){haptic("light");home()};
 }
-
 setupTelegram();
-
-setTimeout(function(){
-  home();
-},700);
+setTimeout(function(){home()},700);
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
 
 
 
