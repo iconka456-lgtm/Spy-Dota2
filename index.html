@@ -19,11 +19,9 @@
   --text:#f7f8fb;
   --muted:#aeb4c0;
   --gold:#ffd166;
-  --gold2:#dcae47;
   --green:#76e5a2;
   --red:#ff7b7b;
   --blue:#7ec8ff;
-  --purple:#be9cff;
 }
 
 *{
@@ -429,7 +427,8 @@ input:focus,select:focus{
   filter:grayscale(.8);
 }
 
-.gcard.crossed:before,.gcard.crossed:after{
+.gcard.crossed:before,
+.gcard.crossed:after{
   position:absolute;
   z-index:3;
   top:50%;
@@ -443,8 +442,13 @@ input:focus,select:focus{
   box-shadow:0 0 7px rgba(255,70,70,.9);
 }
 
-.gcard.crossed:before{transform:rotate(35deg)}
-.gcard.crossed:after{transform:rotate(-35deg)}
+.gcard.crossed:before{
+  transform:rotate(35deg);
+}
+
+.gcard.crossed:after{
+  transform:rotate(-35deg);
+}
 
 .build-items{
   display:grid;
@@ -613,15 +617,34 @@ input:focus,select:focus{
 }
 
 @keyframes spin{
-  to{transform:rotate(360deg)}
+  to{
+    transform:rotate(360deg);
+  }
 }
 
 @media(max-width:360px){
-  .cards{gap:4px}
-  .gcard{min-height:78px;padding:2px;font-size:8px}
-  .pic{height:48px}
-  .gcard span{min-height:19px;padding:1px}
-  .mode{min-height:130px}
+  .cards{
+    gap:4px;
+  }
+
+  .gcard{
+    min-height:78px;
+    padding:2px;
+    font-size:8px;
+  }
+
+  .pic{
+    height:48px;
+  }
+
+  .gcard span{
+    min-height:19px;
+    padding:1px;
+  }
+
+  .mode{
+    min-height:130px;
+  }
 }
 </style>
 </head>
@@ -654,98 +677,99 @@ window.addEventListener("error",function(event){
 });
 
 var heroes=[
-{name:"Abaddon",slug:"abaddon",attr:"Сила",style:"Выносливый ближний боец, способен долго жить в драке."},
+{name:"Abaddon",slug:"abaddon",attr:"Универсальный",style:"Выносливый ближний боец, способен долго жить в драке."},
 {name:"Alchemist",slug:"alchemist",attr:"Сила",style:"Фармит золото быстрее многих и становится опаснее с предметами."},
 {name:"Ancient Apparition",slug:"ancient_apparition",attr:"Интеллект",style:"Дальний маг льда с сильными заклинаниями."},
 {name:"Anti-Mage",slug:"antimage",attr:"Ловкость",style:"Быстрый керри, охотится на героев с маной."},
 {name:"Arc Warden",slug:"arc_warden",attr:"Универсальный",style:"Дальний герой, создаёт копию самого себя."},
 {name:"Axe",slug:"axe",attr:"Сила",style:"Инициатор ближнего боя, любит заставлять врагов атаковать его."},
-{name:"Bane",slug:"bane",attr:"Интеллект",style:"Контролирует одного врага и мешает ему играть."},
+{name:"Bane",slug:"bane",attr:"Универсальный",style:"Контролирует одного врага и мешает ему играть."},
 {name:"Batrider",slug:"batrider",attr:"Универсальный",style:"Летает над полем боя и утаскивает врагов."},
-{name:"Beastmaster",slug:"beastmaster",attr:"Сила",style:"Командует зверями и ловит врагов мощным контролем."},
+{name:"Beastmaster",slug:"beastmaster",attr:"Универсальный",style:"Командует зверями и ловит врагов мощным контролем."},
 {name:"Bloodseeker",slug:"bloodseeker",attr:"Ловкость",style:"Находит раненых врагов и наказывает их за движение."},
-{name:"Bounty Hunter",slug:"bounty_hunter",attr:"Универсальный",style:"Охотник за наградами, любит невидимость и золото."},
-{name:"Brewmaster",slug:"brewmaster",attr:"Сила",style:"Ближний боец, который может разделиться на духов стихий."},
+{name:"Bounty Hunter",slug:"bounty_hunter",attr:"Ловкость",style:"Охотник за наградами, любит невидимость и золото."},
+{name:"Brewmaster",slug:"brewmaster",attr:"Универсальный",style:"Ближний боец, который может разделиться на духов стихий."},
 {name:"Bristleback",slug:"bristleback",attr:"Сила",style:"Очень живучий герой, опасен, когда к нему поворачиваются спиной."},
 {name:"Broodmother",slug:"broodmother",attr:"Ловкость",style:"Быстрый герой с пауками, контролирует часть карты."},
 {name:"Centaur Warrunner",slug:"centaur",attr:"Сила",style:"Огромный танк, который может вести команду в атаку."},
 {name:"Chaos Knight",slug:"chaos_knight",attr:"Сила",style:"Керри ближнего боя с иллюзиями и сильным уроном."},
-{name:"Chen",slug:"chen",attr:"Универсальный",style:"Саппорт, который приручает крипов."},
+{name:"Chen",slug:"chen",attr:"Интеллект",style:"Саппорт, который приручает крипов."},
 {name:"Clinkz",slug:"clinkz",attr:"Ловкость",style:"Скрытный дальний керри с огненными стрелами."},
 {name:"Clockwerk",slug:"rattletrap",attr:"Сила",style:"Инициатор в броне, запирает врагов среди шестерёнок."},
 {name:"Crystal Maiden",slug:"crystal_maiden",attr:"Интеллект",style:"Ледяной саппорт, даёт команде ману."},
-{name:"Dark Seer",slug:"dark_seer",attr:"Универсальный",style:"Создаёт стену и ускоряет союзников."},
+{name:"Dark Seer",slug:"dark_seer",attr:"Интеллект",style:"Создаёт стену и ускоряет союзников."},
 {name:"Dark Willow",slug:"dark_willow",attr:"Интеллект",style:"Маг контроля с опасными проклятиями."},
 {name:"Dawnbreaker",slug:"dawnbreaker",attr:"Сила",style:"Сильный герой с молотом, прилетает помогать союзникам."},
 {name:"Dazzle",slug:"dazzle",attr:"Универсальный",style:"Саппорт, умеет спасать союзника от смерти."},
-{name:"Death Prophet",slug:"death_prophet",attr:"Интеллект",style:"Маг, вызывающий духов для разрушения строений."},
+{name:"Death Prophet",slug:"death_prophet",attr:"Универсальный",style:"Маг, вызывающий духов для разрушения строений."},
 {name:"Disruptor",slug:"disruptor",attr:"Интеллект",style:"Контролирует позицию врагов и ставит поле молчания."},
 {name:"Doom",slug:"doom_bringer",attr:"Сила",style:"Сильный герой, накладывающий опасное проклятие."},
 {name:"Dragon Knight",slug:"dragon_knight",attr:"Сила",style:"Рыцарь, превращающийся в дракона."},
 {name:"Drow Ranger",slug:"drow_ranger",attr:"Ловкость",style:"Дальний керри с ледяными стрелами."},
-{name:"Earth Spirit",slug:"earth_spirit",attr:"Универсальный",style:"Герой контроля, использующий каменные остатки."},
+{name:"Earth Spirit",slug:"earth_spirit",attr:"Сила",style:"Герой контроля, использующий каменные остатки."},
 {name:"Earthshaker",slug:"earthshaker",attr:"Сила",style:"Инициатор, создающий трещины в земле."},
 {name:"Elder Titan",slug:"elder_titan",attr:"Сила",style:"Могучий боец с духом и сильным контролем."},
 {name:"Ember Spirit",slug:"ember_spirit",attr:"Ловкость",style:"Огненный мобильный герой с быстрыми атаками."},
-{name:"Enchantress",slug:"enchantress",attr:"Универсальный",style:"Дальний герой природы, может приручать крипов."},
+{name:"Enchantress",slug:"enchantress",attr:"Интеллект",style:"Дальний герой природы, может приручать крипов."},
 {name:"Enigma",slug:"enigma",attr:"Универсальный",style:"Создаёт чёрную дыру и опасен в командных боях."},
 {name:"Faceless Void",slug:"faceless_void",attr:"Ловкость",style:"Керри, который останавливает время в большой сфере."},
 {name:"Grimstroke",slug:"grimstroke",attr:"Интеллект",style:"Маг чернил, связывает врагов между собой."},
-{name:"Gyrocopter",slug:"gyrocopter",attr:"Универсальный",style:"Дальний герой на летательном аппарате."},
-{name:"Hoodwink",slug:"hoodwink",attr:"Универсальный",style:"Ловкий дальний герой с ловушками и орехом."},
+{name:"Gyrocopter",slug:"gyrocopter",attr:"Ловкость",style:"Дальний герой на летательном аппарате."},
+{name:"Hoodwink",slug:"hoodwink",attr:"Ловкость",style:"Ловкий дальний герой с ловушками и орехом."},
 {name:"Huskar",slug:"huskar",attr:"Сила",style:"Становится опаснее с низким здоровьем."},
-{name:"Invoker",slug:"invoker",attr:"Универсальный",style:"Маг с большим количеством разных заклинаний."},
+{name:"Invoker",slug:"invoker",attr:"Интеллект",style:"Маг с большим количеством разных заклинаний."},
 {name:"Io",slug:"wisp",attr:"Универсальный",style:"Саппорт-сфера, соединяется с союзником."},
 {name:"Jakiro",slug:"jakiro",attr:"Интеллект",style:"Двухголовый дракон с огнём и льдом."},
 {name:"Juggernaut",slug:"juggernaut",attr:"Ловкость",style:"Керри в маске с вращающимся клинком."},
 {name:"Keeper of the Light",slug:"keeper_of_the_light",attr:"Интеллект",style:"Старый маг света, даёт ману и волны энергии."},
-{name:"Kez",slug:"kez",attr:"Универсальный",style:"Воин-птица, сражается мечом и сай."},
+{name:"Kez",slug:"kez",attr:"Ловкость",style:"Воин-птица, сражается мечом и сай."},
 {name:"Kunkka",slug:"kunkka",attr:"Сила",style:"Адмирал, управляющий водой и кораблём-призраком."},
+{name:"Largo",slug:"largo",attr:"Сила",style:"Тяжёлый герой ближнего боя, который давит соперников силой и контролем."},
 {name:"Legion Commander",slug:"legion_commander",attr:"Сила",style:"Командир, вызывает врагов на дуэль."},
 {name:"Leshrac",slug:"leshrac",attr:"Интеллект",style:"Маг с разрушительными электрическими заклинаниями."},
 {name:"Lich",slug:"lich",attr:"Интеллект",style:"Ледяной саппорт с прыгающим заклинанием."},
 {name:"Lifestealer",slug:"life_stealer",attr:"Сила",style:"Ближний керри, может прятаться внутри союзников."},
 {name:"Lina",slug:"lina",attr:"Интеллект",style:"Огненный маг с мощным взрывным уроном."},
 {name:"Lion",slug:"lion",attr:"Интеллект",style:"Саппорт с превращением врага в животное."},
-{name:"Lone Druid",slug:"lone_druid",attr:"Универсальный",style:"Сражается вместе с сильным медведем."},
+{name:"Lone Druid",slug:"lone_druid",attr:"Ловкость",style:"Сражается вместе с сильным медведем."},
 {name:"Luna",slug:"luna",attr:"Ловкость",style:"Дальний керри с лунными клинками."},
-{name:"Lycan",slug:"lycan",attr:"Универсальный",style:"Превращается в волка и призывает волков."},
-{name:"Magnus",slug:"magnataur",attr:"Сила",style:"Инициатор, притягивающий врагов к себе."},
+{name:"Lycan",slug:"lycan",attr:"Сила",style:"Превращается в волка и призывает волков."},
+{name:"Magnus",slug:"magnataur",attr:"Универсальный",style:"Инициатор, притягивающий врагов к себе."},
 {name:"Marci",slug:"marci",attr:"Универсальный",style:"Быстрый боец, бросает врагов и усиливает союзников."},
 {name:"Mars",slug:"mars",attr:"Сила",style:"Воин с копьём и ареной для врагов."},
 {name:"Medusa",slug:"medusa",attr:"Ловкость",style:"Дальний керри со щитом из маны."},
-{name:"Meepo",slug:"meepo",attr:"Универсальный",style:"Создаёт несколько своих копий."},
+{name:"Meepo",slug:"meepo",attr:"Ловкость",style:"Создаёт несколько своих копий."},
 {name:"Mirana",slug:"mirana",attr:"Универсальный",style:"Охотница с луком и длинной стрелой."},
-{name:"Monkey King",slug:"monkey_king",attr:"Универсальный",style:"Прыгает по деревьям и вызывает круг воинов."},
+{name:"Monkey King",slug:"monkey_king",attr:"Ловкость",style:"Прыгает по деревьям и вызывает круг воинов."},
 {name:"Morphling",slug:"morphling",attr:"Ловкость",style:"Водяной керри, меняет характеристики."},
-{name:"Muerta",slug:"muerta",attr:"Ловкость",style:"Дальний герой с призрачной формой."},
+{name:"Muerta",slug:"muerta",attr:"Интеллект",style:"Дальний герой с призрачной формой."},
 {name:"Naga Siren",slug:"naga_siren",attr:"Ловкость",style:"Создаёт иллюзии и усыпляет врагов песней."},
 {name:"Nature's Prophet",slug:"furion",attr:"Универсальный",style:"Телепортируется по карте и призывает деревья."},
 {name:"Necrophos",slug:"necrolyte",attr:"Интеллект",style:"Маг смерти, восстанавливает здоровье и добивает врагов."},
 {name:"Night Stalker",slug:"night_stalker",attr:"Сила",style:"Становится опаснее ночью."},
 {name:"Nyx Assassin",slug:"nyx_assassin",attr:"Универсальный",style:"Жук-убийца с невидимостью и контролем."},
-{name:"Ogre Magi",slug:"ogre_magi",attr:"Универсальный",style:"Двухголовый саппорт, иногда применяет заклинания несколько раз."},
+{name:"Ogre Magi",slug:"ogre_magi",attr:"Сила",style:"Двухголовый саппорт, иногда применяет заклинания несколько раз."},
 {name:"Omniknight",slug:"omniknight",attr:"Сила",style:"Защищает союзников светлой магией."},
-{name:"Oracle",slug:"oracle",attr:"Универсальный",style:"Саппорт, способный спасти героя особым заклинанием."},
+{name:"Oracle",slug:"oracle",attr:"Интеллект",style:"Саппорт, способный спасти героя особым заклинанием."},
 {name:"Outworld Destroyer",slug:"obsidian_destroyer",attr:"Интеллект",style:"Дальний маг, крадущий интеллект."},
 {name:"Pangolier",slug:"pangolier",attr:"Универсальный",style:"Ловкий герой, катающийся в бронированном шаре."},
 {name:"Phantom Assassin",slug:"phantom_assassin",attr:"Ловкость",style:"Скрытный керри с сильными критическими ударами."},
 {name:"Phantom Lancer",slug:"phantom_lancer",attr:"Ловкость",style:"Создаёт множество иллюзий с копьями."},
-{name:"Phoenix",slug:"phoenix",attr:"Универсальный",style:"Огненная птица, возрождается через суперновую."},
+{name:"Phoenix",slug:"phoenix",attr:"Сила",style:"Огненная птица, возрождается через суперновую."},
 {name:"Primal Beast",slug:"primal_beast",attr:"Сила",style:"Огромный зверь, врывается и топчет врагов."},
 {name:"Puck",slug:"puck",attr:"Интеллект",style:"Очень мобильный маг с уклонением."},
 {name:"Pudge",slug:"pudge",attr:"Сила",style:"Мясник с крюком, притягивающим врагов."},
 {name:"Pugna",slug:"pugna",attr:"Интеллект",style:"Маг, высасывающий здоровье лучом."},
 {name:"Queen of Pain",slug:"queenofpain",attr:"Интеллект",style:"Мобильный маг с криком и прыжком."},
-{name:"Razor",slug:"razor",attr:"Универсальный",style:"Электрический герой, крадущий урон у врага."},
+{name:"Razor",slug:"razor",attr:"Ловкость",style:"Электрический герой, крадущий урон у врага."},
 {name:"Riki",slug:"riki",attr:"Ловкость",style:"Невидимый убийца ближнего боя."},
 {name:"Ringmaster",slug:"ringmaster",attr:"Интеллект",style:"Артист и саппорт, использующий трюки и клетку."},
-{name:"Rubick",slug:"rubick",attr:"Универсальный",style:"Маг, умеющий воровать заклинания."},
+{name:"Rubick",slug:"rubick",attr:"Интеллект",style:"Маг, умеющий воровать заклинания."},
 {name:"Sand King",slug:"sand_king",attr:"Универсальный",style:"Песчаный инициатор с сильной бурей."},
-{name:"Shadow Demon",slug:"shadow_demon",attr:"Универсальный",style:"Демон-саппорт, создающий иллюзии и ослабления."},
+{name:"Shadow Demon",slug:"shadow_demon",attr:"Интеллект",style:"Демон-саппорт, создающий иллюзии и ослабления."},
 {name:"Shadow Fiend",slug:"nevermore",attr:"Ловкость",style:"Дальний керри, собирающий души."},
 {name:"Shadow Shaman",slug:"shadow_shaman",attr:"Интеллект",style:"Контролирует врагов и ставит змеиные тотемы."},
-{name:"Silencer",slug:"silencer",attr:"Универсальный",style:"Мешает врагам использовать заклинания."},
+{name:"Silencer",slug:"silencer",attr:"Интеллект",style:"Мешает врагам использовать заклинания."},
 {name:"Skywrath Mage",slug:"skywrath_mage",attr:"Интеллект",style:"Дальний маг с сильным магическим уроном."},
 {name:"Slardar",slug:"slardar",attr:"Сила",style:"Ближний инициатор, понижает броню врагов."},
 {name:"Slark",slug:"slark",attr:"Ловкость",style:"Ловкий герой, крадущий характеристики."},
@@ -759,7 +783,7 @@ var heroes=[
 {name:"Templar Assassin",slug:"templar_assassin",attr:"Ловкость",style:"Керри с щитом и ловушками."},
 {name:"Terrorblade",slug:"terrorblade",attr:"Ловкость",style:"Демон-керри с иллюзиями и превращением."},
 {name:"Tidehunter",slug:"tidehunter",attr:"Сила",style:"Морской инициатор с большим массовым контролем."},
-{name:"Timbersaw",slug:"shredder",attr:"Универсальный",style:"Герой в пиле, очень силён против героев силы."},
+{name:"Timbersaw",slug:"shredder",attr:"Сила",style:"Герой в пиле, очень силён против героев силы."},
 {name:"Tinker",slug:"tinker",attr:"Интеллект",style:"Маг-механик, быстро обновляющий предметы."},
 {name:"Tiny",slug:"tiny",attr:"Сила",style:"Каменный великан, бросает врагов."},
 {name:"Treant Protector",slug:"treant",attr:"Сила",style:"Дерево-защитник с лечением и корнями."},
@@ -773,10 +797,10 @@ var heroes=[
 {name:"Viper",slug:"viper",attr:"Ловкость",style:"Дальний герой с ядом и замедлением."},
 {name:"Visage",slug:"visage",attr:"Универсальный",style:"Призывает фамильяров и защищён слоями брони."},
 {name:"Void Spirit",slug:"void_spirit",attr:"Универсальный",style:"Мобильный герой с ударами из другого измерения."},
-{name:"Warlock",slug:"warlock",attr:"Универсальный",style:"Саппорт, вызывающий большого голема."},
+{name:"Warlock",slug:"warlock",attr:"Интеллект",style:"Саппорт, вызывающий большого голема."},
 {name:"Weaver",slug:"weaver",attr:"Ловкость",style:"Очень быстрый жук с невидимостью."},
 {name:"Windranger",slug:"windrunner",attr:"Универсальный",style:"Лучница с ветром, связывает врагов стрелой."},
-{name:"Winter Wyvern",slug:"winter_wyvern",attr:"Универсальный",style:"Ледяной дракон, лечит и заставляет врагов атаковать союзника."},
+{name:"Winter Wyvern",slug:"winter_wyvern",attr:"Интеллект",style:"Ледяной дракон, лечит и заставляет врагов атаковать союзника."},
 {name:"Witch Doctor",slug:"witch_doctor",attr:"Интеллект",style:"Саппорт с лечением, проклятием и опасным тотемом."},
 {name:"Wraith King",slug:"skeleton_king",attr:"Сила",style:"Король скелетов, может воскреснуть после смерти."},
 {name:"Zeus",slug:"zuus",attr:"Интеллект",style:"Маг молний, наносит урон по всей карте."}
@@ -888,7 +912,9 @@ function formatTime(seconds){
 
 function haptic(type){
   try{
-    if(!window.Telegram||!Telegram.WebApp||!Telegram.WebApp.HapticFeedback)return;
+    if(!window.Telegram||!Telegram.WebApp||!Telegram.WebApp.HapticFeedback){
+      return;
+    }
 
     if(type==="light"){
       Telegram.WebApp.HapticFeedback.impactOccurred("light");
@@ -935,7 +961,7 @@ function home(){
           '<button id="spyButton" class="mode"><span class="ico">🕵️</span>Шпион<small>Классика, ведущий, скрытый</small></button>'+
           '<button id="guessButton" class="mode"><span class="ico">🔍</span>Угадай в карточках<small>Два игрока, 20 карточек</small></button>'+
           '<button id="randomButton" class="mode"><span class="ico">🎲</span>Случайный режим<small>Герой, предмет или сборка</small></button>'+
-          '<button id="quizButton" class="mode"><span class="ico">⭐</span>Угадай по силе<small>10 вопросов и 3 сложности</small></button>'+
+          '<button id="quizButton" class="mode"><span class="ico">⭐</span>Угадай по атрибуту<small>10 вопросов и 3 сложности</small></button>'+
         '</div>'+
         '<button id="rulesButton" class="btn alt">📖 Как играть?</button>'+
       '</div>'+
@@ -981,16 +1007,15 @@ function rulesScreen(){
         '</div>'+
         '<div class="rules-block">'+
           '<h3>🔍 Угадай в карточках</h3>'+
-          '<p class="muted small">Два игрока выбирают по одной секретной карточке из 20. Задавайте вопросы, исключайте неподходящие варианты и попробуйте угадать карточку соперника.</p>'+
+          '<p class="muted small">Два игрока выбирают по одной секретной карточке из 20. Нажимайте на карточки, чтобы зачёркивать неподходящие варианты. Если зачеркнёте секретную карточку соперника — вы сразу победили.</p>'+
         '</div>'+
         '<div class="rules-block">'+
           '<h3>🎲 Случайный режим</h3>'+
           '<p class="muted small">Можно получить случайного героя, случайный предмет или героя со случайной сборкой из 3–5 предметов.</p>'+
         '</div>'+
         '<div class="rules-block">'+
-          '<h3>⭐ Угадай по силе</h3>'+
-          '<p class="muted small">Отвечай на 10 вопросов про главный атрибут героя: Сила, Ловкость, Интеллект или Универсальный.</p>'+
-          '<p class="muted small"><b>Лёгкая:</b> имя и портрет. <b>Средняя:</b> только портрет. <b>Сложная:</b> короткая подсказка без портрета.</p>'+
+          '<h3>⭐ Угадай по атрибуту</h3>'+
+          '<p class="muted small"><b>Лёгкая:</b> имя и портрет героя, нужно назвать атрибут. <b>Средняя:</b> только портрет. <b>Сложная:</b> описание героя и четыре варианта имён — нужно выбрать героя.</p>'+
         '</div>'+
         '<div class="easter-egg">У него был тяжёлый посох, но с двумя стиками он справился.</div>'+
         '<button id="backHome" class="btn">← В главное меню</button>'+
@@ -1138,7 +1163,6 @@ function startSpyGame(){
   var players=Math.max(3,Math.min(20,Number(document.getElementById("playersCount").value)||5));
   var spies=Math.max(1,Math.min(players-1,Number(document.getElementById("spiesCount").value)||1));
   var minutes=Math.max(1,Math.min(60,Number(document.getElementById("minutesCount").value)||8));
-
   var peacefulCard;
   var spyCard;
   var location="";
@@ -1243,7 +1267,9 @@ function spyRoleScreen(){
   }
 
   function showCard(){
-    if(opened)return;
+    if(opened){
+      return;
+    }
 
     opened=true;
     hasSeen=true;
@@ -1252,7 +1278,6 @@ function spyRoleScreen(){
 
     if(spyGame.mode==="hidden"){
       secretButton.classList.add("spy");
-
       secretButton.innerHTML=
         '🔒<br>Секретная карточка<br>'+
         '<span style="font-size:18px">'+esc(name)+'</span>'+
@@ -1261,7 +1286,6 @@ function spyRoleScreen(){
           :"");
     }else{
       secretButton.classList.add(isSpy?"spy":"peace");
-
       secretButton.innerHTML=
         (isSpy?"🕵️<br>ТЫ ШПИОН":"🛡️<br>ТЫ МИРНЫЙ")+
         '<br><span style="font-size:18px">'+esc(name)+'</span>'+
@@ -1274,7 +1298,9 @@ function spyRoleScreen(){
   }
 
   function hideCard(){
-    if(!opened)return;
+    if(!opened){
+      return;
+    }
 
     opened=false;
     secretButton.classList.remove("spy","peace");
@@ -1296,7 +1322,9 @@ function spyRoleScreen(){
   secretButton.onpointercancel=hideCard;
 
   nextButton.onclick=function(){
-    if(!hasSeen)return;
+    if(!hasSeen){
+      return;
+    }
 
     haptic("light");
 
@@ -1350,7 +1378,9 @@ function spyPlayScreen(){
         return;
       }
 
-      if(seconds<=0)return;
+      if(seconds<=0){
+        return;
+      }
 
       running=true;
       timerButton.textContent="⏸️ Пауза";
@@ -1431,7 +1461,7 @@ function guessType(){
       '<h1>Угадай в карточках</h1>'+
       '<div class="card">'+
         '<h2>Игра на двоих</h2>'+
-        '<p class="muted small">В каждой партии выбираются 20 случайных карточек из общего пула. Каждый игрок загадывает одну карточку и пытается найти карточку соперника.</p>'+
+        '<p class="muted small">В каждой партии выбираются 20 случайных карточек. Каждый игрок загадывает одну карточку. Если ты зачеркнёшь секретную карточку соперника, игра сразу закончится твоей победой.</p>'+
         '<div class="grid2">'+
           '<button id="guessHeroes" class="mode"><span class="ico">🦸</span>Герои<small>20 из полного пула</small></button>'+
           '<button id="guessItems" class="mode"><span class="ico">🗡️</span>Предметы<small>20 случайных предметов</small></button>'+
@@ -1576,7 +1606,6 @@ function guessBoardScreen(){
       '<div class="status">Ходит <b>игрок '+player+'</b>. Исключено карточек: '+crossedCount+'/20.</div>'+
       '<div class="card">'+
         '<div class="cards">'+renderGuessCards(true)+'</div>'+
-        '<button id="guessEnemy" class="btn green">✅ Угадать карточку соперника</button>'+
         '<button id="switchPlayer" class="btn blue">🔄 Передать ход игроку '+(player===1?"2":"1")+'</button>'+
         '<button id="finishGuess" class="btn yellow">🏁 Закончить без победителя</button>'+
         '<button id="cancelGuess" class="btn danger">Отменить игру</button>'+
@@ -1585,36 +1614,9 @@ function guessBoardScreen(){
 
   document.querySelectorAll("[data-card]").forEach(function(button){
     button.onclick=function(){
-      haptic("light");
       toggleGuessCard(Number(button.dataset.card));
     };
   });
-
-  document.getElementById("guessEnemy").onclick=function(){
-    haptic("medium");
-
-    var answer=prompt("Введи номер карточки от 1 до 20.");
-
-    if(answer===null)return;
-
-    var index=Number(answer)-1;
-
-    if(!Number.isInteger(index)||index<0||index>=20){
-      alert("Нужно ввести число от 1 до 20.");
-      haptic("error");
-      return;
-    }
-
-    var enemy=guessGame.active===1?guessGame.secondSecret:guessGame.firstSecret;
-
-    if(guessGame.cards[index].slug===enemy.slug){
-      haptic("success");
-      guessResultScreen(guessGame.active);
-    }else{
-      haptic("error");
-      alert("Неверно. Продолжайте игру.");
-    }
-  };
 
   document.getElementById("switchPlayer").onclick=function(){
     haptic("light");
@@ -1639,8 +1641,21 @@ function toggleGuessCard(index){
 
   if(exists===-1){
     list.push(index);
+    haptic("light");
+
+    var selectedCard=guessGame.cards[index];
+    var enemySecret=guessGame.active===1
+      ?guessGame.secondSecret
+      :guessGame.firstSecret;
+
+    if(selectedCard.slug===enemySecret.slug){
+      haptic("success");
+      guessResultScreen(guessGame.active);
+      return;
+    }
   }else{
     list.splice(exists,1);
+    haptic("light");
   }
 
   guessBoardScreen();
@@ -1656,6 +1671,7 @@ function guessResultScreen(winner){
         '<div class="result">'+
           '<div class="role">'+(winner===0?"🤝":"🏆")+'</div>'+
           '<h2>'+title+'</h2>'+
+          (winner!==0?'<p class="muted">Секретная карточка соперника была зачёркнута.</p>':"")+
         '</div>'+
       '</div>'+
       '<div class="card">'+
@@ -1790,13 +1806,13 @@ function randomShow(mode){
 function quizDifficulty(){
   app.innerHTML=
     '<div class="wrap">'+
-      '<h1>Угадай по силе</h1>'+
+      '<h1>Угадай по атрибуту</h1>'+
       '<div class="card">'+
         '<h2>Выбери сложность</h2>'+
         '<div class="grid2">'+
           '<button id="easyQuiz" class="mode"><span class="ico">🟢</span>Лёгкая<small>Имя и портрет, без таймера</small></button>'+
           '<button id="mediumQuiz" class="mode"><span class="ico">🟡</span>Средняя<small>Только портрет, 15 секунд</small></button>'+
-          '<button id="hardQuiz" class="mode"><span class="ico">🔴</span>Сложная<small>Подсказка, 10 секунд</small></button>'+
+          '<button id="hardQuiz" class="mode"><span class="ico">🔴</span>Сложная<small>Описание и выбор героя, 10 секунд</small></button>'+
           '<button id="backHome" class="mode"><span class="ico">⬅️</span>Назад<small>В главное меню</small></button>'+
         '</div>'+
       '</div>'+
@@ -1837,14 +1853,26 @@ function startQuiz(difficulty){
 }
 
 function quizDifficultyName(){
-  if(quizGame.difficulty==="easy")return "Лёгкая";
-  if(quizGame.difficulty==="medium")return "Средняя";
+  if(quizGame.difficulty==="easy"){
+    return "Лёгкая";
+  }
+
+  if(quizGame.difficulty==="medium"){
+    return "Средняя";
+  }
+
   return "Сложная";
 }
 
 function pointsForQuiz(){
-  if(quizGame.difficulty==="easy")return 1;
-  if(quizGame.difficulty==="medium")return 2;
+  if(quizGame.difficulty==="easy"){
+    return 1;
+  }
+
+  if(quizGame.difficulty==="medium"){
+    return 2;
+  }
+
   return 3;
 }
 
@@ -1852,11 +1880,24 @@ function quizQuestionScreen(){
   clearInterval(quizTimerId);
 
   var hero=quizGame.questions[quizGame.index];
-  var options=mix(["Сила","Ловкость","Интеллект","Универсальный"]);
-  var content="";
+  var options;
 
   quizGame.locked=false;
   quizGame.timeLeft=quizGame.difficulty==="medium"?15:(quizGame.difficulty==="hard"?10:0);
+
+  if(quizGame.difficulty==="hard"){
+    var wrongHeroes=mix(
+      heroes.filter(function(otherHero){
+        return otherHero.slug!==hero.slug;
+      })
+    ).slice(0,3);
+
+    options=mix([hero].concat(wrongHeroes));
+  }else{
+    options=mix(["Сила","Ловкость","Интеллект","Универсальный"]);
+  }
+
+  var content="";
 
   if(quizGame.difficulty==="easy"){
     content=
@@ -1888,14 +1929,20 @@ function quizQuestionScreen(){
 
   app.innerHTML=
     '<div class="wrap">'+
-      '<h1>Угадай по силе</h1>'+
+      '<h1>Угадай по атрибуту</h1>'+
       '<div class="quiz-progress">Вопрос '+(quizGame.index+1)+' из 10 · '+quizDifficultyName()+'</div>'+
       '<div class="quiz-score">Очки: '+quizGame.score+'</div>'+
       '<div class="card">'+
         content+
         '<div class="grid2" style="margin-top:12px">'+
           options.map(function(option){
-            return '<button class="quiz-answer" data-answer="'+esc(option)+'">'+esc(option)+'</button>';
+            var answerValue=quizGame.difficulty==="hard"?option.slug:option;
+            var answerText=quizGame.difficulty==="hard"?option.name:option;
+
+            return '<button class="quiz-answer" data-answer="'+
+              esc(answerValue)+'">'+
+              esc(answerText)+
+              '</button>';
           }).join("")+
         '</div>'+
         '<button id="nextQuiz" class="btn green hidden">Следующий вопрос</button>'+
@@ -1928,7 +1975,9 @@ function quizQuestionScreen(){
 
   if(quizGame.difficulty!=="easy"){
     quizTimerId=setInterval(function(){
-      if(quizGame.locked)return;
+      if(quizGame.locked){
+        return;
+      }
 
       quizGame.timeLeft--;
 
@@ -1943,12 +1992,20 @@ function quizQuestionScreen(){
         quizGame.locked=true;
         haptic("heavy");
 
+        var correctValue=quizGame.difficulty==="hard"
+          ?hero.slug
+          :hero.attr;
+
+        var correctText=quizGame.difficulty==="hard"
+          ?hero.name
+          :hero.attr;
+
         document.querySelectorAll("[data-answer]").forEach(function(button){
           button.disabled=true;
 
-          if(button.dataset.answer===hero.attr){
+          if(button.dataset.answer===correctValue){
             button.classList.add("good");
-            button.textContent="✅ "+hero.attr;
+            button.textContent="✅ "+correctText;
           }
         });
 
@@ -1959,30 +2016,41 @@ function quizQuestionScreen(){
 }
 
 function checkQuizAnswer(answer,hero){
-  if(quizGame.locked)return;
+  if(quizGame.locked){
+    return;
+  }
 
   quizGame.locked=true;
   clearInterval(quizTimerId);
 
-  var correct=answer===hero.attr;
-  var points=pointsForQuiz();
+  var correct=quizGame.difficulty==="hard"
+    ?answer===hero.slug
+    :answer===hero.attr;
+
+  var correctValue=quizGame.difficulty==="hard"
+    ?hero.slug
+    :hero.attr;
+
+  var correctText=quizGame.difficulty==="hard"
+    ?hero.name
+    :hero.attr;
 
   document.querySelectorAll("[data-answer]").forEach(function(button){
     button.disabled=true;
 
-    if(button.dataset.answer===hero.attr){
+    if(button.dataset.answer===correctValue){
       button.classList.add("good");
-      button.textContent="✅ "+hero.attr;
+      button.textContent="✅ "+correctText;
     }
 
     if(button.dataset.answer===answer&&!correct){
       button.classList.add("bad");
-      button.textContent="❌ "+answer;
+      button.textContent="❌ "+button.textContent;
     }
   });
 
   if(correct){
-    quizGame.score+=points;
+    quizGame.score+=pointsForQuiz();
     haptic("success");
   }else{
     haptic("error");
@@ -2053,6 +2121,20 @@ setTimeout(function(){
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
